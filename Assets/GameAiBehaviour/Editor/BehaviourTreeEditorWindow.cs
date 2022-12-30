@@ -108,22 +108,6 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
-        /// Editor用のファイルパスを取得
-        /// </summary>
-        public static string GetEditorFilePath(string relativePath) {
-            return $"BehaviourTree/{relativePath}";
-        }
-
-        /// <summary>
-        /// Editor用のファイルを読み込む
-        /// </summary>
-        public static T LoadEditorAsset<T>(string relativePath)
-            where T : UnityEngine.Object {
-            var path = GetEditorFilePath(relativePath);
-            return EditorGUIUtility.Load(path) as T;
-        }
-
-        /// <summary>
         /// アセットを開いた際の処理
         /// </summary>
         [OnOpenAsset]
@@ -141,10 +125,12 @@ namespace GameAiBehaviour.Editor {
         /// アクティブ時処理
         /// </summary>
         private void CreateGUI() {
+            // Xml, Style読み込み
             var root = rootVisualElement;
-
-            var visualTree = LoadEditorAsset<VisualTreeAsset>(nameof(BehaviourTreeEditorWindow) + ".uxml");
-            visualTree.CloneTree(root);
+            var uxml = Resources.Load<VisualTreeAsset>("behaviour_tree_editor_window");
+            uxml.CloneTree(root);
+            var styleSheet = Resources.Load<StyleSheet>("behaviour_tree_editor_window");
+            root.styleSheets.Add(styleSheet);
 
             _graphView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();

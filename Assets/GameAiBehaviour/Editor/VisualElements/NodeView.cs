@@ -1,13 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using GameAiBehaviour;
+﻿using UnityEngine;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor;
 
 namespace GameAiBehaviour.Editor {
     using GraphNode = UnityEditor.Experimental.GraphView.Node;
-    using Node = GameAiBehaviour.Node;
 
     /// <summary>
     /// エディタ用のノード
@@ -20,9 +16,7 @@ namespace GameAiBehaviour.Editor {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public NodeView(Node node)
-//            : base(BehaviourTreeDataEditorWindow.GetEditorFilePath($"{nameof(NodeView)}.uxml"))
-        {
+        public NodeView(Node node) {
             title = node.DisplayName;
             Node = node;
             viewDataKey = node.guid;
