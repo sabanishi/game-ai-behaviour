@@ -154,11 +154,11 @@ namespace GameAiBehaviour {
         /// ActionNodeのハンドリング用インスタンスを取得
         /// </summary>
         IActionNodeHandler IBehaviourTreeController.GetActionHandler(ActionNode node) {
-            if (!_actionNodeHandlers.TryGetValue(node.GetType(), out var handler)) {
-                return null;
+            if (_actionNodeHandlers.TryGetValue(node.GetType(), out var handler)) {
+                return handler;
             }
 
-            return handler;
+            return null;
         }
 
         /// <summary>
