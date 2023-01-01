@@ -1,17 +1,13 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace GameAiBehaviour {
+﻿namespace GameAiBehaviour {
     /// <summary>
     /// 選択用ノード
     /// </summary>
-    public class SelectorNode : CompositeNode {
+    public sealed class SelectorNode : CompositeNode {
         private class Logic : Logic<SelectorNode> {
             /// <summary>
             /// コンストラクタ
             /// </summary>
-            public Logic(BehaviourTreeController controller, SelectorNode node) : base(controller, node) {
+            public Logic(IBehaviourTreeController controller, SelectorNode node) : base(controller, node) {
             }
 
             /// <summary>
@@ -32,7 +28,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ロジックの生成
         /// </summary>
-        public override ILogic CreateLogic(BehaviourTreeController controller) {
+        public override ILogic CreateLogic(IBehaviourTreeController controller) {
             return new Logic(controller, this);
         }
     }

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace GameAiBehaviour {
@@ -46,14 +44,14 @@ namespace GameAiBehaviour {
             // 現在の状態
             public State State { get; private set; }
             // 制御用コントローラ
-            protected BehaviourTreeController Controller { get; private set; }
+            protected IBehaviourTreeController Controller { get; private set; }
             // 参照元のノード
             protected TNode Node { get; private set; }
 
             /// <summary>
             /// コンストラクタ
             /// </summary>
-            public Logic(BehaviourTreeController controller, TNode node) {
+            public Logic(IBehaviourTreeController controller, TNode node) {
                 Controller = controller;
                 Node = node;
             }
@@ -137,6 +135,6 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ロジックの生成
         /// </summary>
-        public abstract ILogic CreateLogic(BehaviourTreeController controller);
+        public abstract ILogic CreateLogic(IBehaviourTreeController controller);
     }
 }

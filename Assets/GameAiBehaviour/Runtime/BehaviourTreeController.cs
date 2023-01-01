@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,9 +7,7 @@ namespace GameAiBehaviour {
     /// <summary>
     /// BehaviourTree制御クラス
     /// </summary>
-    public class BehaviourTreeController {
-        // オーナー
-        private object _owner;
+    public class BehaviourTreeController : IBehaviourTreeController {
         // 実行データ
         private BehaviourTree _data;
         // 実行状態
@@ -17,12 +16,33 @@ namespace GameAiBehaviour {
         private RootNode _rootNode;
         // ノードロジック
         private Dictionary<Node, Node.ILogic> _logics = new Dictionary<Node, Node.ILogic>();
+        // アクションノードハンドラ
+        private readonly Dictionary<Type, IActionNodeHandler> _actionNodeHandlers = new Dictionary<Type, IActionNodeHandler>();
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public BehaviourTreeController(object owner) {
-            _owner = owner;
+        public BehaviourTreeController() {
+        }
+
+        /// <summary>
+        /// ActionNodeHandlerのBind
+        /// </summary>
+        /// <param name="onInit">Handlerの初期化関数</param>
+        public void BindActionNodeHandler<TNode, TNodeHandler>(Action<TNodeHandler> onInit)
+            where TNode : ActionNode
+            where TNodeHandler : ActionNodeHandler<TNode>, new() {
+            var handler = new TNodeHandler();
+            onInit?.Invoke(handler);
+            _actionNodeHandlers[typeof(TNode)] = handler;
+        }
+
+        /// <summary>
+        /// ActionNodeHandlerのBindを解除
+        /// </summary>
+        public void ResetActionNodeHandler<TNode>()
+            where TNode : ActionNode {
+            _actionNodeHandlers.Remove(typeof(TNode));
         }
 
         /// <summary>
@@ -64,6 +84,7 @@ namespace GameAiBehaviour {
             }
 
             _logics.Clear();
+            _actionNodeHandlers.Clear();
         }
 
         /// <summary>
@@ -75,31 +96,42 @@ namespace GameAiBehaviour {
             }
 
             // ノードの実行
-            _state = UpdateNode(_rootNode, deltaTime);
-        }
-
-        /// <summary>
-        /// ノード用のロジック取得
-        /// </summary>
-        public Node.ILogic GetLogic(Node node) {
-            if (_logics.TryGetValue(node, out var logic)) {
-                return logic;
-            }
-
-            Debug.LogError($"Not found node logic. {node.GetType()}");
-            return null;
+            _state = ((IBehaviourTreeController)this).UpdateNode(_rootNode, deltaTime);
         }
 
         /// <summary>
         /// ノードの実行
         /// </summary>
-        public Node.State UpdateNode(Node node, float deltaTime) {
+        Node.State IBehaviourTreeController.UpdateNode(Node node, float deltaTime) {
             var logic = GetLogic(node);
             if (logic == null) {
                 return Node.State.Failure;
             }
 
             return logic.Update(deltaTime);
+        }
+
+        /// <summary>
+        /// ActionNodeのハンドリング用インスタンスを取得
+        /// </summary>
+        IActionNodeHandler IBehaviourTreeController.GetActionHandler(ActionNode node) {
+            if (!_actionNodeHandlers.TryGetValue(node.GetType(), out var handler)) {
+                return null;
+            }
+
+            return handler;
+        }
+
+        /// <summary>
+        /// ノード用のロジック取得
+        /// </summary>
+        private Node.ILogic GetLogic(Node node) {
+            if (_logics.TryGetValue(node, out var logic)) {
+                return logic;
+            }
+
+            Debug.LogError($"Not found node logic. {node.GetType()}");
+            return null;
         }
     }
 }

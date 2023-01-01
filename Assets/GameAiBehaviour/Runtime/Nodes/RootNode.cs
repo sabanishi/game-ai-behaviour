@@ -14,7 +14,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// コンストラクタ
             /// </summary>
-            public Logic(BehaviourTreeController controller, RootNode node) : base(controller, node) {
+            public Logic(IBehaviourTreeController controller, RootNode node) : base(controller, node) {
             }
 
             /// <summary>
@@ -34,7 +34,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ロジックの生成
         /// </summary>
-        public override ILogic CreateLogic(BehaviourTreeController controller) {
+        public override ILogic CreateLogic(IBehaviourTreeController controller) {
             return new Logic(controller, this);
         }
     }

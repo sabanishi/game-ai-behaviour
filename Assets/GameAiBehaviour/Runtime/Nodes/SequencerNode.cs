@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace GameAiBehaviour {
+﻿namespace GameAiBehaviour {
     /// <summary>
     /// シーケンスノード
     /// </summary>
@@ -14,7 +10,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// コンストラクタ
             /// </summary>
-            public Logic(BehaviourTreeController controller, SequencerNode node) : base(controller, node) {
+            public Logic(IBehaviourTreeController controller, SequencerNode node) : base(controller, node) {
             }
 
             /// <summary>
@@ -39,7 +35,7 @@ namespace GameAiBehaviour {
                         return State.Failure;
                     }
                     // 成功していたら次のNodeに移す
-                    else if (state == State.Success) {
+                    if (state == State.Success) {
                         _index++;
                     }
                 }
@@ -57,7 +53,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ロジックの生成
         /// </summary>
-        public override ILogic CreateLogic(BehaviourTreeController controller) {
+        public override ILogic CreateLogic(IBehaviourTreeController controller) {
             return new Logic(controller, this);
         }
     }
