@@ -8,6 +8,7 @@ namespace GameAiBehaviour {
     public abstract class Node : ScriptableObject {
         // 状態
         public enum State {
+            Inactive,
             Failure,
             Running,
             Success,
@@ -25,7 +26,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            State Update(float deltaTime);
+            State Update(float deltaTime, bool back);
 
             /// <summary>
             /// キャンセル処理
@@ -40,7 +41,7 @@ namespace GameAiBehaviour {
             where TNode : Node {
             // 開始済みか
             private bool _started;
-
+            
             // 現在の状態
             public State State { get; private set; }
             // 制御用コントローラ
@@ -54,6 +55,7 @@ namespace GameAiBehaviour {
             public Logic(IBehaviourTreeController controller, TNode node) {
                 Controller = controller;
                 Node = node;
+                State = State.Inactive;
             }
 
             /// <summary>
@@ -74,30 +76,24 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 更新処理
             /// </summary>
-            public State Update(float deltaTime) {
-                if (!_started) {
-                    OnStart();
-                    _started = true;
+            public State Update(float deltaTime, bool back) {
+                Start();
+
+                var state = OnUpdate(deltaTime, back);
+                State = state;
+
+                if (state != State.Running) {
+                    Stop();
                 }
 
-                State = OnUpdate(deltaTime);
-
-                if (State != State.Running) {
-                    OnStop();
-                    _started = false;
-                }
-
-                return State;
+                return state;
             }
 
             /// <summary>
             /// キャンセル処理
             /// </summary>
             public void Cancel() {
-                if (_started) {
-                    OnStop();
-                    _started = false;
-                }
+                Stop();
             }
 
             protected virtual void OnInitialize() {
@@ -109,7 +105,7 @@ namespace GameAiBehaviour {
             protected virtual void OnStart() {
             }
 
-            protected abstract State OnUpdate(float deltaTime);
+            protected abstract State OnUpdate(float deltaTime, bool back);
 
             protected virtual void OnStop() {
             }
@@ -118,7 +114,28 @@ namespace GameAiBehaviour {
             /// ノードの実行
             /// </summary>
             protected State UpdateNode(Node node, float deltaTime) {
-                return Controller.UpdateNode(node, deltaTime);
+                return Controller.UpdateNode(node, deltaTime, false);
+            }
+
+            /// <summary>
+            /// 開始処理
+            /// </summary>
+            private void Start() {
+                if (!_started) {
+                    OnStart();
+                    _started = true;
+                }
+            }
+
+            /// <summary>
+            /// 停止処理
+            /// </summary>
+            private void Stop() {
+                if (_started) {
+                    OnStop();
+                    _started = false;
+                    State = State.Inactive;
+                }
             }
         }
 

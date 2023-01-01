@@ -15,7 +15,12 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
+                // 戻り実行の際は完了扱い
+                if (back) {
+                    return State.Success;
+                }
+                
                 if (Node.child == null) {
                     return State.Failure;
                 }

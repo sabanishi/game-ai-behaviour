@@ -13,7 +13,12 @@
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
+                // 戻り実行の際は完了扱い
+                if (back) {
+                    return State.Success;
+                }
+                
                 foreach (var child in Node.children) {
                     var state = UpdateNode(child, deltaTime);
                     if (state != State.Failure) {

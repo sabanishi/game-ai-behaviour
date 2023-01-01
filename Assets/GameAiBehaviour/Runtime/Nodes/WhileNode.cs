@@ -6,8 +6,6 @@ namespace GameAiBehaviour {
     /// </summary>
     public sealed class WhileNode : DecoratorNode {
         private class Logic : Logic<WhileNode> {
-            private bool _entered = false;
-            
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -17,31 +15,28 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
                 if (Node.child == null) {
                     return State.Failure;
                 }
+
+                // 戻り実行の際は実行中として終わる
+                if (back) {
+                    return State.Running;
+                }
                 
                 // 条件判定
-                if (!_entered) {
-                    foreach (var condition in Node.conditions) {
-                        if (!condition.Check()) {
-                            return State.Failure;
-                        }
+                foreach (var condition in Node.conditions) {
+                    if (!condition.Check()) {
+                        return State.Failure;
                     }
-                }
-                else {
-                    _entered = true;
                 }
 
                 // 接続先ノードの実行
                 var state = UpdateNode(Node.child, deltaTime);
-                if (state == State.Success) {
-                    _entered = false;
-                }
+                
                 // 接続先が失敗していたらNodeを失敗とする
-                else if (state == State.Failure) {
-                    _entered = false;
+                if (state == State.Failure) {
                     return State.Failure;
                 }
 

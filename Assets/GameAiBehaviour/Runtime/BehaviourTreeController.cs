@@ -14,6 +14,8 @@ namespace GameAiBehaviour {
         private Node.State _state = Node.State.Success;
         // Rootノード
         private RootNode _rootNode;
+        // 実行中ノードスタック
+        private List<Node> _runningNodes = new List<Node>();
         // ノードロジック
         private Dictionary<Node, Node.ILogic> _logics = new Dictionary<Node, Node.ILogic>();
         // アクションノードハンドラ
@@ -71,6 +73,7 @@ namespace GameAiBehaviour {
             foreach (var logic in _logics) {
                 logic.Value.Cancel();
             }
+            _runningNodes.Clear();
         }
 
         /// <summary>
@@ -83,6 +86,7 @@ namespace GameAiBehaviour {
                 pair.Value.Dispose();
             }
 
+            _runningNodes.Clear();
             _logics.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -95,20 +99,55 @@ namespace GameAiBehaviour {
                 return;
             }
 
-            // ノードの実行
-            _state = ((IBehaviourTreeController)this).UpdateNode(_rootNode, deltaTime);
+            // スタックの更新
+            void UpdateStack(bool back) {
+                if (_runningNodes.Count <= 0) {
+                    return;
+                }
+                
+                // ノードの実行
+                var lastIndex = _runningNodes.Count - 1;
+                var lastNode = _runningNodes[lastIndex];
+                _runningNodes.RemoveAt(lastIndex);
+                _state = ((IBehaviourTreeController)this).UpdateNode(lastNode, deltaTime, back);
+
+                if (_state != Node.State.Running) {
+                    // 再起的実行
+                    UpdateStack(true);
+                }
+            }
+            
+            // 実行中ノードがあれば実行
+            if (_runningNodes.Count > 0) {
+                UpdateStack(false);
+            }
+            else {
+                // ノードの実行
+                _state = ((IBehaviourTreeController)this).UpdateNode(_rootNode, deltaTime, false);
+            }
+            
+            // ステータスが実行中でなければ、実行中スタックをクリア
+            if (_state != Node.State.Running) {
+                _runningNodes.Clear();
+            }
         }
 
         /// <summary>
         /// ノードの実行
         /// </summary>
-        Node.State IBehaviourTreeController.UpdateNode(Node node, float deltaTime) {
+        Node.State IBehaviourTreeController.UpdateNode(Node node, float deltaTime, bool back) {
             var logic = GetLogic(node);
             if (logic == null) {
                 return Node.State.Failure;
             }
 
-            return logic.Update(deltaTime);
+            _runningNodes.Add(node);
+            var state = logic.Update(deltaTime, back);
+            if (state != Node.State.Running) {
+                _runningNodes.Remove(node);
+            }
+            
+            return state;
         }
 
         /// <summary>

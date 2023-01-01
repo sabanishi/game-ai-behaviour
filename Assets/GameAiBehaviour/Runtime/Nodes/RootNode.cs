@@ -21,7 +21,12 @@ namespace GameAiBehaviour {
             /// 実行処理
             /// </summary>
             /// <returns></returns>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
+                // 戻り実行の際は完了扱い
+                if (back) {
+                    return State.Success;
+                }
+                
                 var child = Node.child;
                 if (child != null) {
                     return UpdateNode(child, deltaTime);

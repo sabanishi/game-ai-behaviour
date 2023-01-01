@@ -23,20 +23,27 @@
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
                 var children = Node.children;
+                
+                // 実行ノードが全て終わった
+                if (_index >= children.Length) {
+                    return State.Success;
+                }
+
+                // 戻り実行の際は実行中として終わる
+                if (back) {
+                    return State.Running;
+                }
 
                 // 接続先ノード実行
                 if (_index < children.Length) {
                     var state = UpdateNode(children[_index], deltaTime);
+                    _index++;
 
                     // 失敗していたらSequenceNode自体を失敗にする
                     if (state == State.Failure) {
                         return State.Failure;
-                    }
-                    // 成功していたら次のNodeに移す
-                    if (state == State.Success) {
-                        _index++;
                     }
                 }
 

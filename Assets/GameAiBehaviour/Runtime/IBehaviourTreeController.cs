@@ -6,7 +6,7 @@
         /// <summary>
         /// ノードの実行
         /// </summary>
-        Node.State UpdateNode(Node node, float deltaTime);
+        Node.State UpdateNode(Node node, float deltaTime, bool back);
 
         /// <summary>
         /// ノードにBindされているHandlerの取得

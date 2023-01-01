@@ -23,7 +23,7 @@
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
                 // 更新に続きがあればRunning
                 if (_actionNodeHandler != null && _actionNodeHandler.OnUpdate(Node, deltaTime)) {
                     return State.Running;

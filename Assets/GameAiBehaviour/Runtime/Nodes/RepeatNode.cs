@@ -7,7 +7,6 @@ namespace GameAiBehaviour {
     public sealed class RepeatNode : DecoratorNode {
         private class Logic : Logic<RepeatNode> {
             private int _index;
-            private bool _entered = false;
             
             /// <summary>
             /// コンストラクタ
@@ -25,36 +24,34 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime) {
+            protected override State OnUpdate(float deltaTime, bool back) {
                 if (Node.child == null) {
                     return State.Failure;
                 }
                 
                 // 条件判定
-                if (!_entered) {
-                    if (_index >= Node.count) {
-                        return State.Success;
-                    }
+                if (_index >= Node.count) {
+                    return State.Success;
                 }
-                else {
-                    _entered = true;
+
+                // 戻り実行の際は実行中として終わる
+                if (back) {
+                    return State.Running;
                 }
 
                 // 接続先ノードの実行
                 var state = UpdateNode(Node.child, deltaTime);
+                _index++;
+                
                 if (state == State.Running) {
                     return State.Running;
                 }
-
-                _index++;
                 
-                // 指定回数を超えている場合、終了
+                // 終了していて指定回数を超えている場合、終了
                 if (_index >= Node.count) {
                     return State.Success;
                 }
                 
-                // そうでない場合、再実行可能な状態にする
-                _entered = false;
                 return State.Running;
             }
         }
