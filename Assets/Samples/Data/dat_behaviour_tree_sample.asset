@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-2307670242924170208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9063987a68c79c44d89f8f57869fd9d1, type: 3}
+  m_Name: SelectorNode
+  m_EditorClassIdentifier: 
+  guid: 91fe93f3d47e2484ebcfb2451e499b35
+  position: {x: 451, y: 105}
+  title: 
+  children: []
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14c4b5c83ab7686489f1b4fa4ca9532e, type: 3}
+  m_Name: dat_behaviour_tree_sample
+  m_EditorClassIdentifier: 
+  memo: 
+  nodes:
+  - {fileID: 4860838083034557716}
+  - {fileID: 1908007682339863260}
+  - {fileID: -2307670242924170208}
+--- !u!114 &1908007682339863260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d18bf1db1334f2d8023426a7851c74, type: 3}
+  m_Name: IfNode
+  m_EditorClassIdentifier: 
+  guid: b34018c91689b47ba8a9c16701bb524f
+  position: {x: 303, y: 143.5}
+  title: 
+  child: {fileID: -2307670242924170208}
+  conditions: []
+--- !u!114 &4860838083034557716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f20ca020fcdcbff4cb6cf4a92eb703db, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: 4aef220cfa344491794a748cf8a5c2b8
+  position: {x: 133, y: 143.5}
+  title: 
+  child: {fileID: 1908007682339863260}
