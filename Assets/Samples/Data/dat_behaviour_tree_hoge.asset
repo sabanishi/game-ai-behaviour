@@ -82,7 +82,7 @@ MonoBehaviour:
   m_Name: IfNode
   m_EditorClassIdentifier: 
   guid: 3ae59785fc2714cd4919595bb9f47246
-  position: {x: 50.5, y: 384.34}
+  position: {x: 50.5, y: 384.5}
   title: 
   child: {fileID: 0}
   conditions: []

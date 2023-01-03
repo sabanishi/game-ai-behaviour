@@ -40,6 +40,8 @@ namespace GameAiBehaviour {
         [HideInInspector, Tooltip("条件")]
         public Condition[] conditions;
 
+        public override string Description => $"{conditions.Length} conditions.";
+
         /// <summary>
         /// ロジックの生成
         /// </summary>

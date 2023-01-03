@@ -4,3 +4,17 @@
     --thick-line-color: rgba(80, 80, 80, 0.3);
     --spacing: 10;
 }
+
+#inspector-label {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#inspector-content {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}

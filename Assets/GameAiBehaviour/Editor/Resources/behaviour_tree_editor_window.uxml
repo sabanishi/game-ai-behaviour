@@ -8,9 +8,9 @@
             <ui:Label text="Tree View" display-tooltip-when-elided="true" style="background-color: rgb(25, 25, 25);" />
             <GameAiBehaviour.Editor.BehaviourTreeView focusable="true" style="flex-grow: 1;" />
         </ui:VisualElement>
-        <ui:VisualElement name="right-panel">
-            <ui:Label text="Inspector" display-tooltip-when-elided="true" style="background-color: rgb(25, 25, 25);" />
-            <GameAiBehaviour.Editor.InspectorView />
+        <ui:VisualElement name="right-panel" style="min-width: 20px;">
+            <ui:Label text="Inspector" display-tooltip-when-elided="true" name="inspector-label" style="background-color: rgb(25, 25, 25); margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px;" />
+            <GameAiBehaviour.Editor.InspectorView name="inspector-content" style="margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px;" />
         </ui:VisualElement>
     </GameAiBehaviour.Editor.SplitView>
     <GameAiBehaviour.Editor.BehaviourTreeView focusable="true" />
