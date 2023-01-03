@@ -11,7 +11,7 @@ namespace GameAiBehaviour.Editor {
     /// <summary>
     /// BehaviourTree用のエディタウィンドウ
     /// </summary>
-    public partial class BehaviourTreeEditorWindow : EditorWindow {
+    public class BehaviourTreeEditorWindow : EditorWindow {
         /// <summary>
         /// Node生成用のSearchWindowProvider
         /// </summary>
@@ -131,8 +131,6 @@ namespace GameAiBehaviour.Editor {
             var root = rootVisualElement;
             var uxml = Resources.Load<VisualTreeAsset>("behaviour_tree_editor_window");
             uxml.CloneTree(root);
-            var styleSheet = Resources.Load<StyleSheet>("behaviour_tree_editor_window");
-            root.styleSheets.Add(styleSheet);
 
             _graphView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
@@ -170,6 +168,29 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         private void Setup(BehaviourTree data) {
             _target = data;
+            _graphView.Load(_target);
+        }
+
+        /// <summary>
+        /// アクティブ時処理
+        /// </summary>
+        private void OnEnable() {
+            // Undo検知
+            Undo.undoRedoPerformed += OnUndoRedo;
+        }
+
+        /// <summary>
+        /// 非アクティブ時処理
+        /// </summary>
+        private void OnDisable() {
+            // Undo検知
+            Undo.undoRedoPerformed -= OnUndoRedo;
+        }
+
+        /// <summary>
+        /// Undo/Redo処理
+        /// </summary>
+        private void OnUndoRedo() {
             _graphView.Load(_target);
         }
 

@@ -148,10 +148,19 @@ namespace GameAiBehaviour {
 
         // 表示名
         public virtual string DisplayName => string.IsNullOrEmpty(title) ? GetType().Name : title;
+        // 説明文
+        public virtual string Description => "";
 
         /// <summary>
         /// ロジックの生成
         /// </summary>
         public abstract ILogic CreateLogic(IBehaviourTreeController controller);
+
+        /// <summary>
+        /// 値変化通知
+        /// </summary>
+        private void OnValidate() {
+            hideFlags |= HideFlags.HideInHierarchy;
+        }
     }
 }

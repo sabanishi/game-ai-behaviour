@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
-using GameAiBehaviour;
 
 namespace GameAiBehaviour.Editor {
     using GraphNode = UnityEditor.Experimental.GraphView.Node;
-    using Node = GameAiBehaviour.Node;
 
     /// <summary>
     /// BehaviourTree表示用のGraphView
@@ -34,7 +30,7 @@ namespace GameAiBehaviour.Editor {
             gridBackground.AddToClassList("grid-background");
 
             // 基本設定
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            this.AddManipulator(new ContentZoomer());
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());

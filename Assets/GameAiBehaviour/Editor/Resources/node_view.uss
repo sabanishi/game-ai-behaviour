@@ -24,10 +24,10 @@
     top: 0;
     right: 0;
     bottom: 0;
-    border-left-color: rgba(0, 180, 255, 255);
-    border-right-color: rgba(0, 180, 255, 255);
-    border-top-color: rgba(0, 180, 255, 255);
-    border-bottom-color: rgba(0, 180, 255, 255);
+    border-left-color: rgb(0, 180, 255);
+    border-right-color: rgb(0, 180, 255);
+    border-top-color: rgb(0, 180, 255);
+    border-bottom-color: rgb(0, 180, 255);
     border-left-width: 0;
     border-right-width: 0;
     border-top-width: 0;
@@ -39,10 +39,10 @@
 }
 
 :hover > #selection-border {
-    border-left-color: rgba(0, 180, 255, 255);
-    border-right-color: rgba(0, 180, 255, 255);
-    border-top-color: rgba(0, 180, 255, 255);
-    border-bottom-color: rgba(0, 180, 255, 255);
+    border-left-color: rgb(0, 180, 255);
+    border-right-color: rgb(0, 180, 255);
+    border-top-color: rgb(0, 180, 255);
+    border-bottom-color: rgb(0, 180, 255);
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;
@@ -54,10 +54,10 @@
 }
 
 :selected > #selection-border {
-    border-left-color: rgba(0, 180, 255, 255);
-    border-right-color: rgba(0, 180, 255, 255);
-    border-top-color: rgba(0, 180, 255, 255);
-    border-bottom-color: rgba(0, 180, 255, 255);
+    border-left-color: rgb(0, 180, 255);
+    border-right-color: rgb(0, 180, 255);
+    border-top-color: rgb(0, 180, 255);
+    border-bottom-color: rgb(0, 180, 255);
     border-left-width: 1px;
     border-right-width: 1px;
     border-top-width: 1px;
@@ -69,10 +69,10 @@
 }
 
 :hover:selected > #selection-border {
-    border-left-color: rgba(0, 180, 255, 255);
-    border-right-color: rgba(0, 180, 255, 255);
-    border-top-color: rgba(0, 180, 255, 255);
-    border-bottom-color: rgba(0, 180, 255, 255);
+    border-left-color: rgb(0, 180, 255);
+    border-right-color: rgb(0, 180, 255);
+    border-top-color: rgb(0, 180, 255);
+    border-bottom-color: rgb(0, 180, 255);
     border-left-width: 2px;
     border-right-width: 2px;
     border-top-width: 2px;
@@ -106,18 +106,22 @@
 }
 
 .root #input {
-    background-color: rgba(242, 129, 73, 255);
+    background-color: rgb(242, 129, 73);
     min-height: 24px;
 }
 
 .decorator #input {
-    background-color: rgba(242, 242, 73, 255);
+    background-color: rgb(242, 242, 73);
 }
 
 .composite #input {
-    background-color: rgba(73, 87, 242, 255);
+    background-color: rgb(73, 87, 242);
 }
 
 .action #input {
-    background-color: rgba(242, 73, 214, 255);
+    background-color: rgb(242, 73, 214);
+}
+
+.node #output {
+    min-height: 24px;
 }

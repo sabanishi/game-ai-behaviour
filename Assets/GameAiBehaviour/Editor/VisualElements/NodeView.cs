@@ -10,9 +10,32 @@ namespace GameAiBehaviour.Editor {
     /// エディタ用のノード
     /// </summary>
     public class NodeView : GraphNode {
-        public new class UxmlFactory : UxmlFactory<NodeView, UxmlTraits> {
+        private Label _descriptionLabel;
+        
+        public sealed override string title {
+            get => base.title;
+            set => base.title = value;
         }
         
+        public string Description {
+            get {
+                if (_descriptionLabel.style.display == DisplayStyle.None) {
+                    return "";
+                }
+
+                return _descriptionLabel.text;
+            }
+            set {
+                if (string.IsNullOrEmpty(value)) {
+                    _descriptionLabel.text = "";
+                    _descriptionLabel.style.display = DisplayStyle.None;
+                }
+                else {
+                    _descriptionLabel.style.display = DisplayStyle.Flex;
+                    _descriptionLabel.text = value;
+                }
+            }
+        }
         public Node Node { get; private set; }
         public Port Input { get; private set; }
         public Port Output { get; private set; }
@@ -22,12 +45,14 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         public NodeView(Node node) 
             : base("Assets/GameAiBehaviour/Editor/Resources/node_view.uxml") {
-            var styleSheet = Resources.Load<StyleSheet>("node_view");
-            styleSheets.Add(styleSheet);
+            // パーツ取得
+            _descriptionLabel = this.Q<Label>("description");
             
-            title = node.DisplayName;
             Node = node;
+            title = node.DisplayName;
             viewDataKey = node.guid;
+
+            Description = node.Description;
 
             // 座標設定
             style.left = Node.position.x;
