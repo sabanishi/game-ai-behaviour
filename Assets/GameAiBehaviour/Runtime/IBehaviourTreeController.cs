@@ -11,6 +11,6 @@
         /// <summary>
         /// ノードにBindされているHandlerの取得
         /// </summary>
-        IActionNodeHandler GetActionHandler(ActionNode node);
+        IActionNodeHandler GetActionHandler(HandleableActionNode node);
     }
 }

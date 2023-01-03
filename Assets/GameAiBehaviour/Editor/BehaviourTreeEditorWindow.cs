@@ -51,8 +51,10 @@ namespace GameAiBehaviour.Editor {
                 };
 
                 foreach (var groupType in groupTypes) {
-                    var types = TypeCache.GetTypesDerivedFrom(groupType);
-                    if (types.Count <= 0) {
+                    var types = TypeCache.GetTypesDerivedFrom(groupType)
+                        .Where(x => !x.IsAbstract && !x.IsGenericType)
+                        .ToArray();
+                    if (types.Length <= 0) {
                         continue;
                     }
 
@@ -134,6 +136,10 @@ namespace GameAiBehaviour.Editor {
 
             _graphView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
+            var nodeViews = _graphView.Query<NodeView>().ToList();
+            foreach (var nodeView in nodeViews) {
+                _graphView.Remove(nodeView);
+            }
 
             _graphView.OnChangedSelectionNodeViews = nodeViews => {
                 // 選択対象の更新

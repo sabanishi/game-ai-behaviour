@@ -32,7 +32,7 @@ namespace GameAiBehaviour {
         /// </summary>
         /// <param name="onInit">Handlerの初期化関数</param>
         public void BindActionNodeHandler<TNode, TNodeHandler>(Action<TNodeHandler> onInit)
-            where TNode : ActionNode
+            where TNode : HandleableActionNode
             where TNodeHandler : ActionNodeHandler<TNode>, new() {
             var handler = new TNodeHandler();
             onInit?.Invoke(handler);
@@ -43,7 +43,7 @@ namespace GameAiBehaviour {
         /// ActionNodeHandlerのBindを解除
         /// </summary>
         public void ResetActionNodeHandler<TNode>()
-            where TNode : ActionNode {
+            where TNode : HandleableActionNode {
             _actionNodeHandlers.Remove(typeof(TNode));
         }
 
@@ -153,7 +153,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ActionNodeのハンドリング用インスタンスを取得
         /// </summary>
-        IActionNodeHandler IBehaviourTreeController.GetActionHandler(ActionNode node) {
+        IActionNodeHandler IBehaviourTreeController.GetActionHandler(HandleableActionNode node) {
             if (_actionNodeHandlers.TryGetValue(node.GetType(), out var handler)) {
                 return handler;
             }
