@@ -26,6 +26,8 @@ namespace GameAiBehaviour {
         [Tooltip("出力内容のログ")]
         public string text = "";
 
+        public override string Description => $"[{logType}]{text}";
+
         /// <summary>
         /// ロジックの生成
         /// </summary>

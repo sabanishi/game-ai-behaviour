@@ -146,8 +146,6 @@ namespace GameAiBehaviour {
         [Tooltip("タイトル")]
         public string title;
 
-        // 表示名
-        public virtual string DisplayName => string.IsNullOrEmpty(title) ? GetType().Name : title;
         // 説明文
         public virtual string Description => "";
 
@@ -155,6 +153,13 @@ namespace GameAiBehaviour {
         /// ロジックの生成
         /// </summary>
         public abstract ILogic CreateLogic(IBehaviourTreeController controller);
+
+        /// <summary>
+        /// 生成時処理
+        /// </summary>
+        private void Awake() {
+            OnValidate();
+        }
 
         /// <summary>
         /// 値変化通知

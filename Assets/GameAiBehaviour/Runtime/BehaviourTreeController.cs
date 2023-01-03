@@ -8,6 +8,14 @@ namespace GameAiBehaviour {
     /// BehaviourTree制御クラス
     /// </summary>
     public class BehaviourTreeController : IBehaviourTreeController {
+        /// <summary>
+        /// ActionHandler情報
+        /// </summary>
+        private class ActionHandlerInfo {
+            public Type Type;
+            public Action<object> InitAction;
+        }
+        
         // 実行データ
         private BehaviourTree _data;
         // 実行状態
@@ -18,8 +26,10 @@ namespace GameAiBehaviour {
         private List<Node> _runningNodes = new List<Node>();
         // ノードロジック
         private Dictionary<Node, Node.ILogic> _logics = new Dictionary<Node, Node.ILogic>();
+        // アクションハンドラ情報
+        private Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new Dictionary<Type, ActionHandlerInfo>();
         // アクションノードハンドラ
-        private readonly Dictionary<Type, IActionNodeHandler> _actionNodeHandlers = new Dictionary<Type, IActionNodeHandler>();
+        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new Dictionary<Node, IActionNodeHandler>();
 
         /// <summary>
         /// コンストラクタ
@@ -31,12 +41,14 @@ namespace GameAiBehaviour {
         /// ActionNodeHandlerのBind
         /// </summary>
         /// <param name="onInit">Handlerの初期化関数</param>
-        public void BindActionNodeHandler<TNode, TNodeHandler>(Action<TNodeHandler> onInit)
+        public void BindActionNodeHandler<TNode, THandler>(Action<THandler> onInit)
             where TNode : HandleableActionNode
-            where TNodeHandler : ActionNodeHandler<TNode>, new() {
-            var handler = new TNodeHandler();
-            onInit?.Invoke(handler);
-            _actionNodeHandlers[typeof(TNode)] = handler;
+            where THandler : ActionNodeHandler<TNode>, new() {
+            
+            _actionHandlerInfos[typeof(TNode)] = new ActionHandlerInfo {
+                Type = typeof(THandler),
+                InitAction = onInit != null ? obj => { onInit.Invoke(obj as THandler); } : null
+            };
         }
 
         /// <summary>
@@ -44,7 +56,7 @@ namespace GameAiBehaviour {
         /// </summary>
         public void ResetActionNodeHandler<TNode>()
             where TNode : HandleableActionNode {
-            _actionNodeHandlers.Remove(typeof(TNode));
+            _actionHandlerInfos.Remove(typeof(TNode));
         }
 
         /// <summary>
@@ -88,6 +100,7 @@ namespace GameAiBehaviour {
 
             _runningNodes.Clear();
             _logics.Clear();
+            _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
 
@@ -154,11 +167,21 @@ namespace GameAiBehaviour {
         /// ActionNodeのハンドリング用インスタンスを取得
         /// </summary>
         IActionNodeHandler IBehaviourTreeController.GetActionHandler(HandleableActionNode node) {
-            if (_actionNodeHandlers.TryGetValue(node.GetType(), out var handler)) {
+            if (_actionNodeHandlers.TryGetValue(node, out var handler)) {
                 return handler;
             }
+            
+            // 無ければ生成
+            if (_actionHandlerInfos.TryGetValue(node.GetType(), out var handlerInfo)) {
+                var constructorInfo = handlerInfo.Type.GetConstructor(Type.EmptyTypes);
+                if (constructorInfo != null) {
+                    handler = (IActionNodeHandler)constructorInfo.Invoke(Array.Empty<object>());
+                    _actionNodeHandlers[node] = handler;
+                    handlerInfo.InitAction?.Invoke(handler);
+                }
+            }
 
-            return null;
+            return handler;
         }
 
         /// <summary>

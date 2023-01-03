@@ -6,6 +6,7 @@ using UnityEngine.UIElements;
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Callbacks;
+using Object = UnityEngine.Object;
 
 namespace GameAiBehaviour.Editor {
     /// <summary>
@@ -93,6 +94,7 @@ namespace GameAiBehaviour.Editor {
         private InspectorView _inspectorView;
 
         // 制御対象のデータ
+        [SerializeField]
         private BehaviourTree _target;
 
         /// <summary>
@@ -139,16 +141,16 @@ namespace GameAiBehaviour.Editor {
                 _graphView.Remove(nodeView);
             }
 
-            _graphView.OnChangedSelectionNodeViews = nodeViews => {
+            _graphView.OnChangedSelectionNodeViews = views => {
                 // 選択対象の更新
-                _inspectorView.UpdateSelection(nodeViews.Select(x => x.Node).ToArray());
+                _inspectorView.UpdateSelection(views.Select(x => (Object)x.Node).ToArray());
             };
             _inspectorView.OnChangedValue = targets => {
                 // 編集時はNodeViewをリフレッシュ
                 foreach (var target in targets) {
                     if (target is GameAiBehaviour.Node node) {
                         var nodeView = _graphView.GetNodeByGuid(node.guid) as NodeView;
-                        nodeView.Refresh();
+                        nodeView?.Refresh();
                     }
                 }
             };
@@ -168,7 +170,9 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         private void Setup(BehaviourTree data) {
             _target = data;
-            _graphView.Load(_target);
+            if (_graphView != null) {
+                _graphView.Load(_target);
+            }
         }
 
         /// <summary>
@@ -177,6 +181,8 @@ namespace GameAiBehaviour.Editor {
         private void OnEnable() {
             // Undo検知
             Undo.undoRedoPerformed += OnUndoRedo;
+            
+            Setup(_target);
         }
 
         /// <summary>

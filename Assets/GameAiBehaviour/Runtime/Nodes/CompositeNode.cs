@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -6,6 +7,6 @@ namespace GameAiBehaviour {
     /// </summary>
     public abstract class CompositeNode : Node {
         [HideInInspector, Tooltip("接続先ノード")]
-        public Node[] children = new Node[0];
+        public Node[] children = Array.Empty<Node>();
     }
 }

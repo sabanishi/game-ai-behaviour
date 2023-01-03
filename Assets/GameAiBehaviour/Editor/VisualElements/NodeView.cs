@@ -14,7 +14,14 @@ namespace GameAiBehaviour.Editor {
         
         public sealed override string title {
             get => base.title;
-            set => base.title = value;
+            set {
+                if (string.IsNullOrEmpty(value)) {
+                    base.title = ObjectNames.NicifyVariableName(Node.GetType().Name);
+                }
+                else {
+                    base.title = value;
+                }
+            }
         }
         
         public string Description {
@@ -49,9 +56,8 @@ namespace GameAiBehaviour.Editor {
             _descriptionLabel = this.Q<Label>("description");
             
             Node = node;
-            title = node.DisplayName;
             viewDataKey = node.guid;
-
+            title = node.title;
             Description = node.Description;
 
             // 座標設定
@@ -76,7 +82,8 @@ namespace GameAiBehaviour.Editor {
         /// 値更新時などのリフレッシュ
         /// </summary>
         public void Refresh() {
-            title = Node.DisplayName;
+            title = Node.title;
+            Description = Node.Description;
         }
 
         /// <summary>
@@ -96,13 +103,13 @@ namespace GameAiBehaviour.Editor {
             var port = default(Port);
 
             if (node is CompositeNode) {
-                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
+                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
             }
             else if (node is DecoratorNode) {
-                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
+                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
             }
             else if (node is ActionNode) {
-                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Single, typeof(bool));
+                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
             }
 
             if (port != null) {

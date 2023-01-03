@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -37,8 +38,8 @@ namespace GameAiBehaviour {
             }
         }
         
-        [HideInInspector, Tooltip("条件")]
-        public Condition[] conditions;
+        [Tooltip("条件")]
+        public Condition[] conditions = Array.Empty<Condition>();
 
         public override string Description => $"{conditions.Length} conditions.";
 

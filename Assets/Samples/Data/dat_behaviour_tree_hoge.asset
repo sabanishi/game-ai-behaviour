@@ -1,6 +1,23 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-7187237960290321776
+--- !u!114 &-5337826013988711861
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d18bf1db1334f2d8023426a7851c74, type: 3}
+  m_Name: IfNode
+  m_EditorClassIdentifier: 
+  guid: e9d6b093129b844ccb301b45af7bab2f
+  position: {x: 165, y: 363.5}
+  title: "\u5206\u5C90\u30C6\u30B9\u30C8"
+  child: {fileID: -4763081281363081274}
+  conditions: []
+--- !u!114 &-4763081281363081274
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -12,11 +29,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02751b745a0a64ae8a46d045246f2b11, type: 3}
   m_Name: LogNode
   m_EditorClassIdentifier: 
-  guid: 83803c6e906ea4fb2924c257a3b27c10
-  position: {x: 200.5, y: 384.5}
+  guid: 5fdcbef03293d4d959a1c2218dad69e8
+  position: {x: 165, y: 492}
   title: 
   logType: 3
-  text: 
+  text: test2
 --- !u!114 &-2728936128759719953
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -30,7 +47,7 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   guid: 9ac25efe17a43441d8006dc74f9baa44
-  position: {x: 165, y: 131}
+  position: {x: 165, y: 121}
   title: 
   child: {fileID: -1309174389589870938}
 --- !u!114 &-1309174389589870938
@@ -46,11 +63,29 @@ MonoBehaviour:
   m_Name: SequencerNode
   m_EditorClassIdentifier: 
   guid: 4c9c092c88f654c8d80d3686a65a0fc1
-  position: {x: 165, y: 237.5}
+  position: {x: 165, y: 230.5}
   title: 
   children:
   - {fileID: 4407816576870536394}
-  - {fileID: -7187237960290321776}
+  - {fileID: -5337826013988711861}
+  - {fileID: -971807083286131376}
+--- !u!114 &-971807083286131376
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02751b745a0a64ae8a46d045246f2b11, type: 3}
+  m_Name: LogNode
+  m_EditorClassIdentifier: 
+  guid: 2c4f9edabf69b4339b57d9019d1b55fe
+  position: {x: 415.5, y: 492}
+  title: 
+  logType: 3
+  text: test
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,7 +103,9 @@ MonoBehaviour:
   - {fileID: -2728936128759719953}
   - {fileID: 4407816576870536394}
   - {fileID: -1309174389589870938}
-  - {fileID: -7187237960290321776}
+  - {fileID: -4763081281363081274}
+  - {fileID: -971807083286131376}
+  - {fileID: -5337826013988711861}
 --- !u!114 &4407816576870536394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -82,7 +119,7 @@ MonoBehaviour:
   m_Name: IfNode
   m_EditorClassIdentifier: 
   guid: 3ae59785fc2714cd4919595bb9f47246
-  position: {x: 50.5, y: 384.5}
+  position: {x: -39.5, y: 363.5}
   title: 
-  child: {fileID: 0}
+  child: {fileID: -4763081281363081274}
   conditions: []

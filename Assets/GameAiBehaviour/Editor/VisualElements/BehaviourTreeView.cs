@@ -74,6 +74,10 @@ namespace GameAiBehaviour.Editor {
 
             Data = data;
 
+            if (Data == null) {
+                return;
+            }
+
             // ノード生成
             foreach (var node in data.nodes) {
                 CreateNodeView(node);

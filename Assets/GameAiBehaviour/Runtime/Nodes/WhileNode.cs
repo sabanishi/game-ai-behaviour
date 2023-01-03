@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -44,8 +45,8 @@ namespace GameAiBehaviour {
             }
         }
         
-        [HideInInspector, Tooltip("条件")]
-        public Condition[] conditions;
+        [Tooltip("条件")]
+        public Condition[] conditions = Array.Empty<Condition>();
 
         /// <summary>
         /// ロジックの生成

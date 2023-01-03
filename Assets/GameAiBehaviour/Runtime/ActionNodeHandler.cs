@@ -3,16 +3,16 @@
     /// 実行ノードハンドリング用インターフェース
     /// </summary>
     public interface IActionNodeHandler {
-        void OnEnter(ActionNode node);
-        bool OnUpdate(ActionNode node, float deltaTime);
-        void OnExit(ActionNode node);
+        void OnEnter(HandleableActionNode node);
+        bool OnUpdate(HandleableActionNode node, float deltaTime);
+        void OnExit(HandleableActionNode node);
     }
     
     /// <summary>
     /// 実行ノードハンドリング用基底クラス
     /// </summary>
     public abstract class ActionNodeHandler<TNode> : IActionNodeHandler
-        where TNode : ActionNode {
+        where TNode : HandleableActionNode {
 
         /// <summary>
         /// コンストラクタ
@@ -20,15 +20,15 @@
         public ActionNodeHandler() {
         }
 
-        void IActionNodeHandler.OnEnter(ActionNode node) {
+        void IActionNodeHandler.OnEnter(HandleableActionNode node) {
             OnEnterInternal((TNode)node);
         }
 
-        bool IActionNodeHandler.OnUpdate(ActionNode node, float deltaTime) {
+        bool IActionNodeHandler.OnUpdate(HandleableActionNode node, float deltaTime) {
             return OnUpdateInternal((TNode)node, deltaTime);
         }
 
-        void IActionNodeHandler.OnExit(ActionNode node) {
+        void IActionNodeHandler.OnExit(HandleableActionNode node) {
             OnExitInternal((TNode)node);
         }
 

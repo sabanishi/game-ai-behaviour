@@ -106,20 +106,20 @@
 }
 
 .root #input {
-    background-color: rgb(242, 129, 73);
+    background-color: rgb(217, 116, 66);
     min-height: 24px;
 }
 
 .decorator #input {
-    background-color: rgb(242, 242, 73);
+    background-color: rgb(217, 217, 66);
 }
 
 .composite #input {
-    background-color: rgb(73, 87, 242);
+    background-color: rgb(66, 78, 217);
 }
 
 .action #input {
-    background-color: rgb(242, 73, 214);
+    background-color: rgb(65, 217, 167);
 }
 
 .node #output {

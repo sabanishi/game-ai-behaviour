@@ -5,7 +5,7 @@
     </uie:Toolbar>
     <GameAiBehaviour.Editor.SplitView fixed-pane-initial-dimension="250" fixed-pane-index="1">
         <ui:VisualElement name="left-panel">
-            <ui:Label text="Tree View" display-tooltip-when-elided="true" style="background-color: rgb(25, 25, 25);" />
+            <ui:Label text="Tree View" display-tooltip-when-elided="true" style="background-color: rgb(25, 25, 25); padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;" />
             <GameAiBehaviour.Editor.BehaviourTreeView focusable="true" style="flex-grow: 1;" />
         </ui:VisualElement>
         <ui:VisualElement name="right-panel" style="min-width: 20px;">
