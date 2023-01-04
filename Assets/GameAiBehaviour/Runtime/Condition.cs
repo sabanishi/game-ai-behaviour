@@ -2,12 +2,12 @@
 
 namespace GameAiBehaviour {
     /// <summary>
-    /// 接続情報
+    /// 条件基底
     /// </summary>
     public abstract class Condition : ScriptableObject {
         /// <summary>
         /// 判定
         /// </summary>
-        public abstract bool Check();
+        public abstract bool Check(Blackboard blackboard);
     }
 }

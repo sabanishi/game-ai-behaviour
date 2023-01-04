@@ -4,6 +4,11 @@
     /// </summary>
     public interface IBehaviourTreeController {
         /// <summary>
+        /// Blackboard
+        /// </summary>
+        Blackboard Blackboard { get; }
+        
+        /// <summary>
         /// ノードの実行
         /// </summary>
         Node.State UpdateNode(Node node, float deltaTime, bool back);

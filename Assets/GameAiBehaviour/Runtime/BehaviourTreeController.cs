@@ -32,6 +32,11 @@ namespace GameAiBehaviour {
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new Dictionary<Node, IActionNodeHandler>();
 
         /// <summary>
+        /// Blackboard
+        /// </summary>
+        public Blackboard Blackboard { get; private set; } = new Blackboard();
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         public BehaviourTreeController() {

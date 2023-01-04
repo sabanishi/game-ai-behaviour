@@ -27,10 +27,8 @@ namespace GameAiBehaviour {
                 }
                 
                 // 条件判定
-                foreach (var condition in Node.conditions) {
-                    if (!condition.Check()) {
-                        return State.Failure;
-                    }
+                if (!Node.conditions.Check(Controller.Blackboard)) {
+                    return State.Failure;
                 }
 
                 // 接続先ノードの実行
@@ -39,9 +37,9 @@ namespace GameAiBehaviour {
         }
         
         [Tooltip("条件")]
-        public Condition[] conditions = Array.Empty<Condition>();
+        public ConditionGroup conditions;
 
-        public override string Description => $"{conditions.Length} conditions.";
+        public override string Description => $"{conditions.Count} conditions.";
 
         /// <summary>
         /// ロジックの生成
