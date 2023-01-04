@@ -4,7 +4,7 @@
     /// </summary>
     public interface IActionNodeHandler {
         void OnEnter(HandleableActionNode node);
-        bool OnUpdate(HandleableActionNode node, float deltaTime);
+        Node.State OnUpdate(HandleableActionNode node, float deltaTime);
         void OnExit(HandleableActionNode node);
     }
     
@@ -24,7 +24,7 @@
             OnEnterInternal((TNode)node);
         }
 
-        bool IActionNodeHandler.OnUpdate(HandleableActionNode node, float deltaTime) {
+        Node.State IActionNodeHandler.OnUpdate(HandleableActionNode node, float deltaTime) {
             return OnUpdateInternal((TNode)node, deltaTime);
         }
 
@@ -35,13 +35,13 @@
         /// <summary>
         /// 実行ノードの開始処理
         /// </summary>
-        protected abstract void OnEnterInternal(TNode node);
+        protected virtual void OnEnterInternal(TNode node) {}
 
         /// <summary>
         /// 実行ノードの更新処理
         /// </summary>
-        protected virtual bool OnUpdateInternal(TNode node, float deltaTime) {
-            return false;
+        protected virtual Node.State OnUpdateInternal(TNode node, float deltaTime) {
+            return Node.State.Success;
         }
 
         /// <summary>

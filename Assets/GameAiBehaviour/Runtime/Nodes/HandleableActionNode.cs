@@ -24,11 +24,13 @@
             /// 実行処理
             /// </summary>
             protected override State OnUpdate(float deltaTime, bool back) {
-                // 更新に続きがあればRunning
-                if (_actionNodeHandler != null && _actionNodeHandler.OnUpdate(Node, deltaTime)) {
-                    return State.Running;
+                // Handlerがあればそれを使用
+                if (_actionNodeHandler != null) {
+                    var result = _actionNodeHandler.OnUpdate(Node, deltaTime);
+                    return result;
                 }
                 
+                // 無ければそのまま終わる
                 return State.Success;
             }
 

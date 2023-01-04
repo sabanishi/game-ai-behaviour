@@ -44,6 +44,7 @@ namespace GameAiBehaviour {
         public void BindActionNodeHandler<TNode, THandler>(Action<THandler> onInit)
             where TNode : HandleableActionNode
             where THandler : ActionNodeHandler<TNode>, new() {
+            ResetActionNodeHandler<TNode>();
             
             _actionHandlerInfos[typeof(TNode)] = new ActionHandlerInfo {
                 Type = typeof(THandler),
@@ -52,11 +53,34 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// ActionNodeHandlerのBind
+        /// </summary>
+        /// <param name="updateFunc">更新関数</param>
+        /// <param name="enterAction">開始関数</param>
+        /// <param name="exitAction">終了関数</param>
+        public void BindActionNodeHandler<TNode>(Func<TNode, float, Node.State> updateFunc, Action<TNode> enterAction = null, Action<TNode> exitAction = null)
+            where TNode : HandleableActionNode {
+            BindActionNodeHandler<TNode, ObserveActionNodeHandler<TNode>>(handler => {
+                handler.SetEnterAction(enterAction);
+                handler.SetUpdateFunc(updateFunc);
+                handler.SetExitAction(exitAction);
+            });
+        }
+
+        /// <summary>
         /// ActionNodeHandlerのBindを解除
         /// </summary>
         public void ResetActionNodeHandler<TNode>()
             where TNode : HandleableActionNode {
             _actionHandlerInfos.Remove(typeof(TNode));
+            
+            // 既に登録済のHandlerがあった場合は削除する
+            var removeKeys = _actionNodeHandlers.Keys
+                .Where(x => x.GetType() == typeof(TNode))
+                .ToArray();
+            foreach (var removeKey in removeKeys) {
+                _actionNodeHandlers.Remove(removeKey);
+            }
         }
 
         /// <summary>
