@@ -18,3 +18,14 @@
     padding-top: 2px;
     padding-bottom: 2px;
 }
+
+#blackboard-label {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#blackboard-content {
+    flex-shrink: 2;
+}

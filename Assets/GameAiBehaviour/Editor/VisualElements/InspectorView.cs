@@ -1,9 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEditor;
-using GameAiBehaviour;
 using UnityEngine.UIElements;
 
 namespace GameAiBehaviour.Editor {

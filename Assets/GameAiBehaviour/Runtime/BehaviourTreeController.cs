@@ -105,6 +105,27 @@ namespace GameAiBehaviour {
             foreach (var pair in _logics) {
                 pair.Value.Initialize();
             }
+            
+            // Blackboard初期化
+            foreach (var property in data.properties) {
+                switch (property.propertyType) {
+                    case Property.Type.Integer:
+                        Blackboard.SetInteger(property.propertyName, property.integerValue);
+                        break;
+                    case Property.Type.Float:
+                        Blackboard.SetFloat(property.propertyName, property.floatValue);
+                        break;
+                    case Property.Type.String:
+                        Blackboard.SetString(property.propertyName, property.stringValue);
+                        break;
+                    case Property.Type.Boolean:
+                        Blackboard.SetBoolean(property.propertyName, property.booleanValue);
+                        break;
+                    case Property.Type.Object:
+                        Blackboard.SetObject(property.propertyName, property.objectValue);
+                        break;
+                }
+            }
         }
 
         /// <summary>
@@ -121,6 +142,8 @@ namespace GameAiBehaviour {
         /// 終了処理
         /// </summary>
         public void Cleanup() {
+            Blackboard.Clear();
+            
             _data = null;
             _rootNode = null;
             foreach (var pair in _logics) {

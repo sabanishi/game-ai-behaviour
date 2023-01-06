@@ -65,7 +65,7 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   guid: 9ac25efe17a43441d8006dc74f9baa44
-  position: {x: 165, y: 96.49997}
+  position: {x: 165, y: 96}
   title: 
   child: {fileID: -1309174389589870938}
 --- !u!114 &-1429929127884270565
@@ -80,6 +80,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9d92910406f2c45dfb507fe9d0faba4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  leftValue:
+    constValue: 0
+    propertyName: 
+  rightValue:
+    constValue: 0
+    propertyName: 
 --- !u!114 &-1309174389589870938
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -137,6 +143,21 @@ MonoBehaviour:
   - {fileID: -971807083286131376}
   - {fileID: -5337826013988711861}
   - {fileID: -9087410631918027791}
+  properties:
+  - propertyName: Test
+    propertyType: 0
+    integerValue: 0
+    floatValue: 0.1
+    stringValue: test
+    booleanValue: 0
+    objectValue: {fileID: 0}
+  - propertyName: Test
+    propertyType: 2
+    integerValue: 0
+    floatValue: 0.1
+    stringValue: test
+    booleanValue: 0
+    objectValue: {fileID: 0}
 --- !u!114 &4407816576870536394
 MonoBehaviour:
   m_ObjectHideFlags: 1

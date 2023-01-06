@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 using System;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Callbacks;
-using Object = UnityEngine.Object;
 
 namespace GameAiBehaviour.Editor {
     /// <summary>
@@ -52,10 +51,8 @@ namespace GameAiBehaviour.Editor {
                 };
 
                 foreach (var groupType in groupTypes) {
-                    var types = TypeCache.GetTypesDerivedFrom(groupType)
-                        .Where(x => !x.IsAbstract && !x.IsGenericType)
-                        .ToArray();
-                    if (types.Length <= 0) {
+                    var types = TypeCache.GetTypesDerivedFrom(groupType);
+                    if (types.Count <= 0) {
                         continue;
                     }
 
@@ -92,9 +89,9 @@ namespace GameAiBehaviour.Editor {
         // UIElement
         private BehaviourTreeView _graphView;
         private InspectorView _inspectorView;
+        private BlackboardView _blackboardView;
 
         // 制御対象のデータ
-        [SerializeField]
         private BehaviourTree _target;
 
         /// <summary>
@@ -133,22 +130,21 @@ namespace GameAiBehaviour.Editor {
             var root = rootVisualElement;
             var uxml = Resources.Load<VisualTreeAsset>("behaviour_tree_editor_window");
             uxml.CloneTree(root);
+            var styleSheet = Resources.Load<StyleSheet>("behaviour_tree_editor_window");
+            root.styleSheets.Add(styleSheet);
 
             _graphView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
-            var nodeViews = _graphView.Query<NodeView>().ToList();
-            foreach (var nodeView in nodeViews) {
-                _graphView.Remove(nodeView);
-            }
+            _blackboardView = root.Q<BlackboardView>();
 
-            _graphView.OnChangedSelectionNodeViews = views => {
+            _graphView.OnChangedSelectionNodeViews = nodeViews => {
                 // 選択対象の更新
-                _inspectorView.UpdateSelection(views.Select(x => (Object)x.Node).ToArray());
+                _inspectorView.UpdateSelection(nodeViews.Select(x => x.Node).ToArray());
             };
             _inspectorView.OnChangedValue = targets => {
                 // 編集時はNodeViewをリフレッシュ
                 foreach (var target in targets) {
-                    if (target is GameAiBehaviour.Node node) {
+                    if (target is Node node) {
                         var nodeView = _graphView.GetNodeByGuid(node.guid) as NodeView;
                         nodeView?.Refresh();
                     }
@@ -169,35 +165,12 @@ namespace GameAiBehaviour.Editor {
         /// 初期化処理
         /// </summary>
         private void Setup(BehaviourTree data) {
+            var serializedObj = data != null ? new SerializedObject(data) : null;
             _target = data;
-            if (_graphView != null) {
-                _graphView.Load(_target);
-            }
-        }
-
-        /// <summary>
-        /// アクティブ時処理
-        /// </summary>
-        private void OnEnable() {
-            // Undo検知
-            Undo.undoRedoPerformed += OnUndoRedo;
-            
-            Setup(_target);
-        }
-
-        /// <summary>
-        /// 非アクティブ時処理
-        /// </summary>
-        private void OnDisable() {
-            // Undo検知
-            Undo.undoRedoPerformed -= OnUndoRedo;
-        }
-
-        /// <summary>
-        /// Undo/Redo処理
-        /// </summary>
-        private void OnUndoRedo() {
             _graphView.Load(_target);
+            _blackboardView.SetPropertiesProperty(serializedObj != null
+                ? serializedObj.FindProperty("properties")
+                : null);
         }
 
         /// <summary>

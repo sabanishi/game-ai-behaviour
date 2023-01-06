@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using UnityEngine;
 
 #if UNITY_EDITOR
@@ -14,13 +15,15 @@ namespace GameAiBehaviour {
         [Tooltip("メモ")]
         public string memo = "";
         [HideInInspector, Tooltip("所持ノードリスト")]
-        public Node[] nodes = new Node[0];
+        public Node[] nodes = Array.Empty<Node>();
+        [HideInInspector, Tooltip("Blackboardに列挙するプロパティ")]
+        public Property[] properties = Array.Empty<Property>();
 
 #if UNITY_EDITOR
         /// <summary>
         /// ノードの生成
         /// </summary>
-        public Node CreateNode(System.Type type) {
+        public Node CreateNode(Type type) {
             Undo.RecordObject(this, "CreateNode");
 
             var node = CreateInstance(type) as Node;

@@ -97,9 +97,6 @@ namespace GameAiBehaviour.Editor {
                     CreateEdge(node, root.child);
                 }
             }
-
-            // サイズ調整
-            this.StretchToParentSize();
         }
 
         /// <summary>
