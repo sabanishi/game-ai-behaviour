@@ -49,12 +49,12 @@ MonoBehaviour:
   m_Name: BooleanCondition
   m_EditorClassIdentifier: 
   leftValue:
-    constValue: 0
+    constValue: 1
     propertyName: 
   rightValue:
-    constValue: 0
+    constValue: 1
     propertyName: 
-  operatorType: 0
+  operatorType: 1
 --- !u!114 &-5337826013988711861
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: IfNode
   m_EditorClassIdentifier: 
   guid: e9d6b093129b844ccb301b45af7bab2f
-  position: {x: 165, y: 364}
+  position: {x: 165, y: 374.8}
   title: 
   child: {fileID: -4763081281363081274}
   conditions:
@@ -129,8 +129,8 @@ MonoBehaviour:
   title: 
   children:
   - {fileID: 4407816576870536394}
-  - {fileID: -5337826013988711861}
   - {fileID: 6281218530233689731}
+  - {fileID: -5337826013988711861}
 --- !u!114 &-2728936128759719953
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -193,14 +193,12 @@ MonoBehaviour:
     floatValue: 0.1
     stringValue: test
     booleanValue: 0
-    objectValue: {fileID: 0}
   - propertyName: Hoge
     propertyType: 2
     integerValue: 0
     floatValue: 0.1
     stringValue: test
     booleanValue: 0
-    objectValue: {fileID: 0}
 --- !u!114 &3706645140078936450
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -252,7 +250,7 @@ MonoBehaviour:
   m_Name: WhileNode
   m_EditorClassIdentifier: 
   guid: ba3261afe1b34c847b2fc02bab171393
-  position: {x: 407, y: 364}
+  position: {x: 409, y: 364}
   title: 
   child: {fileID: -971807083286131376}
   conditions:

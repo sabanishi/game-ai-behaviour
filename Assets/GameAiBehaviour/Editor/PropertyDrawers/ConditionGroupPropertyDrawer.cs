@@ -18,8 +18,12 @@ namespace GameAiBehaviour.Editor {
             public ReorderableList reorderableList;
         }
         
+        // Conditionの詳細表示用BoxのPadding
+        private const float BoxPadding = 2;
+        
         private Dictionary<string, PropertyInfo> _propertyInfos = new Dictionary<string, PropertyInfo>();
         private PropertyInfo _propertyInfo;
+
 
         /// <summary>
         /// GUI拡張
@@ -27,7 +31,29 @@ namespace GameAiBehaviour.Editor {
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
             Initialize(property);
             using (new EditorGUI.PropertyScope(position, label, property)) {
-                _propertyInfo.reorderableList.DoList(position);
+                var rect = position;
+                rect.height = _propertyInfo.reorderableList.GetHeight();
+                _propertyInfo.reorderableList.DoList(rect);
+                rect.y += rect.height;
+                
+                // 選択中の物があった場合、その描画を行う
+                if (_propertyInfo.reorderableList.selectedIndices.Count > 0) {
+                    var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
+                    var condition = element.objectReferenceValue as Condition;
+                    if (condition != null) {
+                        var serializedObj = new SerializedObject(condition);
+                        rect.height = condition.GetInspectorGUIHeight(serializedObj) + BoxPadding * 2;
+                        EditorGUI.DrawRect(rect, new Color(0.15f, 0.15f, 0.15f));
+                        rect = AddPadding(rect, BoxPadding * 0.5f);
+                        EditorGUI.DrawRect(rect, new Color(0.25f, 0.25f, 0.25f));
+                        rect = AddPadding(rect, BoxPadding * 0.5f);
+                        serializedObj.Update();
+                        condition.OnInspectorGUI(rect, serializedObj);
+                        serializedObj.ApplyModifiedProperties();
+                        rect = AddPadding(rect, -BoxPadding);
+                        rect.y += rect.height;
+                    }
+                }
             }
         }
 
@@ -43,6 +69,15 @@ namespace GameAiBehaviour.Editor {
             catch {
                 _propertyInfos.Remove(property.propertyPath);
                 height = GetPropertyHeight(property, label);
+            }
+
+            // 選択中の物があった場合、その分の高さを加える
+            if (_propertyInfo.reorderableList.selectedIndices.Count > 0) {
+                var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
+                var condition = element.objectReferenceValue as Condition;
+                if (condition != null) {
+                    height += condition.GetInspectorGUIHeight(new SerializedObject(condition)) + BoxPadding * 2;
+                }
             }
 
             return height;
@@ -71,13 +106,6 @@ namespace GameAiBehaviour.Editor {
                     var labelRect = rect;
                     labelRect.height = EditorGUIUtility.singleLineHeight;
                     EditorGUI.LabelField(labelRect, $"{condition.ConditionTitle}", EditorStyles.boldLabel);
-                    rect.yMin += EditorGUIUtility.singleLineHeight;
-                    
-                    // Conditionの中身を描画
-                    var serializedObj = new SerializedObject(condition);
-                    serializedObj.Update();
-                    condition.OnInspectorGUI(rect, serializedObj);
-                    serializedObj.ApplyModifiedProperties();
                 }
                 else {
                     EditorGUI.PropertyField(rect, prop, GUIContent.none);
@@ -87,9 +115,8 @@ namespace GameAiBehaviour.Editor {
                 var prop = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
                 var condition = prop.objectReferenceValue as Condition;
                 if (condition != null) {
-                    // Conditionの中身 + ラベルの高さ
-                    return condition.GetInspectorGUIHeight(new SerializedObject(condition)) +
-                           EditorGUIUtility.singleLineHeight;
+                    // ラベルの高さ
+                    return EditorGUIUtility.singleLineHeight;
                 }
                 return EditorGUI.GetPropertyHeight(prop);
             };
@@ -163,6 +190,17 @@ namespace GameAiBehaviour.Editor {
 
             EditorUtility.SetDirty(targetObject);
             AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// RectにPaddingを加える
+        /// </summary>
+        private Rect AddPadding(Rect rect, float padding) {
+            rect.xMin += padding;
+            rect.xMax -= padding;
+            rect.yMin += padding;
+            rect.yMax -= padding;
+            return rect;
         }
     }
 }
