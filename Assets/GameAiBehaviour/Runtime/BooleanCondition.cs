@@ -13,6 +13,11 @@ namespace GameAiBehaviour {
         public class ValueObject : ValueObject<bool> {
         }
 
+        [Tooltip("演算子")]
+        public OperatorType operatorType = OperatorType.Equal;  
+
+        public override string ConditionTitle => $"[Bool]{leftValue} {operatorType.GetMark()} {rightValue}";
+
         /// <summary>
         /// 値の判定
         /// </summary>

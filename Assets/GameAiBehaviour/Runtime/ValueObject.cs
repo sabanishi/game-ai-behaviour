@@ -8,5 +8,16 @@ namespace GameAiBehaviour {
     public abstract class ValueObject<T> {
         public T constValue;
         public string propertyName;
+
+        /// <summary>
+        /// 文字列化
+        /// </summary>
+        public override string ToString() {
+            if (string.IsNullOrEmpty(propertyName)) {
+                return constValue.ToString();
+            }
+
+            return propertyName;
+        }
     }
 }
