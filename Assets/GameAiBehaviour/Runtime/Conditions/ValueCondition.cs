@@ -9,9 +9,7 @@ namespace GameAiBehaviour {
     /// </summary>
     public abstract class ValueCondition<T, TValueObject> : Condition
         where TValueObject : ValueObject<T> {
-        [Tooltip("左辺値")]
         public TValueObject leftValue;
-        [Tooltip("右辺値")]
         public TValueObject rightValue;
         
 #if UNITY_EDITOR

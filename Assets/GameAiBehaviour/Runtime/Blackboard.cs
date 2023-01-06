@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -11,13 +10,11 @@ namespace GameAiBehaviour {
         private readonly Dictionary<string, float> _floatProperties = new Dictionary<string, float>();
         private readonly Dictionary<string, string> _stringProperties = new Dictionary<string, string>();
         private readonly Dictionary<string, bool> _booleanProperties = new Dictionary<string, bool>();
-        private readonly Dictionary<string, Object> _objectProperties = new Dictionary<string, Object>();
 
         public string[] IntegerPropertyNames => _integerProperties.Keys.ToArray();
         public string[] FloatPropertyNames => _floatProperties.Keys.ToArray();
         public string[] StringPropertyNames => _booleanProperties.Keys.ToArray();
         public string[] BooleanPropertyNames => _stringProperties.Keys.ToArray();
-        public string[] ObjectPropertyNames => _objectProperties.Keys.ToArray();
 
         /// <summary>
         /// プロパティのクリア
@@ -27,13 +24,12 @@ namespace GameAiBehaviour {
             _floatProperties.Clear();
             _booleanProperties.Clear();
             _stringProperties.Clear();
-            _objectProperties.Clear();
         }
 
         /// <summary>
         /// Integer型プロパティの取得
         /// </summary>
-        public int GetInt(string propertyName, int defaultValue = 0) {
+        public int GetInteger(string propertyName, int defaultValue = 0) {
             if (_integerProperties.TryGetValue(propertyName, out var val)) {
                 return val;
             }
@@ -100,24 +96,6 @@ namespace GameAiBehaviour {
         /// </summary>
         public void SetBoolean(string propertyName, bool val) {
             _booleanProperties[propertyName] = val;
-        }
-
-        /// <summary>
-        /// Object型プロパティの取得
-        /// </summary>
-        public Object GetObject(string propertyName, Object defaultValue = null) {
-            if (_objectProperties.TryGetValue(propertyName, out var val)) {
-                return val;
-            }
-
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Object型プロパティ野設定
-        /// </summary>
-        public void SetObject(string propertyName, Object val) {
-            _objectProperties[propertyName] = val;
         }
     }
 }

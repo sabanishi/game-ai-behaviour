@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
+
+//using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -15,7 +16,7 @@ namespace GameAiBehaviour {
             public Type Type;
             public Action<object> InitAction;
         }
-        
+
         // 実行データ
         private BehaviourTree _data;
         // 実行状態
@@ -29,7 +30,8 @@ namespace GameAiBehaviour {
         // アクションハンドラ情報
         private Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new Dictionary<Type, ActionHandlerInfo>();
         // アクションノードハンドラ
-        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new Dictionary<Node, IActionNodeHandler>();
+        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
+            new Dictionary<Node, IActionNodeHandler>();
 
         /// <summary>
         /// Blackboard
@@ -50,7 +52,7 @@ namespace GameAiBehaviour {
             where TNode : HandleableActionNode
             where THandler : ActionNodeHandler<TNode>, new() {
             ResetActionNodeHandler<TNode>();
-            
+
             _actionHandlerInfos[typeof(TNode)] = new ActionHandlerInfo {
                 Type = typeof(THandler),
                 InitAction = onInit != null ? obj => { onInit.Invoke(obj as THandler); } : null
@@ -63,7 +65,8 @@ namespace GameAiBehaviour {
         /// <param name="updateFunc">更新関数</param>
         /// <param name="enterAction">開始関数</param>
         /// <param name="exitAction">終了関数</param>
-        public void BindActionNodeHandler<TNode>(Func<TNode, float, Node.State> updateFunc, Action<TNode> enterAction = null, Action<TNode> exitAction = null)
+        public void BindActionNodeHandler<TNode>(Func<TNode, float, Node.State> updateFunc,
+            Action<TNode> enterAction = null, Action<TNode> exitAction = null)
             where TNode : HandleableActionNode {
             BindActionNodeHandler<TNode, ObserveActionNodeHandler<TNode>>(handler => {
                 handler.SetEnterAction(enterAction);
@@ -78,7 +81,7 @@ namespace GameAiBehaviour {
         public void ResetActionNodeHandler<TNode>()
             where TNode : HandleableActionNode {
             _actionHandlerInfos.Remove(typeof(TNode));
-            
+
             // 既に登録済のHandlerがあった場合は削除する
             var removeKeys = _actionNodeHandlers.Keys
                 .Where(x => x.GetType() == typeof(TNode))
@@ -105,7 +108,7 @@ namespace GameAiBehaviour {
             foreach (var pair in _logics) {
                 pair.Value.Initialize();
             }
-            
+
             // Blackboard初期化
             foreach (var property in data.properties) {
                 switch (property.propertyType) {
@@ -121,9 +124,6 @@ namespace GameAiBehaviour {
                     case Property.Type.Boolean:
                         Blackboard.SetBoolean(property.propertyName, property.booleanValue);
                         break;
-                    case Property.Type.Object:
-                        Blackboard.SetObject(property.propertyName, property.objectValue);
-                        break;
                 }
             }
         }
@@ -135,6 +135,7 @@ namespace GameAiBehaviour {
             foreach (var logic in _logics) {
                 logic.Value.Cancel();
             }
+
             _runningNodes.Clear();
         }
 
@@ -143,7 +144,7 @@ namespace GameAiBehaviour {
         /// </summary>
         public void Cleanup() {
             Blackboard.Clear();
-            
+
             _data = null;
             _rootNode = null;
             foreach (var pair in _logics) {
@@ -169,7 +170,7 @@ namespace GameAiBehaviour {
                 if (_runningNodes.Count <= 0) {
                     return;
                 }
-                
+
                 // ノードの実行
                 var lastIndex = _runningNodes.Count - 1;
                 var lastNode = _runningNodes[lastIndex];
@@ -181,7 +182,7 @@ namespace GameAiBehaviour {
                     UpdateStack(true);
                 }
             }
-            
+
             // 実行中ノードがあれば実行
             if (_runningNodes.Count > 0) {
                 UpdateStack(false);
@@ -190,7 +191,7 @@ namespace GameAiBehaviour {
                 // ノードの実行
                 _state = ((IBehaviourTreeController)this).UpdateNode(_rootNode, deltaTime, false);
             }
-            
+
             // ステータスが実行中でなければ、実行中スタックをクリア
             if (_state != Node.State.Running) {
                 _runningNodes.Clear();
@@ -211,7 +212,7 @@ namespace GameAiBehaviour {
             if (state != Node.State.Running) {
                 _runningNodes.Remove(node);
             }
-            
+
             return state;
         }
 
@@ -222,7 +223,7 @@ namespace GameAiBehaviour {
             if (_actionNodeHandlers.TryGetValue(node, out var handler)) {
                 return handler;
             }
-            
+
             // 無ければ生成
             if (_actionHandlerInfos.TryGetValue(node.GetType(), out var handlerInfo)) {
                 var constructorInfo = handlerInfo.Type.GetConstructor(Type.EmptyTypes);
@@ -244,7 +245,6 @@ namespace GameAiBehaviour {
                 return logic;
             }
 
-            Debug.LogError($"Not found node logic. {node.GetType()}");
             return null;
         }
     }

@@ -62,7 +62,7 @@ namespace GameAiBehaviour.Editor {
                 
                 var blackboard = _controller.Blackboard;
                 DrawProperty(blackboard.IntegerPropertyNames,
-                    key => EditorGUILayout.IntField(key, blackboard.GetInt(key)),
+                    key => EditorGUILayout.IntField(key, blackboard.GetInteger(key)),
                     (key, result) => blackboard.SetInteger(key, result));
                 DrawProperty(blackboard.FloatPropertyNames,
                     key => EditorGUILayout.FloatField(key, blackboard.GetFloat(key)),
@@ -73,9 +73,6 @@ namespace GameAiBehaviour.Editor {
                 DrawProperty(blackboard.BooleanPropertyNames,
                     key => EditorGUILayout.Toggle(key, blackboard.GetBoolean(key)),
                     (key, result) => blackboard.SetBoolean(key, result));
-                DrawProperty(blackboard.ObjectPropertyNames,
-                    key => EditorGUILayout.ObjectField(new GUIContent(key), blackboard.GetObject(key), typeof(UnityEngine.Object), false),
-                    (key, result) => blackboard.SetObject(key, result));
             }
             else {
                 if (_property != null) {

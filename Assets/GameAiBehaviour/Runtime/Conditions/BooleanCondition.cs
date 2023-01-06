@@ -1,11 +1,10 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
     /// bool値比較用条件
     /// </summary>
-    public class BooleanCondition : ValueCondition<bool, BooleanCondition.ValueObject> {
+    public class BooleanCondition : LogicalCondition<bool, BooleanCondition.ValueObject> {
         /// <summary>
         /// 格納用の値型
         /// </summary>
@@ -13,17 +12,7 @@ namespace GameAiBehaviour {
         public class ValueObject : ValueObject<bool> {
         }
 
-        [Tooltip("演算子")]
-        public OperatorType operatorType = OperatorType.Equal;  
-
-        public override string ConditionTitle => $"[Bool]{leftValue} {operatorType.GetMark()} {rightValue}";
-
-        /// <summary>
-        /// 値の判定
-        /// </summary>
-        protected override bool CheckInternal(bool left, bool right) {
-            return left == right;
-        }
+        public override string ConditionTitle => $"[Bool]{base.ConditionTitle}";
 
         /// <summary>
         /// プロパティの取得

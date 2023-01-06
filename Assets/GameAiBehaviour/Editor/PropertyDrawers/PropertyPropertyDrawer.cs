@@ -55,9 +55,6 @@ namespace GameAiBehaviour.Editor {
                 case Property.Type.Boolean:
                     val = property.FindPropertyRelative("booleanValue");
                     break;
-                case Property.Type.Object:
-                    val = property.FindPropertyRelative("objectValue");
-                    break;
             }
 
             EditorGUI.PropertyField(left, name, GUIContent.none);

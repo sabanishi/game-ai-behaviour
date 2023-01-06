@@ -1,5 +1,4 @@
 ﻿using System;
-using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -7,13 +6,8 @@ namespace GameAiBehaviour {
     /// </summary>
     [Serializable]
     public sealed class ConditionGroup {
-        [Tooltip("判定条件リスト")]
+        // 判定条件リスト"
         public Condition[] conditions = Array.Empty<Condition>();
-
-        /// <summary>
-        /// 条件の数
-        /// </summary>
-        public int Count => conditions.Length;
         
         /// <summary>
         /// 判定
