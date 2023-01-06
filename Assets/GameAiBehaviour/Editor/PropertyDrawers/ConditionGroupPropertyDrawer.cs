@@ -37,7 +37,7 @@ namespace GameAiBehaviour.Editor {
                 rect.y += rect.height;
                 
                 // 選択中の物があった場合、その描画を行う
-                if (_propertyInfo.reorderableList.selectedIndices.Count > 0) {
+                if (_propertyInfo.reorderableList.selectedIndices.Count > 0 && _propertyInfo.reorderableList.count > 0) {
                     var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                     var condition = element.objectReferenceValue as Condition;
                     if (condition != null) {
@@ -72,7 +72,7 @@ namespace GameAiBehaviour.Editor {
             }
 
             // 選択中の物があった場合、その分の高さを加える
-            if (_propertyInfo.reorderableList.selectedIndices.Count > 0) {
+            if (_propertyInfo.reorderableList.selectedIndices.Count > 0 && _propertyInfo.reorderableList.count > 0) {
                 var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                 var condition = element.objectReferenceValue as Condition;
                 if (condition != null) {

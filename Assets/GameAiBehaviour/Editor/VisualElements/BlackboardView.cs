@@ -50,8 +50,7 @@ namespace GameAiBehaviour.Editor {
                 // Blackboardの中身を表示
                 void DrawProperty<T>(string[] keys, Func<string, T> onGui, Action<string, T> onSet) {
                     foreach (var key in keys) {
-                        using (var scope = new EditorGUI.ChangeCheckScope())
-                        {
+                        using (var scope = new EditorGUI.ChangeCheckScope()) {
                             var result = onGui.Invoke(key);
                             if (scope.changed) {
                                 onSet.Invoke(key, result);
@@ -59,7 +58,7 @@ namespace GameAiBehaviour.Editor {
                         }
                     }
                 }
-                
+
                 var blackboard = _controller.Blackboard;
                 DrawProperty(blackboard.IntegerPropertyNames,
                     key => EditorGUILayout.IntField(key, blackboard.GetInteger(key)),
@@ -76,19 +75,16 @@ namespace GameAiBehaviour.Editor {
             }
             else {
                 if (_property != null) {
-                    _container.onGUIHandler = () => {
-                        _property.serializedObject.Update();
-                    
-                        using (var scope = new EditorGUILayout.ScrollViewScope(_scroll)) {
-                            EditorGUILayout.PropertyField(_property);
-                            _scroll = scope.scrollPosition;
-                        }
+                    _property.serializedObject.Update();
 
-                        _property.serializedObject.ApplyModifiedProperties();
-                    };
+                    using (var scope = new EditorGUILayout.ScrollViewScope(_scroll)) {
+                        EditorGUILayout.PropertyField(_property);
+                        _scroll = scope.scrollPosition;
+                    }
+
+                    _property.serializedObject.ApplyModifiedProperties();
                 }
                 else {
-                    _container.onGUIHandler = null;
                     _scroll = Vector2.zero;
                 }
             }

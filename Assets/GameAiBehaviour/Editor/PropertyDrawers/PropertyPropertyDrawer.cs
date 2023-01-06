@@ -24,12 +24,6 @@ namespace GameAiBehaviour.Editor {
             using (var scope = new EditorGUI.ChangeCheckScope()) {
                 type.enumValueIndex = EditorGUI.Popup(rect, GUIContent.none, type.enumValueIndex,
                     type.enumDisplayNames.Select(x => new GUIContent(x)).ToArray());
-                
-                if (scope.changed) {
-                    // Typeが切り替わったらObject型の中身をクリアする（依存が残るのを防ぐため）
-                    var objVal = property.FindPropertyRelative("objectValue");
-                    objVal.objectReferenceValue = null;
-                }
             }
             
             // プロパティ名/タイプ毎の値の描画
