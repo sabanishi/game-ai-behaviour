@@ -17,6 +17,44 @@ MonoBehaviour:
   title: 
   logType: 3
   text: 
+--- !u!114 &-9049983506114280701
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d92910406f2c45dfb507fe9d0faba4f, type: 3}
+  m_Name: BooleanCondition
+  m_EditorClassIdentifier: 
+  leftValue:
+    constValue: 0
+    propertyName: 
+  rightValue:
+    constValue: 0
+    propertyName: 
+  operatorType: 1
+--- !u!114 &-8240166303019582350
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d92910406f2c45dfb507fe9d0faba4f, type: 3}
+  m_Name: BooleanCondition
+  m_EditorClassIdentifier: 
+  leftValue:
+    constValue: 0
+    propertyName: 
+  rightValue:
+    constValue: 0
+    propertyName: 
+  operatorType: 0
 --- !u!114 &-5337826013988711861
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -36,6 +74,8 @@ MonoBehaviour:
   conditions:
     conditions:
     - {fileID: -5275789485348423684}
+    - {fileID: 3706645140078936450}
+    - {fileID: -9049983506114280701}
 --- !u!114 &-5275789485348423684
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -54,7 +94,7 @@ MonoBehaviour:
   rightValue:
     constValue: 0
     propertyName: 
-  operatorType: 0
+  operatorType: 1
 --- !u!114 &-4763081281363081274
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -162,6 +202,25 @@ MonoBehaviour:
     stringValue: test
     booleanValue: 0
     objectValue: {fileID: 0}
+--- !u!114 &3706645140078936450
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d92910406f2c45dfb507fe9d0faba4f, type: 3}
+  m_Name: BooleanCondition
+  m_EditorClassIdentifier: 
+  leftValue:
+    constValue: 0
+    propertyName: 
+  rightValue:
+    constValue: 0
+    propertyName: 
+  operatorType: 0
 --- !u!114 &4407816576870536394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -193,8 +252,29 @@ MonoBehaviour:
   m_Name: WhileNode
   m_EditorClassIdentifier: 
   guid: ba3261afe1b34c847b2fc02bab171393
-  position: {x: 413, y: 364}
+  position: {x: 414, y: 364}
   title: 
   child: {fileID: 0}
   conditions:
-    conditions: []
+    conditions:
+    - {fileID: 9117957884410586540}
+    - {fileID: -8240166303019582350}
+--- !u!114 &9117957884410586540
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d92910406f2c45dfb507fe9d0faba4f, type: 3}
+  m_Name: BooleanCondition
+  m_EditorClassIdentifier: 
+  leftValue:
+    constValue: 0
+    propertyName: 
+  rightValue:
+    constValue: 0
+    propertyName: 
+  operatorType: 0
