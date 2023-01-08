@@ -158,9 +158,9 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
-        /// 更新処理
+        /// Tree実行
         /// </summary>
-        public void Update(float deltaTime) {
+        public void Tick(float deltaTime) {
             if (_data == null || _rootNode == null) {
                 return;
             }

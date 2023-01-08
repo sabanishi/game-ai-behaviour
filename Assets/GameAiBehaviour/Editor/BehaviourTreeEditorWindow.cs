@@ -86,13 +86,17 @@ namespace GameAiBehaviour.Editor {
             }
         }
 
+        // 制御対象のデータ
+        [SerializeField]
+        private BehaviourTree _target;
+
         // UIElement
         private BehaviourTreeView _graphView;
         private InspectorView _inspectorView;
         private BlackboardView _blackboardView;
-
-        // 制御対象のデータ
-        private BehaviourTree _target;
+        
+        // BehaviourTreeControllerのオーナー
+        private IBehaviourTreeControllerOwner _owner;
 
         /// <summary>
         /// 開く処理
@@ -158,7 +162,7 @@ namespace GameAiBehaviour.Editor {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
             };
 
-            OnSelectionChange();
+            Setup(_target);
         }
 
         /// <summary>
@@ -182,22 +186,19 @@ namespace GameAiBehaviour.Editor {
             if (treeData != null) {
                 Setup(treeData);
             }
-        }
-    }
 
-    /// <summary>
-    /// GraphData用のエディタウィンドウ
-    /// </summary>
-    [CustomEditor(typeof(BehaviourTree))]
-    public class GraphDataEditor : UnityEditor.Editor {
-        /// <summary>
-        /// インスペクタ拡張
-        /// </summary>
-        public override void OnInspectorGUI() {
-            base.OnInspectorGUI();
+            var activeGameObject = Selection.activeGameObject;
 
-            if (GUILayout.Button("Open Window")) {
-                BehaviourTreeEditorWindow.Open(target as BehaviourTree);
+            if (activeGameObject != null) {
+                var owner = activeGameObject.GetComponentInParent<IBehaviourTreeControllerOwner>();
+                _owner = owner;
+            }
+
+            if (_owner != null) {
+                _blackboardView.SetController(_owner.BehaviourTreeController);
+            }
+            else {
+                _blackboardView.SetController(null);
             }
         }
     }

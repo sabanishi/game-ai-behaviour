@@ -70,8 +70,8 @@ namespace GameAiBehaviour {
             Undo.RecordObject(parent, "Sort Children");
 
             if (parent is CompositeNode composite) {
-                var sortedChildren = composite.children.OrderBy(x => x.position.y).ToList();
-                sortedChildren.Sort((a, b) => a.position.y.CompareTo(b.position.y));
+                var sortedChildren = composite.children.OrderBy(x => x.position.x).ToList();
+                sortedChildren.Sort((a, b) => a.position.x.CompareTo(b.position.x));
                 composite.children = sortedChildren.ToArray();
             }
 

@@ -13,8 +13,8 @@ namespace GameAiBehaviour {
 
         public string[] IntegerPropertyNames => _integerProperties.Keys.ToArray();
         public string[] FloatPropertyNames => _floatProperties.Keys.ToArray();
-        public string[] StringPropertyNames => _booleanProperties.Keys.ToArray();
-        public string[] BooleanPropertyNames => _stringProperties.Keys.ToArray();
+        public string[] StringPropertyNames => _stringProperties.Keys.ToArray();
+        public string[] BooleanPropertyNames => _booleanProperties.Keys.ToArray();
 
         /// <summary>
         /// プロパティのクリア
