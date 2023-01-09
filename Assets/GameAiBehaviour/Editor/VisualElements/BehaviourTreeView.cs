@@ -241,13 +241,21 @@ namespace GameAiBehaviour.Editor {
             
             // Node情報をデシリアライズ
             var serializableNodes = JsonUtility.FromJson<SerializableNodes>(data);
-            foreach (var node in serializableNodes.nodes) {
-                BehaviourTreeEditorUtility.DuplicateNode(Data, node);
-            }
+            var newNodes = BehaviourTreeEditorUtility.DuplicateNodes(Data, serializableNodes.nodes)
+                .ToList();
             
             // ツリー情報を再構築
             Load(Data);
             AssetDatabase.SaveAssets();
+            
+            // 新しいNodeを選択状態にする
+            var newNodeViews = nodes.OfType<NodeView>()
+                .Where(x => newNodes.Contains(x.Node))
+                .ToArray();
+            selection.Clear();
+            foreach (var view in newNodeViews) {
+                view.Select(this, true);
+            }
         }
 
         /// <summary>

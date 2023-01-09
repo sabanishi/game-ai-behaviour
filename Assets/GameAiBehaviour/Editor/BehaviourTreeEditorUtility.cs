@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -87,65 +88,58 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ノードの複製
         /// </summary>
-        public static Node DuplicateNode(BehaviourTree tree, Node baseNode) {
-            if (tree == null || baseNode == null) {
-                return null;
+        public static Node[] DuplicateNodes(BehaviourTree tree, Node[] baseNodes) {
+            if (tree == null || baseNodes == null) {
+                return Array.Empty<Node>();
             }
-            
-            var serializedObj = new SerializedObject(tree);
-            var nodes = serializedObj.FindProperty("nodes");
 
-            // アセットの複製
-            var node = Object.Instantiate(baseNode);
-            node.name = baseNode.name;
-            node.guid = GUID.Generate().ToString();
-            node.position += Vector2.one * 50;
-            Undo.RegisterCreatedObjectUndo(node, "DuplicateNode");
-            AssetDatabase.AddObjectToAsset(node, tree);
-            
-            var nodeObj = new SerializedObject(node);
-            var childProp = nodeObj.FindProperty("child");
-            var childrenProp = nodeObj.FindProperty("children");
-            var conditionsProp = nodeObj.FindProperty("conditions");
-            
-            nodeObj.Update();
-            
-            // 接続先の解除
-            if (childProp != null) {
-                childProp.objectReferenceValue = null;
-            }
-            if (childrenProp != null) {
-                childrenProp.arraySize = 0;
-            }
-            // 条件の複製
-            if (conditionsProp != null) {
-                var list = conditionsProp.FindPropertyRelative("conditions");
-                for (var i = list.arraySize - 1; i >= 0; i--) {
-                    var conditionElement = list.GetArrayElementAtIndex(i);
-                    var condition = conditionElement.objectReferenceValue;
-                    if (condition == null) {
-                        list.arraySize--;
-                        continue;
-                    }
-
-                    var clonedCondition = Object.Instantiate(condition) as Condition;
-                    Undo.RegisterCreatedObjectUndo(clonedCondition, "DuplicateCondition");
-                    AssetDatabase.AddObjectToAsset(clonedCondition, node);
-                    conditionElement.objectReferenceValue = clonedCondition;
+            // 全Nodeを複製
+            var dict = new Dictionary<Node, Node>();
+            foreach (var baseNode in baseNodes) {
+                var node = DuplicateNode(tree, baseNode);
+                if (node == null) {
+                    continue;
                 }
+
+                dict[baseNode] = node;
+            }
+            
+            // 参照先をつなぎなおし（参照先がないものはクリア）
+            foreach (var node in dict.Values) {
+                var nodeObj = new SerializedObject(node);
+                var childProp = nodeObj.FindProperty("child");
+                var childrenProp = nodeObj.FindProperty("children");
+            
+                nodeObj.Update();
+
+                if (childProp != null) {
+                    var key = childProp.objectReferenceValue as Node;
+                    if (key != null && dict.TryGetValue(key, out var res)) {
+                        childProp.objectReferenceValue = res;
+                    }
+                    else {
+                        childProp.objectReferenceValue = null;
+                    }
+                }
+
+                if (childrenProp != null) {
+                    for (var i = childrenProp.arraySize - 1; i >= 0; i--) {
+                        var element = childrenProp.GetArrayElementAtIndex(i);
+                        var key = element.objectReferenceValue as Node;
+                        if (key != null && dict.TryGetValue(key, out var res)) {
+                            element.objectReferenceValue = res;
+                        }
+                        else {
+                            element.objectReferenceValue = null;
+                            childrenProp.DeleteArrayElementAtIndex(i);
+                        }
+                    }
+                }
+
+                nodeObj.ApplyModifiedProperties();
             }
 
-            nodeObj.ApplyModifiedProperties();
-
-            // Treeへの追加
-            serializedObj.Update();
-            nodes.arraySize++;
-            var element = nodes.GetArrayElementAtIndex(nodes.arraySize - 1);
-            element.objectReferenceValue = node;
-            serializedObj.ApplyModifiedProperties();
-
-            EditorUtility.SetDirty(tree);
-            return node;
+            return dict.Values.ToArray();
         }
 
         /// <summary>
@@ -311,6 +305,61 @@ namespace GameAiBehaviour {
 
             // アセットの削除
             Undo.DestroyObjectImmediate(condition);
+        }
+        
+        /// <summary>
+        /// ノードの複製
+        /// </summary>
+        private static Node DuplicateNode(BehaviourTree tree, Node baseNode) {
+            if (tree == null || baseNode == null) {
+                return null;
+            }
+            
+            var serializedObj = new SerializedObject(tree);
+            var nodes = serializedObj.FindProperty("nodes");
+
+            // アセットの複製
+            var node = Object.Instantiate(baseNode);
+            node.name = baseNode.name;
+            node.guid = GUID.Generate().ToString();
+            node.position += Vector2.one * 50;
+            Undo.RegisterCreatedObjectUndo(node, "DuplicateNode");
+            AssetDatabase.AddObjectToAsset(node, tree);
+            
+            var nodeObj = new SerializedObject(node);
+            var conditionsProp = nodeObj.FindProperty("conditions");
+            
+            nodeObj.Update();
+            
+            // 条件の複製
+            if (conditionsProp != null) {
+                var list = conditionsProp.FindPropertyRelative("conditions");
+                for (var i = list.arraySize - 1; i >= 0; i--) {
+                    var conditionElement = list.GetArrayElementAtIndex(i);
+                    var condition = conditionElement.objectReferenceValue;
+                    if (condition == null) {
+                        list.arraySize--;
+                        continue;
+                    }
+
+                    var clonedCondition = Object.Instantiate(condition) as Condition;
+                    Undo.RegisterCreatedObjectUndo(clonedCondition, "DuplicateCondition");
+                    AssetDatabase.AddObjectToAsset(clonedCondition, node);
+                    conditionElement.objectReferenceValue = clonedCondition;
+                }
+            }
+
+            nodeObj.ApplyModifiedProperties();
+
+            // Treeへの追加
+            serializedObj.Update();
+            nodes.arraySize++;
+            var element = nodes.GetArrayElementAtIndex(nodes.arraySize - 1);
+            element.objectReferenceValue = node;
+            serializedObj.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(tree);
+            return node;
         }
     }
 }
