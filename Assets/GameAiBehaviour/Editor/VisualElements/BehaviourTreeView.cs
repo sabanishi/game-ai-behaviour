@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace GameAiBehaviour.Editor {
@@ -12,11 +13,18 @@ namespace GameAiBehaviour.Editor {
     /// BehaviourTree表示用のGraphView
     /// </summary>
     public class BehaviourTreeView : GraphView {
-        public Action<NodeView[]> OnChangedSelectionNodeViews;
-
         public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> {
         }
 
+        /// <summary>
+        /// シリアライズ用のNode配列
+        /// </summary>
+        [Serializable]
+        private class SerializableNodes {
+            public Node[] nodes;
+        }
+            
+        public Action<NodeView[]> OnChangedSelectionNodeViews;
         public BehaviourTree Data { get; private set; }
 
         /// <summary>
@@ -37,6 +45,11 @@ namespace GameAiBehaviour.Editor {
 
             // 変更通知監視
             graphViewChanged += OnGraphViewChanged;
+            
+            // コピー
+            serializeGraphElements += OnSerializeGraphElements;
+            // ペースト
+            unserializeAndPaste += OnUnserializeAndPaste;
 
             // Undo通知
             Undo.undoRedoPerformed += OnUndoRedo;
@@ -201,6 +214,40 @@ namespace GameAiBehaviour.Editor {
             }
 
             return graphViewChange;
+        }
+
+        /// <summary>
+        /// コピー処理
+        /// </summary>
+        private string OnSerializeGraphElements(IEnumerable<GraphElement> elements) {
+            var nodeViews = elements.OfType<NodeView>().ToArray();
+            if (nodeViews.Length <= 0 || Data == null) {
+                return "";
+            }
+            
+            // Node情報をシリアライズ化
+            var serializableNodes = new SerializableNodes();
+            serializableNodes.nodes = nodeViews.Select(x => x.Node).ToArray();
+            return JsonUtility.ToJson(serializableNodes);
+        }
+
+        /// <summary>
+        /// ペースト処理
+        /// </summary>
+        private void OnUnserializeAndPaste(string operationName, string data) {
+            if (string.IsNullOrEmpty(data) || Data == null) {
+                return;
+            }
+            
+            // Node情報をデシリアライズ
+            var serializableNodes = JsonUtility.FromJson<SerializableNodes>(data);
+            foreach (var node in serializableNodes.nodes) {
+                BehaviourTreeEditorUtility.DuplicateNode(Data, node);
+            }
+            
+            // ツリー情報を再構築
+            Load(Data);
+            AssetDatabase.SaveAssets();
         }
 
         /// <summary>

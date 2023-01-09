@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 namespace GameAiBehaviour {
@@ -38,7 +37,7 @@ namespace GameAiBehaviour {
         }
         
         [Tooltip("条件")]
-        public ConditionGroup conditions;
+        public ConditionGroup conditions = new ConditionGroup();
 
         public override string Description => string.Join("\n", conditions.conditions.Select(x => x.ConditionTitle));
 

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   guid: f014b8d988251da45be1a68507b4ea56
-  position: {x: 546, y: -32.4}
+  position: {x: 537, y: -15.495113}
   title: 
   child: {fileID: 1917303352956534878}
 --- !u!114 &-6950444865005838857
@@ -70,7 +70,7 @@ MonoBehaviour:
     propertyName: AAA
   rightValue:
     useProperty: 0
-    constValue: 5
+    constValue: 4
     propertyName: 
   operatorType: 2
 --- !u!114 &11400000
