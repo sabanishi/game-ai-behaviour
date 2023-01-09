@@ -34,7 +34,6 @@ namespace GameAiBehaviour {
             serializedObj.ApplyModifiedProperties();
 
             EditorUtility.SetDirty(tree);
-            AssetDatabase.SaveAssets();
             return node;
         }
 
@@ -82,7 +81,6 @@ namespace GameAiBehaviour {
             Undo.DestroyObjectImmediate(node);
 
             EditorUtility.SetDirty(tree);
-            AssetDatabase.SaveAssets();
         }
 
         /// <summary>
@@ -112,7 +110,6 @@ namespace GameAiBehaviour {
             parentObj.ApplyModifiedProperties();
 
             EditorUtility.SetDirty(parent);
-            AssetDatabase.SaveAssets();
         }
 
         /// <summary>
@@ -151,7 +148,6 @@ namespace GameAiBehaviour {
             parentObj.ApplyModifiedProperties();
 
             EditorUtility.SetDirty(parent);
-            AssetDatabase.SaveAssets();
         }
 
         /// <summary>
@@ -184,7 +180,6 @@ namespace GameAiBehaviour {
             parentObj.ApplyModifiedProperties();
 
             EditorUtility.SetDirty(parent);
-            AssetDatabase.SaveAssets();
         }
 
         /// <summary>
@@ -207,7 +202,6 @@ namespace GameAiBehaviour {
             }
 
             EditorUtility.SetDirty(node);
-            AssetDatabase.SaveAssets();
         }
 
         /// <summary>

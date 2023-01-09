@@ -132,7 +132,6 @@ namespace GameAiBehaviour.Editor {
                         BehaviourTreeEditorUtility.CreateCondition(_propertyInfo.listProperty, t);
                         list.index = list.count - 1;
                         AssetDatabase.SaveAssets();
-                        AssetDatabase.Refresh();
                     });
                 }
                 menu.ShowAsContext();
@@ -141,7 +140,6 @@ namespace GameAiBehaviour.Editor {
                 // 条件の削除
                 BehaviourTreeEditorUtility.DeleteCondition(_propertyInfo.listProperty, list.index);
                 AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
                 reorderableList.index--;
             };
             Undo.undoRedoPerformed += () => {

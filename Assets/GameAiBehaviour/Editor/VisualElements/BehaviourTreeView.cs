@@ -171,6 +171,7 @@ namespace GameAiBehaviour.Editor {
                         BehaviourTreeEditorUtility.DisconnectNode(parentView?.Node, childView?.Node);
                     }
                 });
+                AssetDatabase.SaveAssets();
             }
 
             if (graphViewChange.edgesToCreate != null) {
@@ -180,6 +181,7 @@ namespace GameAiBehaviour.Editor {
                     BehaviourTreeEditorUtility.ConnectNode(parentView?.Node, childView?.Node);
                     BehaviourTreeEditorUtility.SortChildren(parentView?.Node);
                 });
+                AssetDatabase.SaveAssets();
             }
 
             if (graphViewChange.movedElements != null) {
@@ -195,6 +197,7 @@ namespace GameAiBehaviour.Editor {
                         }
                     }
                 });
+                AssetDatabase.SaveAssets();
             }
 
             return graphViewChange;
