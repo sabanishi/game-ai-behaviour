@@ -29,9 +29,9 @@ MonoBehaviour:
   m_Name: IfNode
   m_EditorClassIdentifier: 
   guid: ef03001decfcee2458e6ef0ff2e6200d
-  position: {x: 281, y: 227}
+  position: {x: 305, y: 229}
   title: 
-  child: {fileID: -1895885672976489729}
+  child: {fileID: 5520178271997835118}
   conditions:
     conditions:
     - {fileID: -624816096900473424}
@@ -113,10 +113,11 @@ MonoBehaviour:
   m_Name: SequencerNode
   m_EditorClassIdentifier: 
   guid: 640508f01d4c5ee46b53e558cd246e2c
-  position: {x: 537, y: 80}
+  position: {x: 537, y: 81.3225}
   title: 
   children:
   - {fileID: -6950444865005838857}
+  - {fileID: 5520178271997835118}
   - {fileID: 5520178271997835118}
   - {fileID: 2283124608860793593}
 --- !u!114 &2283124608860793593
@@ -132,7 +133,7 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: 2aa5215b8aa78024388398f822e0c96e
-  position: {x: 687, y: 373}
+  position: {x: 687, y: 391.96002}
   title: 
   logType: 3
   text: 
@@ -149,7 +150,7 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: abacdb3acfbe89e45942064a06f4c4cd
-  position: {x: 520, y: 373}
+  position: {x: 549.095, y: 446}
   title: 
   logType: 3
   text: 

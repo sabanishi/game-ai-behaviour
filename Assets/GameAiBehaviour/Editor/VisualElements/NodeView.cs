@@ -115,6 +115,7 @@ namespace GameAiBehaviour.Editor {
             if (port != null) {
                 port.portName = "";
                 port.style.flexDirection = FlexDirection.Column;
+                port.AddToClassList("node_port");
                 inputContainer.Add(port);
             }
 
@@ -140,6 +141,7 @@ namespace GameAiBehaviour.Editor {
             if (port != null) {
                 port.portName = "";
                 port.style.flexDirection = FlexDirection.ColumnReverse;
+                port.AddToClassList("node_port");
                 outputContainer.Add(port);
             }
 
