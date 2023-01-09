@@ -30,31 +30,14 @@ MonoBehaviour:
   m_Name: BooleanCondition
   m_EditorClassIdentifier: 
   leftValue:
+    useProperty: 0
     constValue: 1
     propertyName: 
   rightValue:
+    useProperty: 0
     constValue: 1
     propertyName: 
   operatorType: 1
---- !u!114 &-5658248222550898941
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b197604ec642c8b4f8452d846874c5bf, type: 3}
-  m_Name: StringCondition
-  m_EditorClassIdentifier: 
-  leftValue:
-    constValue: 
-    propertyName: Tag
-  rightValue:
-    constValue: Hoge
-    propertyName: 
-  operatorType: 0
 --- !u!114 &-5337826013988711861
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -75,6 +58,7 @@ MonoBehaviour:
     conditions:
     - {fileID: 1134131246056441526}
     - {fileID: -3526110894738135656}
+    - {fileID: 2394652700643547276}
 --- !u!114 &-5117553915215347885
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -141,12 +125,14 @@ MonoBehaviour:
   m_Name: FloatCondition
   m_EditorClassIdentifier: 
   leftValue:
+    useProperty: 1
     constValue: 0
     propertyName: TargetDistance
   rightValue:
+    useProperty: 0
     constValue: 10
-    propertyName: 
-  operatorType: 3
+    propertyName: TargetDistance
+  operatorType: 0
 --- !u!114 &-2728936128759719953
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -223,12 +209,6 @@ MonoBehaviour:
   - {fileID: -1363541818680074}
   - {fileID: -5117553915215347885}
   properties:
-  - propertyName: Tag
-    propertyType: 2
-    integerValue: 0
-    floatValue: 0
-    stringValue: Hoge1
-    booleanValue: 0
   - propertyName: TargetDistance
     propertyType: 1
     integerValue: 0
@@ -238,6 +218,12 @@ MonoBehaviour:
   - propertyName: IsPlayer
     propertyType: 3
     integerValue: 0
+    floatValue: 0.1
+    stringValue: test
+    booleanValue: 0
+  - propertyName: Num
+    propertyType: 0
+    integerValue: 1
     floatValue: 0.1
     stringValue: test
     booleanValue: 0
@@ -254,11 +240,13 @@ MonoBehaviour:
   m_Name: BooleanCondition
   m_EditorClassIdentifier: 
   leftValue:
+    useProperty: 1
     constValue: 0
     propertyName: IsPlayer
   rightValue:
+    useProperty: 0
     constValue: 1
-    propertyName: 
+    propertyName: IsPlayer
   operatorType: 0
 --- !u!114 &2082612556359990846
 MonoBehaviour:
@@ -277,6 +265,27 @@ MonoBehaviour:
   title: 
   logType: 3
   text: Log D
+--- !u!114 &2394652700643547276
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7774819b8896c6439f456332d2df66f, type: 3}
+  m_Name: FloatCondition
+  m_EditorClassIdentifier: 
+  leftValue:
+    useProperty: 1
+    constValue: 0
+    propertyName: Num
+  rightValue:
+    useProperty: 1
+    constValue: 0
+    propertyName: TargetDistance
+  operatorType: 0
 --- !u!114 &4407816576870536394
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -295,7 +304,8 @@ MonoBehaviour:
   child: {fileID: -9087410631918027791}
   conditions:
     conditions:
-    - {fileID: -5658248222550898941}
+    - {fileID: 0}
+    - {fileID: 0}
 --- !u!114 &8958632894031454815
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -328,9 +338,11 @@ MonoBehaviour:
   m_Name: BooleanCondition
   m_EditorClassIdentifier: 
   leftValue:
+    useProperty: 0
     constValue: 0
     propertyName: 
   rightValue:
+    useProperty: 0
     constValue: 0
     propertyName: 
   operatorType: 0

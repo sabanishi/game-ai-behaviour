@@ -6,6 +6,7 @@ namespace GameAiBehaviour {
     /// </summary>
     [Serializable]
     public abstract class ValueObject<T> {
+        public bool useProperty;
         public T constValue = default;
         public string propertyName = "";
 
@@ -13,7 +14,7 @@ namespace GameAiBehaviour {
         /// 文字列化
         /// </summary>
         public override string ToString() {
-            if (string.IsNullOrEmpty(propertyName)) {
+            if (!useProperty) {
                 return constValue?.ToString();
             }
 

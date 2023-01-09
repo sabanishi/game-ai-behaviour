@@ -15,6 +15,8 @@ namespace GameAiBehaviour.Editor {
         private UnityEditor.Editor _editor;
         // スクロール位置
         private Vector2 _scroll;
+        // 描画対象のBehaviourTree
+        private BehaviourTree _behaviourTree;
 
         // 値変更時イベント
         public System.Action<Object[]> OnChangedValue;
@@ -23,6 +25,13 @@ namespace GameAiBehaviour.Editor {
         /// コンストラクタ
         /// </summary>
         public InspectorView() {
+        }
+
+        /// <summary>
+        /// 描画対象となるBehaviourTreeの設定
+        /// </summary>
+        public void SetBehaviourTree(BehaviourTree behaviourTree) {
+            _behaviourTree = behaviourTree;
         }
 
         /// <summary>
@@ -54,6 +63,8 @@ namespace GameAiBehaviour.Editor {
                         return;
                     }
 
+                    BehaviourTreeEditorGUI.CurrentTree = _behaviourTree;
+
                     using (var scrollScope = new EditorGUILayout.ScrollViewScope(_scroll)) {
                         _editor.OnInspectorGUI();
                         _scroll = scrollScope.scrollPosition;
@@ -61,6 +72,8 @@ namespace GameAiBehaviour.Editor {
                     if (scope.changed) {
                         OnChangedValue?.Invoke(_editor.targets);
                     }
+
+                    BehaviourTreeEditorGUI.CurrentTree = null;
                 }
             });
             Add(container);

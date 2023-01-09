@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -11,7 +12,10 @@ namespace GameAiBehaviour {
         // 演算子
         public NumericOperatorType operatorType = NumericOperatorType.Equal;  
 
+        // 条件タイトル
         public override string ConditionTitle => $"{leftValue} {operatorType.GetMark()} {rightValue}";
+        // GUI描画の際に使用するPropertyの使用可能型フィルタ
+        protected override Property.Type[] PropertyTypeFilters => new[] { Property.Type.Integer, Property.Type.Float };
 
         /// <summary>
         /// 値の判定
@@ -34,6 +38,14 @@ namespace GameAiBehaviour {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// オペレータタイプの表示名
+        /// </summary>
+        protected override string[] GetOperatorTypeLabels() {
+            return ((NumericOperatorType[])Enum.GetValues(typeof(NumericOperatorType)))
+                .Select(x => x.GetMark()).ToArray();
         }
     }
 }

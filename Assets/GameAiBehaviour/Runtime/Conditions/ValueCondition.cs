@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -11,6 +12,9 @@ namespace GameAiBehaviour {
         where TValueObject : ValueObject<T> {
         public TValueObject leftValue;
         public TValueObject rightValue;
+
+        // GUI描画の際に使用するPropertyの使用可能型フィルタ
+        protected abstract Property.Type[] PropertyTypeFilters { get; }
         
 #if UNITY_EDITOR
         /// <summary>
@@ -20,32 +24,62 @@ namespace GameAiBehaviour {
             var leftProp = serializedObject.FindProperty("leftValue");
             var rightProp = serializedObject.FindProperty("rightValue");
             var operatorProp = serializedObject.FindProperty("operatorType");
+            var padding = EditorGUIUtility.standardVerticalSpacing;
+            var operatorWidth = 30;
+            var valueWidth = (position.width - operatorWidth - padding * 2) / 2 - padding * 2;
+            var height = EditorGUIUtility.singleLineHeight;
             var rect = position;
             
-            rect.y += EditorGUIUtility.standardVerticalSpacing;
-            rect.height = EditorGUI.GetPropertyHeight(leftProp, true) + EditorGUIUtility.standardVerticalSpacing;
-            EditorGUI.PropertyField(rect, leftProp, true);
+            // プロパティ描画
+            void DrawValueObject(Rect pos, SerializedProperty prop) {
+                var useProperty = prop.FindPropertyRelative("useProperty");
+                var constValue = prop.FindPropertyRelative("constValue");
+                var propertyName = prop.FindPropertyRelative("propertyName");
+                
+                var r = rect;
+                r.height = height;
+                r.y += padding;
+                var buttonLabel = useProperty.boolValue ? "Property Mode" : "Const Mode";
+                useProperty.boolValue ^= GUI.Button(r, buttonLabel);
+                r.y += height + padding * 2;
+                if (useProperty.boolValue) {
+                    propertyName.stringValue = BehaviourTreeEditorGUI.PropertyNameField(r, propertyName.stringValue, PropertyTypeFilters);
+                }
+                else {
+                    EditorGUI.PropertyField(r, constValue, GUIContent.none);
+                }
+            }
             
-            rect.y += rect.height + EditorGUIUtility.standardVerticalSpacing;
-            rect.height = EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing;
-            operatorProp.enumValueIndex = EditorGUI.Popup(rect, operatorProp.displayName, operatorProp.enumValueIndex, operatorProp.enumDisplayNames);
+            // 左辺
+            rect.width = valueWidth;
+            rect.x += padding;
+            DrawValueObject(rect, leftProp);
             
-            rect.y += rect.height + EditorGUIUtility.standardVerticalSpacing;
-            rect.height = EditorGUI.GetPropertyHeight(rightProp, true) + EditorGUIUtility.standardVerticalSpacing;
-            EditorGUI.PropertyField(rect, rightProp, true);
+            // 演算子
+            rect.width = operatorWidth;
+            rect.x += valueWidth + padding * 2;
+            {
+                var r = rect;
+                r.height = height;
+                r.y += (height + padding * 2) * 0.5f + padding;
+                var labels = GetOperatorTypeLabels();
+                operatorProp.enumValueIndex = EditorGUI.Popup(r, operatorProp.enumValueIndex, labels, EditorStyles.miniButton);
+            }
+            
+            // 右辺
+            rect.width = valueWidth;
+            rect.x += operatorWidth + padding * 2;
+            DrawValueObject(rect, rightProp);
         }
 
         /// <summary>
         /// インスペクタ描画時の高さ取得
         /// </summary>
         public override float GetInspectorGUIHeight(SerializedObject serializedObject) {
-            var leftProp = serializedObject.FindProperty("leftValue");
-            var rightProp = serializedObject.FindProperty("rightValue");
             var height = 0.0f;
-            var padding = EditorGUIUtility.standardVerticalSpacing * 2;
-            height += EditorGUI.GetPropertyHeight(leftProp, true) + padding;
-            height += EditorGUIUtility.singleLineHeight + padding;
-            height += EditorGUI.GetPropertyHeight(rightProp, true) + padding;
+            var padding = EditorGUIUtility.standardVerticalSpacing;
+            height += EditorGUIUtility.singleLineHeight + padding * 2;
+            height += EditorGUIUtility.singleLineHeight + padding * 2;
             return height;
         }
 #endif
@@ -66,6 +100,11 @@ namespace GameAiBehaviour {
         /// プロパティの取得
         /// </summary>
         protected abstract T GetPropertyValue(Blackboard blackboard, string propertyName, T defaultValue);
+
+        /// <summary>
+        /// オペレータタイプの表示名
+        /// </summary>
+        protected abstract string[] GetOperatorTypeLabels();
 
         /// <summary>
         /// 左辺値の取得

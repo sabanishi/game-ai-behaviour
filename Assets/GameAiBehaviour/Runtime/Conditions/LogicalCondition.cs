@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -25,6 +26,14 @@ namespace GameAiBehaviour {
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// オペレータタイプの表示名
+        /// </summary>
+        protected override string[] GetOperatorTypeLabels() {
+            return ((OperatorType[])Enum.GetValues(typeof(OperatorType)))
+                .Select(x => x.GetMark()).ToArray();
         }
     }
 }

@@ -175,6 +175,7 @@ namespace GameAiBehaviour.Editor {
             _blackboardView.SetPropertiesProperty(serializedObj != null
                 ? serializedObj.FindProperty("properties")
                 : null);
+            _inspectorView.SetBehaviourTree(_target);
         }
 
         /// <summary>

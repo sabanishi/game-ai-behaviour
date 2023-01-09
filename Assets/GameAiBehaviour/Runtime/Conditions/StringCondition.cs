@@ -12,7 +12,10 @@ namespace GameAiBehaviour {
         public class ValueObject : ValueObject<string> {
         }  
 
+        // 条件タイトル
         public override string ConditionTitle => $"[String]{base.ConditionTitle}";
+        // GUI描画の際に使用するPropertyの使用可能型フィルタ
+        protected override Property.Type[] PropertyTypeFilters => new[] { Property.Type.String };
 
         /// <summary>
         /// プロパティの取得

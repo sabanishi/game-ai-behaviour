@@ -37,7 +37,7 @@ namespace GameAiBehaviour.Editor {
                 rect.y += rect.height;
                 
                 // 選択中の物があった場合、その描画を行う
-                if (_propertyInfo.reorderableList.selectedIndices.Count > 0 && _propertyInfo.reorderableList.count > 0) {
+                if (_propertyInfo.reorderableList.index >= 0) {
                     var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                     var condition = element.objectReferenceValue as Condition;
                     if (condition != null) {
@@ -72,7 +72,7 @@ namespace GameAiBehaviour.Editor {
             }
 
             // 選択中の物があった場合、その分の高さを加える
-            if (_propertyInfo.reorderableList.selectedIndices.Count > 0 && _propertyInfo.reorderableList.count > 0) {
+            if (_propertyInfo.reorderableList.index >= 0) {
                 var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                 var condition = element.objectReferenceValue as Condition;
                 if (condition != null) {
@@ -130,6 +130,7 @@ namespace GameAiBehaviour.Editor {
                     menu.AddItem(new GUIContent(type.Name), false, () => {
                         // 条件の生成
                         CreateCondition(_propertyInfo.listProperty, t);
+                        list.index = list.count - 1;
                     });
                 }
                 menu.ShowAsContext();
@@ -137,6 +138,7 @@ namespace GameAiBehaviour.Editor {
             reorderableList.onRemoveCallback = list => {
                 // 条件の削除
                 DeleteCondition(_propertyInfo.listProperty, list.index);
+                reorderableList.index--;
             };
             _propertyInfo.reorderableList = reorderableList;
 
