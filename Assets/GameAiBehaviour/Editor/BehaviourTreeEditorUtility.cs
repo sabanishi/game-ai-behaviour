@@ -1,0 +1,258 @@
+﻿using System;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+namespace GameAiBehaviour {
+    /// <summary>
+    /// BehaviourTreeのエディタ用ユーティリティ
+    /// </summary>
+    public static class BehaviourTreeEditorUtility {
+        /// <summary>
+        /// ノードの生成
+        /// </summary>
+        public static Node CreateNode(BehaviourTree tree, Type type) {
+            if (tree == null) {
+                return null;
+            }
+            
+            var serializedObj = new SerializedObject(tree);
+            var nodes = serializedObj.FindProperty("nodes");
+
+            // アセットの生成
+            var node = ScriptableObject.CreateInstance(type) as Node;
+            node.name = type.Name;
+            node.guid = GUID.Generate().ToString();
+            Undo.RegisterCreatedObjectUndo(node, "CreateNode");
+            AssetDatabase.AddObjectToAsset(node, tree);
+
+            // Treeへの追加
+            serializedObj.Update();
+            nodes.arraySize++;
+            var element = nodes.GetArrayElementAtIndex(nodes.arraySize - 1);
+            element.objectReferenceValue = node;
+            serializedObj.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(tree);
+            AssetDatabase.SaveAssets();
+            return node;
+        }
+
+        /// <summary>
+        /// ノードの削除
+        /// </summary>
+        public static void DeleteNode(BehaviourTree tree, Node node) {
+            if (tree == null || node == null) {
+                return;
+            }
+            
+            var serializedObj = new SerializedObject(tree);
+            var nodesProp = serializedObj.FindProperty("nodes");
+
+            // 接続情報の切断
+            for (var i = 0; i < nodesProp.arraySize; i++) {
+                var element = nodesProp.GetArrayElementAtIndex(i);
+                var parent = element.objectReferenceValue as Node;
+                if (parent == node) {
+                    continue;
+                }
+
+                DisconnectNode(parent, node);
+            }
+
+            // リストから除外
+            serializedObj.Update();
+
+            for (var i = nodesProp.arraySize - 1; i >= 0; i--) {
+                var element = nodesProp.GetArrayElementAtIndex(i);
+                if (element.objectReferenceValue != node) {
+                    continue;
+                }
+
+                element.objectReferenceValue = null;
+                nodesProp.DeleteArrayElementAtIndex(i);
+            }
+
+            serializedObj.ApplyModifiedProperties();
+
+            // 依存条件の削除
+            DeleteConditions(node);
+
+            // アセットの削除
+            Undo.DestroyObjectImmediate(node);
+
+            EditorUtility.SetDirty(tree);
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// ノードの接続
+        /// </summary>
+        public static void ConnectNode(Node parent, Node child) {
+            if (parent == null || child == null) {
+                return;
+            }
+            
+            var parentObj = new SerializedObject(parent);
+            var childProp = parentObj.FindProperty("child");
+            var childrenProp = parentObj.FindProperty("children");
+
+            // リストに追加
+            parentObj.Update();
+
+            if (childProp != null) {
+                childProp.objectReferenceValue = child;
+            }
+
+            if (childrenProp != null) {
+                childrenProp.arraySize++;
+                childrenProp.GetArrayElementAtIndex(childrenProp.arraySize - 1).objectReferenceValue = child;
+            }
+
+            parentObj.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(parent);
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// ノードの接続解除
+        /// </summary>
+        public static void DisconnectNode(Node parent, Node child) {
+            if (parent == null || child == null) {
+                return;
+            }
+            
+            var parentObj = new SerializedObject(parent);
+            var childProp = parentObj.FindProperty("child");
+            var childrenProp = parentObj.FindProperty("children");
+
+            // リストから除外
+            parentObj.Update();
+
+            if (childProp != null) {
+                if (childProp.objectReferenceValue == child) {
+                    childProp.objectReferenceValue = null;
+                }
+            }
+
+            if (childrenProp != null) {
+                for (var i = childrenProp.arraySize - 1; i >= 0; i--) {
+                    var element = childrenProp.GetArrayElementAtIndex(i);
+                    if (element.objectReferenceValue != child) {
+                        continue;
+                    }
+
+                    element.objectReferenceValue = null;
+                    childrenProp.DeleteArrayElementAtIndex(i);
+                }
+            }
+
+            parentObj.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(parent);
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// 子ノードのソート
+        /// </summary>
+        public static void SortChildren(Node parent) {
+            if (parent == null) {
+                return;
+            }
+            
+            var parentObj = new SerializedObject(parent);
+            var childrenProp = parentObj.FindProperty("children");
+
+            parentObj.Update();
+
+            // 複数子要素を持つ値をソート
+            if (childrenProp != null) {
+                var list = new List<Node>();
+                for (var i = 0; i < childrenProp.arraySize; i++) {
+                    list.Add(childrenProp.GetArrayElementAtIndex(i).objectReferenceValue as Node);
+                }
+
+                list.Sort((a, b) => a.position.x.CompareTo(b.position.x));
+                
+                for (var i = 0; i < childrenProp.arraySize; i++) {
+                    childrenProp.GetArrayElementAtIndex(i).objectReferenceValue = list[i];
+                }
+            }
+
+            parentObj.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(parent);
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// 全条件の削除
+        /// </summary>
+        public static void DeleteConditions(Node node) {
+            if (node == null) {
+                return;
+            }
+            
+            var nodeObj = new SerializedObject(node);
+            var conditionGroup = nodeObj.FindProperty("conditions");
+            if (conditionGroup == null) {
+                return;
+            }
+
+            var conditions = conditionGroup.FindPropertyRelative("conditions");
+            for (var i = conditions.arraySize - 1; i >= 0; i--) {
+                DeleteCondition(conditions, i);
+            }
+
+            EditorUtility.SetDirty(node);
+            AssetDatabase.SaveAssets();
+        }
+
+        /// <summary>
+        /// 条件リストへの条件追加
+        /// </summary>
+        public static Condition CreateCondition(SerializedProperty listProperty, Type type) {
+            var serializedObject = listProperty.serializedObject;
+            var targetObject = serializedObject.targetObject;
+
+            var condition = ScriptableObject.CreateInstance(type) as Condition;
+            Undo.RegisterCreatedObjectUndo(condition, "CreateCondition");
+
+            if (condition == null) {
+                return null;
+            }
+
+            condition.name = type.Name;
+            AssetDatabase.AddObjectToAsset(condition, targetObject);
+            Undo.RecordObject(condition, "AddConditionAsset");
+
+            serializedObject.Update();
+            listProperty.arraySize++;
+            listProperty.GetArrayElementAtIndex(listProperty.arraySize - 1).objectReferenceValue = condition;
+            serializedObject.ApplyModifiedProperties();
+
+            EditorUtility.SetDirty(targetObject);
+            return condition;
+        }
+
+        /// <summary>
+        /// 条件リストから条件の削除
+        /// </summary>
+        public static void DeleteCondition(SerializedProperty listProperty, int index) {
+            var serializedObject = listProperty.serializedObject;
+
+            // リストから除外
+            serializedObject.Update();
+
+            var condition = listProperty.GetArrayElementAtIndex(index).objectReferenceValue;
+            listProperty.DeleteArrayElementAtIndex(index);
+
+            serializedObject.ApplyModifiedProperties();
+
+            // アセットの削除
+            Undo.DestroyObjectImmediate(condition);
+        }
+    }
+}

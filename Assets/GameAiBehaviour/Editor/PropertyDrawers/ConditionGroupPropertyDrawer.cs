@@ -37,7 +37,7 @@ namespace GameAiBehaviour.Editor {
                 rect.y += rect.height;
                 
                 // 選択中の物があった場合、その描画を行う
-                if (_propertyInfo.reorderableList.index >= 0) {
+                if (_propertyInfo.reorderableList.index >= 0 && _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
                     var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                     var condition = element.objectReferenceValue as Condition;
                     if (condition != null) {
@@ -72,7 +72,7 @@ namespace GameAiBehaviour.Editor {
             }
 
             // 選択中の物があった場合、その分の高さを加える
-            if (_propertyInfo.reorderableList.index >= 0) {
+            if (_propertyInfo.reorderableList.index >= 0 && _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
                 var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                 var condition = element.objectReferenceValue as Condition;
                 if (condition != null) {
@@ -129,71 +129,29 @@ namespace GameAiBehaviour.Editor {
                     var t = type;
                     menu.AddItem(new GUIContent(type.Name), false, () => {
                         // 条件の生成
-                        CreateCondition(_propertyInfo.listProperty, t);
+                        BehaviourTreeEditorUtility.CreateCondition(_propertyInfo.listProperty, t);
                         list.index = list.count - 1;
+                        AssetDatabase.SaveAssets();
+                        AssetDatabase.Refresh();
                     });
                 }
                 menu.ShowAsContext();
             };
             reorderableList.onRemoveCallback = list => {
                 // 条件の削除
-                DeleteCondition(_propertyInfo.listProperty, list.index);
+                BehaviourTreeEditorUtility.DeleteCondition(_propertyInfo.listProperty, list.index);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
                 reorderableList.index--;
+            };
+            Undo.undoRedoPerformed += () => {
+
             };
             _propertyInfo.reorderableList = reorderableList;
 
             _propertyInfos.Add(property.propertyPath, _propertyInfo);
         }
-
-        /// <summary>
-        /// 条件の追加
-        /// </summary>
-        private Condition CreateCondition(SerializedProperty listProperty, Type type) {
-            var serializedObject = listProperty.serializedObject;
-            var targetObject = serializedObject.targetObject;
-            Undo.RecordObject(targetObject, "CreateCondition");
-
-            var condition = ScriptableObject.CreateInstance(type) as Condition;
-            if (condition == null) {
-                return null;
-            }
-            
-            condition.name = type.Name;
-            AssetDatabase.AddObjectToAsset(condition, targetObject);
-            Undo.RegisterCreatedObjectUndo(condition, "CreateCondition");
-
-            serializedObject.Update();
-            listProperty.arraySize++;
-            listProperty.GetArrayElementAtIndex(listProperty.arraySize - 1).objectReferenceValue = condition;
-            serializedObject.ApplyModifiedProperties();
-
-            EditorUtility.SetDirty(targetObject);
-            AssetDatabase.SaveAssets();
-            return condition;
-        }
-
-        /// <summary>
-        /// 条件の削除
-        /// </summary>
-        private void DeleteCondition(SerializedProperty listProperty, int index) {
-            var serializedObject = listProperty.serializedObject;
-            var targetObject = serializedObject.targetObject;
-            Undo.RecordObject(targetObject, "DeleteCondition");
-
-            serializedObject.Update();
-            var condition = listProperty.GetArrayElementAtIndex(index).objectReferenceValue;
-            listProperty.DeleteArrayElementAtIndex(index);
-            serializedObject.ApplyModifiedProperties();
-
-            if (condition != null) {
-                AssetDatabase.RemoveObjectFromAsset(condition);
-                Undo.DestroyObjectImmediate(condition);
-            }
-
-            EditorUtility.SetDirty(targetObject);
-            AssetDatabase.SaveAssets();
-        }
-
+        
         /// <summary>
         /// RectにPaddingを加える
         /// </summary>

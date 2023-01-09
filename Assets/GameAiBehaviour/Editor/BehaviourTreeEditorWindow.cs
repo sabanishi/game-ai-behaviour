@@ -51,8 +51,10 @@ namespace GameAiBehaviour.Editor {
                 };
 
                 foreach (var groupType in groupTypes) {
-                    var types = TypeCache.GetTypesDerivedFrom(groupType);
-                    if (types.Count <= 0) {
+                    var types = TypeCache.GetTypesDerivedFrom(groupType)
+                        .Where(x => !x.IsAbstract && !x.IsGenericType)
+                        .ToArray();
+                    if (types.Length <= 0) {
                         continue;
                     }
 
@@ -73,7 +75,7 @@ namespace GameAiBehaviour.Editor {
             /// </summary>
             public bool OnSelectEntry(SearchTreeEntry entry, SearchWindowContext context) {
                 var type = entry.userData as Type;
-                var node = _graphView.Data.CreateNode(type);
+                var node = BehaviourTreeEditorUtility.CreateNode(_graphView.Data, type);
 
                 var rootElement = _editorWindow.rootVisualElement;
                 var worldMousePos = rootElement.ChangeCoordinatesTo(rootElement.parent,

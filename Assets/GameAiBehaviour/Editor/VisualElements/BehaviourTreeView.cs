@@ -37,6 +37,9 @@ namespace GameAiBehaviour.Editor {
 
             // 変更通知監視
             graphViewChanged += OnGraphViewChanged;
+
+            // Undo通知
+            Undo.undoRedoPerformed += OnUndoRedo;
         }
 
         /// <summary>
@@ -160,22 +163,22 @@ namespace GameAiBehaviour.Editor {
             if (graphViewChange.elementsToRemove != null) {
                 graphViewChange.elementsToRemove.ForEach(element => {
                     if (element is NodeView nodeView) {
-                        Data.DeleteNode(nodeView.Node);
+                        BehaviourTreeEditorUtility.DeleteNode(Data, nodeView.Node);
                     }
                     else if (element is Edge edge) {
-                        var parent = edge.output.node as NodeView;
-                        var child = edge.input.node as NodeView;
-                        Data.DisconnectNode(parent.Node, child.Node);
+                        var parentView = edge.output.node as NodeView;
+                        var childView = edge.input.node as NodeView;
+                        BehaviourTreeEditorUtility.DisconnectNode(parentView?.Node, childView?.Node);
                     }
                 });
             }
 
             if (graphViewChange.edgesToCreate != null) {
                 graphViewChange.edgesToCreate.ForEach(edge => {
-                    var parent = edge.output.node as NodeView;
-                    var child = edge.input.node as NodeView;
-                    Data.ConnectNode(parent.Node, child.Node);
-                    Data.SortChildren(parent.Node);
+                    var parentView = edge.output.node as NodeView;
+                    var childView = edge.input.node as NodeView;
+                    BehaviourTreeEditorUtility.ConnectNode(parentView?.Node, childView?.Node);
+                    BehaviourTreeEditorUtility.SortChildren(parentView?.Node);
                 });
             }
 
@@ -186,10 +189,8 @@ namespace GameAiBehaviour.Editor {
                         if (input != null) {
                             // 接続されている元のNodeに対してソートを行う
                             foreach (var edge in input.connections) {
-                                var parent = edge.output.node as NodeView;
-                                if (parent != null) {
-                                    Data.SortChildren(parent.Node);
-                                }
+                                var parentView = edge.output.node as NodeView;
+                                BehaviourTreeEditorUtility.SortChildren(parentView?.Node);
                             }
                         }
                     }
@@ -197,6 +198,14 @@ namespace GameAiBehaviour.Editor {
             }
 
             return graphViewChange;
+        }
+
+        /// <summary>
+        /// Undo/Redo通知
+        /// </summary>
+        private void OnUndoRedo() {
+            Load(Data);
+            AssetDatabase.SaveAssets();
         }
     }
 }
