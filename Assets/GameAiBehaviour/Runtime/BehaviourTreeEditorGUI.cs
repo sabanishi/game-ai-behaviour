@@ -22,10 +22,13 @@ namespace GameAiBehaviour {
             }
             
             // Treeがある場合は、BlackboardのPropertyを使ったPopup
-            var propertyNames = CurrentTree.properties
-                .Where(x => typeFilters?.Contains(x.propertyType) ?? true)
-                .Select(x => x.propertyName)
-                .ToArray();
+            var propertyNames = Array.Empty<string>();
+            if (CurrentTree.blackboardAsset != null) {
+                propertyNames = CurrentTree.blackboardAsset.properties
+                    .Where(x => typeFilters?.Contains(x.propertyType) ?? true)
+                    .Select(x => x.propertyName)
+                    .ToArray();
+            }
             if (propertyNames.Length <= 0) {
                 propertyNames = new[] { "Empty" };
             }

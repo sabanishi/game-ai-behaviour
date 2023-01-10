@@ -96,9 +96,7 @@ namespace GameAiBehaviour.Editor {
             var serializedObj = data != null ? new SerializedObject(data) : null;
             _target = data;
             _graphView.Load(_target);
-            _blackboardView.SetPropertiesProperty(serializedObj != null
-                ? serializedObj.FindProperty("properties")
-                : null);
+            _blackboardView.SetBehaviourTreeObject(serializedObj);
             _inspectorView.SetBehaviourTree(_target);
         }
 

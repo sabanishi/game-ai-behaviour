@@ -93,13 +93,7 @@ MonoBehaviour:
   - {fileID: 2283124608860793593}
   - {fileID: -6950444865005838857}
   - {fileID: -1895885672976489729}
-  properties:
-  - propertyName: AAA
-    propertyType: 0
-    integerValue: 0
-    floatValue: 0
-    stringValue: 
-    booleanValue: 0
+  blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &1917303352956534878
 MonoBehaviour:
   m_ObjectHideFlags: 1

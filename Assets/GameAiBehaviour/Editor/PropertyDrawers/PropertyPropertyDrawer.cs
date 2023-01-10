@@ -19,6 +19,8 @@ namespace GameAiBehaviour.Editor {
             rect.y += EditorGUIUtility.standardVerticalSpacing;
             rect.height = height;
             
+            property.serializedObject.Update();
+            
             // タイプ切り替え
             var type = property.FindPropertyRelative("propertyType");
             using (var scope = new EditorGUI.ChangeCheckScope()) {
@@ -50,9 +52,11 @@ namespace GameAiBehaviour.Editor {
                     val = property.FindPropertyRelative("booleanValue");
                     break;
             }
-
+            
             EditorGUI.PropertyField(left, name, GUIContent.none);
             EditorGUI.PropertyField(right, val, GUIContent.none);
+            
+            property.serializedObject.ApplyModifiedProperties();
         }
 
         /// <summary>

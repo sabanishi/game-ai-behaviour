@@ -11,7 +11,7 @@ namespace GameAiBehaviour {
         public string memo = "";
         [HideInInspector, Tooltip("所持ノードリスト")]
         public Node[] nodes = Array.Empty<Node>();
-        [HideInInspector, Tooltip("Blackboardに列挙するプロパティ")]
-        public Property[] properties = Array.Empty<Property>();
+        [Tooltip("Blackboard定義用アセット")]
+        public BlackboardAsset blackboardAsset;
     }
 }

@@ -110,20 +110,22 @@ namespace GameAiBehaviour {
             }
 
             // Blackboard初期化
-            foreach (var property in data.properties) {
-                switch (property.propertyType) {
-                    case Property.Type.Integer:
-                        Blackboard.SetInteger(property.propertyName, property.integerValue);
-                        break;
-                    case Property.Type.Float:
-                        Blackboard.SetFloat(property.propertyName, property.floatValue);
-                        break;
-                    case Property.Type.String:
-                        Blackboard.SetString(property.propertyName, property.stringValue);
-                        break;
-                    case Property.Type.Boolean:
-                        Blackboard.SetBoolean(property.propertyName, property.booleanValue);
-                        break;
+            if (data.blackboardAsset != null) {
+                foreach (var property in data.blackboardAsset.properties) {
+                    switch (property.propertyType) {
+                        case Property.Type.Integer:
+                            Blackboard.SetInteger(property.propertyName, property.integerValue);
+                            break;
+                        case Property.Type.Float:
+                            Blackboard.SetFloat(property.propertyName, property.floatValue);
+                            break;
+                        case Property.Type.String:
+                            Blackboard.SetString(property.propertyName, property.stringValue);
+                            break;
+                        case Property.Type.Boolean:
+                            Blackboard.SetBoolean(property.propertyName, property.booleanValue);
+                            break;
+                    }
                 }
             }
         }

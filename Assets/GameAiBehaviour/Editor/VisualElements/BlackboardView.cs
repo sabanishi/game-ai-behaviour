@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 namespace GameAiBehaviour.Editor {
     /// <summary>
@@ -17,8 +18,12 @@ namespace GameAiBehaviour.Editor {
         private Vector2 _scroll;
         // Treeを制御しているクラス
         private IBehaviourTreeController _controller;
-        // TreeのProperties用プロパティ
-        private SerializedProperty _property;
+        // 表示に使用するBehaviourTree
+        private BehaviourTree _behaviourTree;
+        // Blackboard用アセット
+        private SerializedProperty _blackboardAsset;
+        // Blackboard用のエディタ
+        private UnityEditor.Editor _blackboardEditor;
 
         /// <summary>
         /// コンストラクタ
@@ -36,10 +41,40 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
-        /// Blackboardに乗せるProperties用のProperty設定
+        /// BehaviourTreeのSerializedObjectを設定
         /// </summary>
-        public void SetPropertiesProperty(SerializedProperty property) {
-            _property = property;
+        public void SetBehaviourTreeObject(SerializedObject behaviourTreeObject) {
+            if (behaviourTreeObject != null) {
+                _blackboardAsset = behaviourTreeObject.FindProperty("blackboardAsset");
+            }
+            else {
+                _blackboardAsset = null;
+            }
+        }
+
+        /// <summary>
+        /// BlackboardAsset用のエディタを取得
+        /// </summary>
+        private UnityEditor.Editor GetEditor(BlackboardAsset blackboardAsset) {
+            if (blackboardAsset != null) {
+                if (_blackboardEditor == null || _blackboardEditor.target != blackboardAsset) {
+                    DestroyEditor();
+                }
+
+                _blackboardEditor = UnityEditor.Editor.CreateEditor(blackboardAsset);
+            }
+
+            return _blackboardEditor;
+        }
+
+        /// <summary>
+        /// BlackboardAsset用のエディタの削除
+        /// </summary>
+        private void DestroyEditor() {
+            if (_blackboardEditor != null) {
+                Object.DestroyImmediate(_blackboardEditor);
+                _blackboardEditor = null;
+            }
         }
 
         /// <summary>
@@ -74,15 +109,27 @@ namespace GameAiBehaviour.Editor {
                     (key, result) => blackboard.SetBoolean(key, result));
             }
             else {
-                if (_property != null) {
-                    _property.serializedObject.Update();
+                if (_blackboardAsset != null) {
+                    // BlackboardAssetの参照設定
+                    _blackboardAsset.serializedObject.Update();
+                    EditorGUILayout.PropertyField(_blackboardAsset);
+                    _blackboardAsset.serializedObject.ApplyModifiedProperties();
 
-                    using (var scope = new EditorGUILayout.ScrollViewScope(_scroll)) {
-                        EditorGUILayout.PropertyField(_property);
-                        _scroll = scope.scrollPosition;
+                    // BlackboardAssetの中身表示
+                    var asset = _blackboardAsset.objectReferenceValue as BlackboardAsset;
+                    if (asset != null) {
+                        using (var scope = new EditorGUILayout.ScrollViewScope(_scroll)) {
+                            var editor = GetEditor(asset);
+                            var serializedObj = new SerializedObject(asset);
+                            serializedObj.Update();
+                            editor.OnInspectorGUI();
+                            serializedObj.ApplyModifiedProperties();
+                            _scroll = scope.scrollPosition;
+                        }
                     }
-
-                    _property.serializedObject.ApplyModifiedProperties();
+                    else {
+                        DestroyEditor();
+                    }
                 }
                 else {
                     _scroll = Vector2.zero;
