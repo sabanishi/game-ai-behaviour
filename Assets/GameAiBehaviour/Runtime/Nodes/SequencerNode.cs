@@ -30,7 +30,6 @@ namespace GameAiBehaviour {
 
                 // 先頭ノードを実行
                 if (_index < children.Length) {
-                    Debug.Log($"Update:{_index}");
                     UpdateNode(children[_index]);
                 }
                 else {
@@ -47,7 +46,6 @@ namespace GameAiBehaviour {
                 // 成功していたらRunningへ
                 if (childNodeLogic.State == State.Success) {
                     _index++;
-                    Debug.Log($"Increment:{childNodeLogic.TargetNode.GetType()}");
                     if (_index < Node.children.Length) {
                         return State.Running;
                     }
