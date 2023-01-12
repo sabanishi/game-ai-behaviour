@@ -41,7 +41,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// Running状態の実行処理
             /// </summary>
-            void UpdateRunning();
+            void UpdateRunning(ILogic childNodeLogic);
 
             /// <summary>
             /// 子のNode実行結果を送る
@@ -68,6 +68,8 @@ namespace GameAiBehaviour {
 
             // 現在の状態
             public State State => _state;
+            // 実行中か
+            public bool IsRunning => _state == State.Running;
             // 制御対象のNode
             Node ILogic.TargetNode => Node;
             
@@ -106,46 +108,40 @@ namespace GameAiBehaviour {
             /// <param name="deltaTime">更新にかける時間</param>
             /// <param name="parentNodeLogic">呼び出し元のLogic</param>
             public void Update(ILogic parentNodeLogic) {
-                if (_started) {
-                    Debug.LogWarning($"Nande:{Node.GetType().Name}");
-                    return;
-                }
-                
                 _parentNodeLogic = parentNodeLogic;
                 
                 Start();
 
                 // 自身の更新
                 _state = OnUpdate();
+
+                // 実行完了している場合
+                if (!IsRunning) {
+                    Stop();
+                }
                 
                 // 親NodeLogicに更新結果を送る
                 if (_parentNodeLogic != null) {
                     _parentNodeLogic.SendChildResult(this);
-                }
-
-                if (_state != State.Running) {
-                    Stop();
                 }
             }
 
             /// <summary>
             /// Running状態の更新処理
             /// </summary>
-            public void UpdateRunning() {
-                if (_state != State.Running) {
-                    return;
+            public void UpdateRunning(ILogic childNodeLogic) {
+                if (childNodeLogic != null) {
+                    SendChildResult(childNodeLogic);
                 }
                 
-                // 自身の更新
-                _state = OnUpdate();
+                if (IsRunning) {
+                    // 自身の更新
+                    _state = OnUpdate();
+                }
 
-                if (_state != State.Running) {
+                // 実行完了している場合
+                if (!IsRunning) {
                     Stop();
-                }
-                
-                // 親NodeLogicに更新結果を送る
-                if (_parentNodeLogic != null) {
-                    _parentNodeLogic.SendChildResult(this);
                 }
             }
 
@@ -153,12 +149,11 @@ namespace GameAiBehaviour {
             /// 子要素の結果を送る
             /// </summary>
             public void SendChildResult(ILogic childNodeLogic) {
-                _state = OnUpdatedChild(childNodeLogic);
-                
-                // 親NodeLogicに更新結果を送る
-                if (_parentNodeLogic != null) {
-                    _parentNodeLogic.SendChildResult(this);
+                if (childNodeLogic == null) {
+                    return;
                 }
+                
+                _state = OnUpdatedChild(childNodeLogic);
 
                 if (_state != State.Running) {
                     Stop();
@@ -214,7 +209,6 @@ namespace GameAiBehaviour {
                 if (_started) {
                     OnStop();
                     _started = false;
-                    Debug.Log($"{Node.GetType().Name}:{State}");
                 }
             }
         }

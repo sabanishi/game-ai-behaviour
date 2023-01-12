@@ -176,7 +176,7 @@ namespace GameAiBehaviour {
             }
 
             // スタックの更新
-            void UpdateStack() {
+            void UpdateStack(Node childNode) {
                 if (_runningNodes.Count <= 0) {
                     return;
                 }
@@ -185,17 +185,17 @@ namespace GameAiBehaviour {
                 var lastIndex = _runningNodes.Count - 1;
                 var lastNode = _runningNodes[lastIndex];
                 _runningNodes.RemoveAt(lastIndex);
-                _state = UpdateRunningNode(lastNode);
+                _state = UpdateRunningNode(lastNode, childNode);
 
                 if (_state != Node.State.Running) {
                     // 再起的実行
-                    UpdateStack();
+                    UpdateStack(lastNode);
                 }
             }
 
             // 実行中ノードがあれば実行
             if (_runningNodes.Count > 0) {
-                UpdateStack();
+                UpdateStack(null);
             }
             else {
                 // Logicの状態をリセット
@@ -255,19 +255,16 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 実行中ノードの更新
         /// </summary>
-        private Node.State UpdateRunningNode(Node node) {
+        private Node.State UpdateRunningNode(Node node, Node childNode) {
             var logic = GetLogic(node);
             if (logic == null) {
                 return Node.State.Failure;
             }
 
-            // すでにRunningじゃなくなっていたら何もしない
-            if (logic.State != Node.State.Running) {
-                return logic.State;
-            }
+            var childLogic = GetLogic(childNode);
 
             _runningNodes.Add(node);
-            logic.UpdateRunning();
+            logic.UpdateRunning(childLogic);
             if (logic.State != Node.State.Running) {
                 _runningNodes.Remove(node);
             }
@@ -279,6 +276,10 @@ namespace GameAiBehaviour {
         /// ノード用のロジック取得
         /// </summary>
         private Node.ILogic GetLogic(Node node) {
+            if (node == null) {
+                return null;
+            }
+            
             if (_logics.TryGetValue(node, out var logic)) {
                 return logic;
             }
