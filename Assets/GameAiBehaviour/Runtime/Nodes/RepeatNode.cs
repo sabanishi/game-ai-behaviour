@@ -24,7 +24,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override State OnUpdate() {
                 if (Node.child == null) {
                     return State.Failure;
                 }
@@ -34,24 +34,22 @@ namespace GameAiBehaviour {
                     return State.Success;
                 }
 
-                // 戻り実行の際は実行中として終わる
-                if (back) {
-                    return State.Running;
-                }
-
                 // 接続先ノードの実行
-                var state = UpdateNode(Node.child, deltaTime);
-                _index++;
-                
-                if (state == State.Running) {
-                    return State.Running;
+                UpdateNode(Node.child);
+
+                return State;
+            }
+
+            /// <summary>
+            /// 子要素の更新結果通知
+            /// </summary>
+            protected override State OnUpdatedChild(ILogic childNodeLogic) {
+                // 失敗していたら失敗
+                if (childNodeLogic.State == State.Failure) {
+                    return State.Failure;
                 }
                 
-                // 終了していて指定回数を超えている場合、終了
-                if (_index >= Node.count) {
-                    return State.Success;
-                }
-                
+                // それ以外は実行中
                 return State.Running;
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace GameAiBehaviour {
+﻿using UnityEngine;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// ハンドリング拡張可能な実行ノード（アプリケーション依存度の高いActionNodeはこちらを使う）
     /// </summary>
@@ -23,15 +25,23 @@
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override State OnUpdate() {
                 // Handlerがあればそれを使用
                 if (_actionNodeHandler != null) {
-                    var result = _actionNodeHandler.OnUpdate(Node, deltaTime);
+                    var result = _actionNodeHandler.OnUpdate(Node);
                     return result;
                 }
                 
                 // 無ければそのまま終わる
+                Debug.Log($"Invoke ActionNode[{GetType().Name}]");
                 return State.Success;
+            }
+
+            /// <summary>
+            /// 子要素実行通知
+            /// </summary>
+            protected override State OnUpdatedChild(ILogic childNodeLogic) {
+                return State.Failure;
             }
 
             /// <summary>

@@ -1,3 +1,4 @@
+
 using GameAiBehaviour;
 using UnityEngine;
 
@@ -15,9 +16,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerOwner {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.T)) {
-            _controller.Tick(Time.deltaTime);
-        }
+        _controller.Update(Time.deltaTime);
     }
 
     private void OnDestroy() {

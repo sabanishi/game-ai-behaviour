@@ -17,14 +17,9 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override State OnUpdate() {
                 if (Node.child == null) {
                     return State.Failure;
-                }
-
-                // 戻り実行の際は実行中として終わる
-                if (back) {
-                    return State.Running;
                 }
                 
                 // 条件判定
@@ -33,13 +28,21 @@ namespace GameAiBehaviour {
                 }
 
                 // 接続先ノードの実行
-                var state = UpdateNode(Node.child, deltaTime);
-                
-                // 接続先が失敗していたらNodeを失敗とする
-                if (state == State.Failure) {
+                UpdateNode(Node.child);
+
+                return State;
+            }
+
+            /// <summary>
+            /// 子要素の更新通知
+            /// </summary>
+            protected override State OnUpdatedChild(ILogic childNodeLogic) {
+                // 失敗していたら失敗
+                if (childNodeLogic.State == State.Failure) {
                     return State.Failure;
                 }
-
+                
+                // それ以外は実行中
                 return State.Running;
             }
         }

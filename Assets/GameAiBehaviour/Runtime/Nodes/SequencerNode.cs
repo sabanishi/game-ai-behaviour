@@ -1,4 +1,6 @@
-﻿namespace GameAiBehaviour {
+﻿using UnityEngine;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// シーケンスノード
     /// </summary>
@@ -23,37 +25,37 @@
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override State OnUpdate() {
                 var children = Node.children;
-                
-                // 実行ノードが全て終わった
-                if (_index >= children.Length) {
-                    return State.Success;
-                }
 
-                // 戻り実行の際は実行中として終わる
-                if (back) {
-                    return State.Running;
-                }
-
-                // 接続先ノード実行
+                // 先頭ノードを実行
                 if (_index < children.Length) {
-                    var state = UpdateNode(children[_index], deltaTime);
-                    _index++;
-
-                    // 失敗していたらSequenceNode自体を失敗にする
-                    if (state == State.Failure) {
-                        return State.Failure;
-                    }
+                    Debug.Log($"Update:{_index}");
+                    UpdateNode(children[_index]);
+                }
+                else {
+                    return State.Failure;
                 }
 
-                // 全てのNodeが実行終わっていたら完了
-                if (_index >= children.Length) {
+                return State;
+            }
+
+            /// <summary>
+            /// 子要素の更新結果通知
+            /// </summary>
+            protected override State OnUpdatedChild(ILogic childNodeLogic) {
+                // 成功していたらRunningへ
+                if (childNodeLogic.State == State.Success) {
+                    _index++;
+                    Debug.Log($"Increment:{childNodeLogic.TargetNode.GetType()}");
+                    if (_index < Node.children.Length) {
+                        return State.Running;
+                    }
+
                     return State.Success;
                 }
 
-                // それ以外は継続中
-                return State.Running;
+                return childNodeLogic.State;
             }
         }
 

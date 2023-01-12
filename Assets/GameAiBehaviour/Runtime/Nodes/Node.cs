@@ -19,6 +19,16 @@ namespace GameAiBehaviour {
         /// </summary>
         public interface ILogic : IDisposable {
             /// <summary>
+            /// 制御対象のNode
+            /// </summary>
+            Node TargetNode { get; }
+            
+            /// <summary>
+            /// 現在の状態
+            /// </summary>
+            State State { get; }
+            
+            /// <summary>
             /// 初期化処理
             /// </summary>
             void Initialize();
@@ -26,12 +36,22 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            State Update(float deltaTime, bool back);
+            void Update(ILogic parentNodeLogic);
+
+            /// <summary>
+            /// Running状態の実行処理
+            /// </summary>
+            void UpdateRunning();
+
+            /// <summary>
+            /// 子のNode実行結果を送る
+            /// </summary>
+            void SendChildResult(ILogic childNodeLogic);
 
             /// <summary>
             /// キャンセル処理
             /// </summary>
-            void Cancel();
+            void Reset();
         }
 
         /// <summary>
@@ -41,13 +61,20 @@ namespace GameAiBehaviour {
             where TNode : Node {
             // 開始済みか
             private bool _started;
-            
+            // 実行主のLogic
+            private ILogic _parentNodeLogic;
             // 現在の状態
-            public State State { get; private set; }
+            private State _state;
+
+            // 現在の状態
+            public State State => _state;
+            // 制御対象のNode
+            Node ILogic.TargetNode => Node;
+            
             // 制御用コントローラ
             protected IBehaviourTreeController Controller { get; private set; }
             // 参照元のノード
-            protected TNode Node { get; private set; }
+            protected TNode Node { get; }
 
             /// <summary>
             /// コンストラクタ
@@ -55,7 +82,7 @@ namespace GameAiBehaviour {
             public Logic(IBehaviourTreeController controller, TNode node) {
                 Controller = controller;
                 Node = node;
-                State = State.Inactive;
+                _state = State.Inactive;
             }
 
             /// <summary>
@@ -69,31 +96,82 @@ namespace GameAiBehaviour {
             /// 廃棄時処理
             /// </summary>
             public void Dispose() {
-                Cancel();
+                Reset();
                 OnDispose();
             }
 
             /// <summary>
             /// 更新処理
             /// </summary>
-            public State Update(float deltaTime, bool back) {
+            /// <param name="deltaTime">更新にかける時間</param>
+            /// <param name="parentNodeLogic">呼び出し元のLogic</param>
+            public void Update(ILogic parentNodeLogic) {
+                if (_started) {
+                    Debug.LogWarning($"Nande:{Node.GetType().Name}");
+                    return;
+                }
+                
+                _parentNodeLogic = parentNodeLogic;
+                
                 Start();
 
-                var state = OnUpdate(deltaTime, back);
-                State = state;
-
-                if (state != State.Running) {
-                    Stop();
+                // 自身の更新
+                _state = OnUpdate();
+                
+                // 親NodeLogicに更新結果を送る
+                if (_parentNodeLogic != null) {
+                    _parentNodeLogic.SendChildResult(this);
                 }
 
-                return state;
+                if (_state != State.Running) {
+                    Stop();
+                }
             }
 
             /// <summary>
-            /// キャンセル処理
+            /// Running状態の更新処理
             /// </summary>
-            public void Cancel() {
+            public void UpdateRunning() {
+                if (_state != State.Running) {
+                    return;
+                }
+                
+                // 自身の更新
+                _state = OnUpdate();
+
+                if (_state != State.Running) {
+                    Stop();
+                }
+                
+                // 親NodeLogicに更新結果を送る
+                if (_parentNodeLogic != null) {
+                    _parentNodeLogic.SendChildResult(this);
+                }
+            }
+
+            /// <summary>
+            /// 子要素の結果を送る
+            /// </summary>
+            public void SendChildResult(ILogic childNodeLogic) {
+                _state = OnUpdatedChild(childNodeLogic);
+                
+                // 親NodeLogicに更新結果を送る
+                if (_parentNodeLogic != null) {
+                    _parentNodeLogic.SendChildResult(this);
+                }
+
+                if (_state != State.Running) {
+                    Stop();
+                }
+            }
+
+            /// <summary>
+            /// リセット処理
+            /// </summary>
+            public void Reset() {
                 Stop();
+                _parentNodeLogic = null;
+                _state = State.Inactive;
             }
 
             protected virtual void OnInitialize() {
@@ -105,7 +183,9 @@ namespace GameAiBehaviour {
             protected virtual void OnStart() {
             }
 
-            protected abstract State OnUpdate(float deltaTime, bool back);
+            protected abstract State OnUpdate();
+
+            protected abstract State OnUpdatedChild(ILogic childNodeLogic);
 
             protected virtual void OnStop() {
             }
@@ -113,8 +193,8 @@ namespace GameAiBehaviour {
             /// <summary>
             /// ノードの実行
             /// </summary>
-            protected State UpdateNode(Node node, float deltaTime) {
-                return Controller.UpdateNode(node, deltaTime, false);
+            protected void UpdateNode(Node node) {
+                Controller.UpdateNode(this, node);
             }
 
             /// <summary>
@@ -134,7 +214,7 @@ namespace GameAiBehaviour {
                 if (_started) {
                     OnStop();
                     _started = false;
-                    State = State.Inactive;
+                    Debug.Log($"{Node.GetType().Name}:{State}");
                 }
             }
         }
@@ -165,7 +245,8 @@ namespace GameAiBehaviour {
         /// 値変化通知
         /// </summary>
         private void OnValidate() {
-            hideFlags |= HideFlags.HideInHierarchy;
+            //hideFlags |= HideFlags.HideInHierarchy;
+            hideFlags &= ~HideFlags.HideInHierarchy;
         }
     }
 }

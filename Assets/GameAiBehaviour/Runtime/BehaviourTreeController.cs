@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-//using UnityEngine;
-
 namespace GameAiBehaviour {
     /// <summary>
     /// BehaviourTree制御クラス
@@ -23,6 +21,7 @@ namespace GameAiBehaviour {
         private Node.State _state = Node.State.Success;
         // Rootノード
         private RootNode _rootNode;
+        private float _tickTimer;
         // 実行中ノードスタック
         private List<Node> _runningNodes = new List<Node>();
         // ノードロジック
@@ -33,10 +32,10 @@ namespace GameAiBehaviour {
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
             new Dictionary<Node, IActionNodeHandler>();
 
-        /// <summary>
-        /// Blackboard
-        /// </summary>
+        // プロパティ管理用Blackboard
         public Blackboard Blackboard { get; private set; } = new Blackboard();
+        // 思考頻度
+        public float TickInterval { get; set; } = 1;
 
         /// <summary>
         /// コンストラクタ
@@ -65,7 +64,7 @@ namespace GameAiBehaviour {
         /// <param name="updateFunc">更新関数</param>
         /// <param name="enterAction">開始関数</param>
         /// <param name="exitAction">終了関数</param>
-        public void BindActionNodeHandler<TNode>(Func<TNode, float, Node.State> updateFunc,
+        public void BindActionNodeHandler<TNode>(Func<TNode, Node.State> updateFunc,
             Action<TNode> enterAction = null, Action<TNode> exitAction = null)
             where TNode : HandleableActionNode {
             BindActionNodeHandler<TNode, ObserveActionNodeHandler<TNode>>(handler => {
@@ -135,7 +134,7 @@ namespace GameAiBehaviour {
         /// </summary>
         public void ResetThink() {
             foreach (var logic in _logics) {
-                logic.Value.Cancel();
+                logic.Value.Reset();
             }
 
             _runningNodes.Clear();
@@ -160,15 +159,24 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
-        /// Tree実行
+        /// Tree更新
         /// </summary>
-        public void Tick(float deltaTime) {
+        public void Update(float deltaTime) {
             if (_data == null || _rootNode == null) {
                 return;
             }
+            
+            // Tickタイマー更新
+            if (_tickTimer > 0.0f) {
+                _tickTimer -= deltaTime;
+                return;
+            }
+            else {
+                _tickTimer = TickInterval;
+            }
 
             // スタックの更新
-            void UpdateStack(bool back) {
+            void UpdateStack() {
                 if (_runningNodes.Count <= 0) {
                     return;
                 }
@@ -177,21 +185,26 @@ namespace GameAiBehaviour {
                 var lastIndex = _runningNodes.Count - 1;
                 var lastNode = _runningNodes[lastIndex];
                 _runningNodes.RemoveAt(lastIndex);
-                _state = ((IBehaviourTreeController)this).UpdateNode(lastNode, deltaTime, back);
+                _state = UpdateRunningNode(lastNode);
 
                 if (_state != Node.State.Running) {
                     // 再起的実行
-                    UpdateStack(true);
+                    UpdateStack();
                 }
             }
 
             // 実行中ノードがあれば実行
             if (_runningNodes.Count > 0) {
-                UpdateStack(false);
+                UpdateStack();
             }
             else {
-                // ノードの実行
-                _state = ((IBehaviourTreeController)this).UpdateNode(_rootNode, deltaTime, false);
+                // Logicの状態をリセット
+                foreach (var logic in _logics) {
+                    logic.Value.Reset();
+                }
+                
+                // ルートノードの実行
+                _state = ((IBehaviourTreeController)this).UpdateNode(null, _rootNode);
             }
 
             // ステータスが実行中でなければ、実行中スタックをクリア
@@ -203,19 +216,19 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ノードの実行
         /// </summary>
-        Node.State IBehaviourTreeController.UpdateNode(Node node, float deltaTime, bool back) {
+        Node.State IBehaviourTreeController.UpdateNode(Node.ILogic parentNodeLogic, Node node) {
             var logic = GetLogic(node);
             if (logic == null) {
                 return Node.State.Failure;
             }
 
             _runningNodes.Add(node);
-            var state = logic.Update(deltaTime, back);
-            if (state != Node.State.Running) {
+            logic.Update(parentNodeLogic);
+            if (logic.State != Node.State.Running) {
                 _runningNodes.Remove(node);
             }
 
-            return state;
+            return logic.State;
         }
 
         /// <summary>
@@ -237,6 +250,29 @@ namespace GameAiBehaviour {
             }
 
             return handler;
+        }
+
+        /// <summary>
+        /// 実行中ノードの更新
+        /// </summary>
+        private Node.State UpdateRunningNode(Node node) {
+            var logic = GetLogic(node);
+            if (logic == null) {
+                return Node.State.Failure;
+            }
+
+            // すでにRunningじゃなくなっていたら何もしない
+            if (logic.State != Node.State.Running) {
+                return logic.State;
+            }
+
+            _runningNodes.Add(node);
+            logic.UpdateRunning();
+            if (logic.State != Node.State.Running) {
+                _runningNodes.Remove(node);
+            }
+
+            return logic.State;
         }
 
         /// <summary>

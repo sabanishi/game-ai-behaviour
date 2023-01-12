@@ -8,7 +8,7 @@ namespace GameAiBehaviour {
         where TNode : HandleableActionNode {
 
         private Action<TNode> _enterAction;
-        private Func<TNode, float, Node.State> _updateFunc;
+        private Func<TNode, Node.State> _updateFunc;
         private Action<TNode> _exitAction;
 
         /// <summary>
@@ -27,7 +27,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 更新時処理登録
         /// </summary>
-        public void SetUpdateFunc(Func<TNode, float, Node.State> updateFunc) {
+        public void SetUpdateFunc(Func<TNode, Node.State> updateFunc) {
             _updateFunc = updateFunc;
         }
 
@@ -48,8 +48,8 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 実行ノードの更新処理
         /// </summary>
-        protected override Node.State OnUpdateInternal(TNode node, float deltaTime) {
-            return _updateFunc?.Invoke(node, deltaTime) ?? Node.State.Success;
+        protected override Node.State OnUpdateInternal(TNode node) {
+            return _updateFunc?.Invoke(node) ?? Node.State.Success;
         }
 
         /// <summary>

@@ -15,9 +15,16 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行処理
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override State OnUpdate() {
                 Debug.unityLogger.Log(Node.logType, Node.text);
                 return State.Success;
+            }
+
+            /// <summary>
+            /// 子要素実行通知
+            /// </summary>
+            protected override State OnUpdatedChild(ILogic childNodeLogic) {
+                return State.Failure;
             }
         }
 

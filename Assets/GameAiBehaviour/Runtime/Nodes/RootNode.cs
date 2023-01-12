@@ -11,6 +11,8 @@ namespace GameAiBehaviour {
         public Node child;
 
         private class Logic : Logic<RootNode> {
+            private bool _invoked;
+            
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -18,21 +20,37 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
+            /// 開始時処理
+            /// </summary>
+            protected override void OnStart() {
+                _invoked = false;
+            }
+
+            /// <summary>
             /// 実行処理
             /// </summary>
-            /// <returns></returns>
-            protected override State OnUpdate(float deltaTime, bool back) {
-                // 戻り実行の際は完了扱い
-                if (back) {
-                    return State.Success;
+            protected override State OnUpdate() {
+                if (_invoked) {
+                    return State;
                 }
                 
                 var child = Node.child;
                 if (child != null) {
-                    return UpdateNode(child, deltaTime);
+                    UpdateNode(child);
                 }
 
-                return State.Failure;
+                // 実行済フラグを立てる
+                _invoked = true;
+
+                return State;
+            }
+
+            /// <summary>
+            /// 子要素の更新結果通知
+            /// </summary>
+            protected override State OnUpdatedChild(ILogic childNodeLogic) {
+                // 常に同じStateとする
+                return childNodeLogic.State;
             }
         }
 

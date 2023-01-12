@@ -11,7 +11,7 @@
         /// <summary>
         /// ノードの実行
         /// </summary>
-        Node.State UpdateNode(Node node, float deltaTime, bool back);
+        Node.State UpdateNode(Node.ILogic parentNodeLogic, Node node);
 
         /// <summary>
         /// ノードにBindされているHandlerの取得
