@@ -27,6 +27,11 @@ namespace GameAiBehaviour {
             /// 現在の状態
             /// </summary>
             State State { get; }
+            
+            /// <summary>
+            /// 実行中
+            /// </summary>
+            bool IsRunning { get; }
 
             /// <summary>
             /// 初期化処理
@@ -90,10 +95,10 @@ namespace GameAiBehaviour {
             IEnumerator ILogic.ExecuteRoutine() {
                 // 実行開始
                 IsRunning = true;
-                
+
                 // Override用コード実行
                 yield return ExecuteRoutineInternal();
-                
+
                 // 実行完了
                 IsRunning = false;
             }
@@ -147,7 +152,7 @@ namespace GameAiBehaviour {
             /// </summary>
             protected IEnumerator ExecuteNodeRoutine(Node node, Action<State> onResult) {
                 var logic = Controller.FindLogic(node);
-                
+
                 // Logicが存在しない場合、完了扱い
                 if (logic == null) {
                     Debug.Log($"Skip node logic. {node.GetType().Name}");

@@ -1,22 +1,29 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/GameAiBehaviour/Editor/Resources/behaviour_tree_editor_window.uss?fileID=7433441132597879392&amp;guid=4b821d14c037ef641afcaf1aead615ab&amp;type=3#behaviour_tree_editor_window" />
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements"
+         xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements"
+         noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
+    <Style src="project://database/Assets/GameAiBehaviour/Editor/Resources/behaviour_tree_editor_window.uss?fileID=7433441132597879392&amp;guid=4b821d14c037ef641afcaf1aead615ab&amp;type=3#behaviour_tree_editor_window"/>
     <uie:Toolbar>
-        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
+        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets"/>
     </uie:Toolbar>
     <GameAiBehaviour.Editor.SplitView fixed-pane-initial-dimension="250" fixed-pane-index="1">
         <ui:VisualElement name="left-panel">
-            <ui:Label text="Tree View" display-tooltip-when-elided="true" style="background-color: rgb(25, 25, 25); padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;" />
-            <GameAiBehaviour.Editor.BehaviourTreeView focusable="true" style="flex-grow: 1; position: relative;" />
+            <ui:Label text="Tree View" display-tooltip-when-elided="true"
+                      style="background-color: rgb(25, 25, 25); padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;"/>
+            <GameAiBehaviour.Editor.BehaviourTreeView focusable="true" style="flex-grow: 1; position: relative;"/>
         </ui:VisualElement>
         <ui:VisualElement name="right-panel" style="min-width: 20px;">
-            <GameAiBehaviour.Editor.SplitView orientation="Vertical" fixed-pane-index="1" fixed-pane-initial-dimension="200">
+            <GameAiBehaviour.Editor.SplitView orientation="Vertical" fixed-pane-index="1"
+                                              fixed-pane-initial-dimension="200">
                 <ui:VisualElement name="top-panel" style="min-height: 100px;">
-                    <ui:Label text="Inspector" display-tooltip-when-elided="true" name="inspector-label" style="background-color: rgb(25, 25, 25); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
-                    <GameAiBehaviour.Editor.InspectorView name="inspector-content" style="margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px;" />
+                    <ui:Label text="Inspector" display-tooltip-when-elided="true" name="inspector-label"
+                              style="background-color: rgb(25, 25, 25); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;"/>
+                    <GameAiBehaviour.Editor.InspectorView name="inspector-content"
+                                                          style="margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px;"/>
                 </ui:VisualElement>
                 <ui:VisualElement name="bottom_panel" style="min-height: 100px;">
-                    <ui:Label text="Blackboard" display-tooltip-when-elided="true" name="blackboard-label" style="background-color: rgb(25, 25, 25); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;" />
-                    <GameAiBehaviour.Editor.BlackboardView name="blackboard-content" />
+                    <ui:Label text="Blackboard" display-tooltip-when-elided="true" name="blackboard-label"
+                              style="background-color: rgb(25, 25, 25); margin-left: 0; margin-right: 0; margin-top: 0; margin-bottom: 0;"/>
+                    <GameAiBehaviour.Editor.BlackboardView name="blackboard-content"/>
                 </ui:VisualElement>
             </GameAiBehaviour.Editor.SplitView>
         </ui:VisualElement>

@@ -15,7 +15,7 @@ namespace GameAiBehaviour.Editor {
         private BehaviourTree _target;
 
         // UIElement
-        private BehaviourTreeView _graphView;
+        private BehaviourTreeView _behaviourTreeView;
         private InspectorView _inspectorView;
         private BlackboardView _blackboardView;
 
@@ -61,11 +61,11 @@ namespace GameAiBehaviour.Editor {
             var styleSheet = Resources.Load<StyleSheet>("behaviour_tree_editor_window");
             root.styleSheets.Add(styleSheet);
 
-            _graphView = root.Q<BehaviourTreeView>();
+            _behaviourTreeView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
             _blackboardView = root.Q<BlackboardView>();
 
-            _graphView.OnChangedSelectionNodeViews = nodeViews => {
+            _behaviourTreeView.OnChangedSelectionNodeViews = nodeViews => {
                 // 選択対象の更新
                 _inspectorView.UpdateSelection(nodeViews.Select(x => x.Node).ToArray());
             };
@@ -73,7 +73,7 @@ namespace GameAiBehaviour.Editor {
                 // 編集時はNodeViewをリフレッシュ
                 foreach (var target in targets) {
                     if (target is Node node) {
-                        var nodeView = _graphView.GetNodeByGuid(node.guid) as NodeView;
+                        var nodeView = _behaviourTreeView.GetNodeByGuid(node.guid) as NodeView;
                         nodeView?.Refresh();
                     }
                 }
@@ -81,12 +81,21 @@ namespace GameAiBehaviour.Editor {
 
             // ノード生成処理
             var provider = CreateInstance<CreateNodeSearchWindowProvider>();
-            provider.Initialize(_graphView, this);
-            _graphView.nodeCreationRequest = context => {
+            provider.Initialize(_behaviourTreeView, this);
+            _behaviourTreeView.nodeCreationRequest = context => {
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), provider);
             };
 
             Setup(_target);
+        }
+
+        /// <summary>
+        /// 更新処理
+        /// </summary>
+        private void Update() {
+            if (_behaviourTreeView != null) {
+                _behaviourTreeView.RefreshNodeLogicStatus();
+            }
         }
 
         /// <summary>
@@ -95,7 +104,7 @@ namespace GameAiBehaviour.Editor {
         private void Setup(BehaviourTree data) {
             var serializedObj = data != null ? new SerializedObject(data) : null;
             _target = data;
-            _graphView.Load(_target);
+            _behaviourTreeView.Load(_target);
             _blackboardView.SetBehaviourTreeObject(serializedObj);
             _inspectorView.SetBehaviourTree(_target);
         }
@@ -119,9 +128,11 @@ namespace GameAiBehaviour.Editor {
 
             if (_owner != null) {
                 _blackboardView.SetController(_owner.BehaviourTreeController);
+                _behaviourTreeView.SetController(_owner.BehaviourTreeController);
             }
             else {
                 _blackboardView.SetController(null);
+                _behaviourTreeView.SetController(null);
             }
         }
     }

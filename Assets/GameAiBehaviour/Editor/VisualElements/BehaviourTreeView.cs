@@ -24,6 +24,8 @@ namespace GameAiBehaviour.Editor {
             public Node[] nodes;
         }
 
+        private BehaviourTreeController _behaviourTreeController;
+
         public Action<NodeView[]> OnChangedSelectionNodeViews;
         public BehaviourTree Data { get; private set; }
 
@@ -128,6 +130,62 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
+        /// BehaviourTreeControllerの参照を設定
+        /// </summary>
+        public void SetController(BehaviourTreeController behaviourTreeController) {
+            _behaviourTreeController = behaviourTreeController;
+
+            // Nodeの状態をリセット
+            foreach (var node in nodes) {
+                if (!(node is NodeView nodeView)) {
+                    continue;
+                }
+
+                nodeView.SetNodeState(NodeView.State.Default);
+            }
+        }
+
+        /// <summary>
+        /// NodeLogicの状態を更新
+        /// </summary>
+        public void RefreshNodeLogicStatus() {
+            if (_behaviourTreeController == null) {
+                return;
+            }
+
+            var controller = (IBehaviourTreeController)_behaviourTreeController;
+
+            // Nodeの状態更新
+            foreach (var node in nodes) {
+                if (!(node is NodeView nodeView)) {
+                    continue;
+                }
+
+                var logic = controller.FindLogic(nodeView.Node);
+                if (logic == null) {
+                    continue;
+                }
+
+                if (logic.IsRunning) {
+                    nodeView.SetNodeState(NodeView.State.Running);
+                }
+                else {
+                    switch (logic.State) {
+                        case Node.State.Success:
+                            nodeView.SetNodeState(NodeView.State.Success);
+                            break;
+                        case Node.State.Failure:
+                            nodeView.SetNodeState(NodeView.State.Failure);
+                            break;
+                        default:
+                            nodeView.SetNodeState(NodeView.State.Default);
+                            break;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 選択状態の追加
         /// </summary>
         public override void AddToSelection(ISelectable selectable) {
@@ -161,8 +219,10 @@ namespace GameAiBehaviour.Editor {
 
             var parentElement = GetElementByGuid(parent.guid) as NodeView;
             var childElement = GetElementByGuid(child.guid) as NodeView;
-            var edge = parentElement.Output.ConnectTo(childElement.Input);
-            AddElement(edge);
+            if (parentElement != null && childElement != null) {
+                var edge = parentElement.Output.ConnectTo<NodeEdge>(childElement.Input);
+                AddElement(edge);
+            }
         }
 
         /// <summary>

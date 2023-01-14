@@ -23,7 +23,7 @@ namespace GameAiBehaviour {
                 while (Controller.ThinkTime - startTime < Node.duration) {
                     yield return this;
                 }
-                
+
                 // 完了
                 SetState(State.Success);
 

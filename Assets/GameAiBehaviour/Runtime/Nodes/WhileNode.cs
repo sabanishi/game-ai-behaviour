@@ -23,12 +23,12 @@ namespace GameAiBehaviour {
                     SetState(State.Failure);
                     yield break;
                 }
-                
+
                 // 条件判定に失敗するまで繰り返す
                 while (Node.conditions.Check(Controller.Blackboard)) {
                     // 接続先ノードの実行
                     yield return ExecuteNodeRoutine(Node.child, SetState);
-                    
+
                     // 成功していたら処理継続
                     if (State == State.Success) {
                         yield return this;
@@ -40,7 +40,7 @@ namespace GameAiBehaviour {
                 }
             }
         }
-        
+
         [Tooltip("条件")]
         public ConditionGroup conditions;
 

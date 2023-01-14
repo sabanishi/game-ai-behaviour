@@ -29,7 +29,7 @@ MonoBehaviour:
   m_Name: IfNode
   m_EditorClassIdentifier: 
   guid: ef03001decfcee2458e6ef0ff2e6200d
-  position: {x: 159.68, y: 229}
+  position: {x: 153.64502, y: 228.99998}
   title: 
   child: {fileID: 2118217804359472935}
   conditions:
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: 8cf5b0cfccdf347f0a01cfba22cbeb50
-  position: {x: 620, y: 408}
+  position: {x: 715, y: 410.00003}
   title: 
   logType: 3
   text: B

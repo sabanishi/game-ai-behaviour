@@ -9,7 +9,7 @@ namespace GameAiBehaviour {
         /// 思考実行してからの経過時間
         /// </summary>
         float ThinkTime { get; }
-        
+
         /// <summary>
         /// Blackboard
         /// </summary>

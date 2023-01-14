@@ -10,6 +10,16 @@ namespace GameAiBehaviour.Editor {
     /// エディタ用のノード
     /// </summary>
     public class NodeView : GraphNode {
+        /// <summary>
+        /// ノードの状態
+        /// </summary>
+        public enum State {
+            Default,
+            Success,
+            Failure,
+            Running,
+        }
+
         private Label _descriptionLabel;
 
         public sealed override string title {
@@ -73,17 +83,30 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
-        /// コンストラクタ
-        /// </summary>
-        public NodeView() {
-        }
-
-        /// <summary>
         /// 値更新時などのリフレッシュ
         /// </summary>
         public void Refresh() {
             title = Node.title;
             Description = Node.Description;
+        }
+
+        /// <summary>
+        /// ノードの実行アクティブ状態の設定
+        /// </summary>
+        public void SetNodeState(State state) {
+            var classNames = new[] {
+                "success",
+                "failure",
+                "running"
+            };
+
+            foreach (var className in classNames) {
+                RemoveFromClassList(className);
+            }
+
+            if (state != State.Default) {
+                AddToClassList(classNames[(int)state - 1]);
+            }
         }
 
         /// <summary>
