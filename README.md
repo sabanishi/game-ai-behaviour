@@ -22,5 +22,5 @@
     }
 }
 ```
-バージョンを指定したい場合には以下のように記述します。
+バージョンを指定したい場合には以下のように記述します。  
 https://github.com/DaitokuAmygame-ai-behaviour.git?path=/Assets/GameAiBehaviour#1.0.0
