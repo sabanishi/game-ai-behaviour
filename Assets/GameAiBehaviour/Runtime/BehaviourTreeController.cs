@@ -8,6 +8,14 @@ namespace GameAiBehaviour {
     /// </summary>
     public class BehaviourTreeController : IBehaviourTreeController {
         /// <summary>
+        /// 実行パス
+        /// </summary>
+        public struct Path {
+            public Node.ILogic prev;
+            public Node.ILogic next;
+        }
+        
+        /// <summary>
         /// ActionHandler情報
         /// </summary>
         private class ActionHandlerInfo {
@@ -32,6 +40,8 @@ namespace GameAiBehaviour {
             new Dictionary<Node, IActionNodeHandler>();
         // 実行用ルーチン
         private NodeLogicRoutine _nodeLogicRoutine;
+        // 実行履歴パス
+        private List<Path> _executedPaths = new List<Path>(); 
 
         // 思考開始からの経過時間
         public float ThinkTime { get; private set; }
@@ -43,6 +53,8 @@ namespace GameAiBehaviour {
         public Node.State CurrentState => _nodeLogicRoutine?.Current?.State ?? Node.State.Inactive;
         // 実行中か
         public bool IsRunning => _nodeLogicRoutine != null;
+        // 実行履歴のパス
+        public IReadOnlyList<Path> ExecutedPaths => _executedPaths;
 
         /// <summary>
         /// コンストラクタ
@@ -145,6 +157,7 @@ namespace GameAiBehaviour {
             }
 
             _nodeLogicRoutine = null;
+            _executedPaths.Clear();
             _tickTimer = 0.0f;
         }
 
@@ -197,15 +210,17 @@ namespace GameAiBehaviour {
                 UpdateRoutine();
             }
             else {
-                // Logicの状態をリセット
+                // 実行状態をリセット
                 foreach (var logic in _logics) {
                     logic.Value.Reset();
                 }
+                
+                _executedPaths.Clear();
+                ThinkTime = 0.0f;
 
                 // RootNode起点のRoutineを生成
                 var rootLogic = ((IBehaviourTreeController)this).FindLogic(_rootNode);
                 _nodeLogicRoutine = new NodeLogicRoutine(rootLogic.ExecuteRoutine());
-                ThinkTime = 0.0f;
 
                 // ルーチン実行
                 UpdateRoutine();
@@ -270,6 +285,13 @@ namespace GameAiBehaviour {
         /// </summary>
         void IBehaviourTreeController.ResetTickTimer() {
             _tickTimer = 0.0f;
+        }
+
+        /// <summary>
+        /// 実行パスの追加
+        /// </summary>
+        void IBehaviourTreeController.AddExecutedPath(Node.ILogic prev, Node.ILogic next) {
+            _executedPaths.Add(new Path { prev = prev, next = next });
         }
     }
 }

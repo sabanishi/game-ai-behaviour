@@ -16,6 +16,11 @@ namespace GameAiBehaviour {
             /// 実行ルーチン
             /// </summary>
             protected override IEnumerator ExecuteRoutineInternal() {
+                if (Node.children.Length <= 0) {
+                    SetState(State.Failure);
+                    yield break;
+                }
+                
                 // 順番に実行
                 for (var i = 0; i < Node.children.Length; i++) {
                     var node = Node.children[i];
@@ -23,6 +28,10 @@ namespace GameAiBehaviour {
 
                     // 成功していたら待機
                     if (State == State.Success) {
+                        // 最後だったら終わる
+                        if (i >= Node.children.Length - 1) {
+                            break;
+                        }
                         yield return this;
                     }
                     // 失敗していた場合、そのまま失敗として終了
@@ -30,9 +39,6 @@ namespace GameAiBehaviour {
                         yield break;
                     }
                 }
-
-                // 誰も実行できなかった場合、失敗とする
-                SetState(State.Failure);
             }
         }
 

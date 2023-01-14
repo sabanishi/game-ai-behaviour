@@ -25,6 +25,8 @@ namespace GameAiBehaviour.Editor {
         }
 
         private BehaviourTreeController _behaviourTreeController;
+        private List<NodeView> _tempNodeViews = new List<NodeView>();
+        private List<NodeEdge> _tempNodeEdges = new List<NodeEdge>();
 
         public Action<NodeView[]> OnChangedSelectionNodeViews;
         public BehaviourTree Data { get; private set; }
@@ -152,35 +154,62 @@ namespace GameAiBehaviour.Editor {
             if (_behaviourTreeController == null) {
                 return;
             }
+            
+            // Node/Edgeの取得
+            _tempNodeViews.Clear();
+            _tempNodeViews.AddRange(nodes.OfType<NodeView>());
+            _tempNodeEdges.Clear();
+            _tempNodeEdges.AddRange(_tempNodeViews
+                .SelectMany(x => x.Output?.connections ?? Array.Empty<Edge>())
+                .OfType<NodeEdge>());
+            
+            // 各種状態のリセット
+            foreach (var nodeView in _tempNodeViews) {
+                nodeView.SetNodeState(NodeView.State.Default);
+            }
 
-            var controller = (IBehaviourTreeController)_behaviourTreeController;
-
-            // Nodeの状態更新
-            foreach (var node in nodes) {
-                if (!(node is NodeView nodeView)) {
-                    continue;
-                }
-
-                var logic = controller.FindLogic(nodeView.Node);
-                if (logic == null) {
-                    continue;
-                }
-
-                if (logic.IsRunning) {
-                    nodeView.SetNodeState(NodeView.State.Running);
+            foreach (var nodeEdge in _tempNodeEdges) {
+                nodeEdge.IsRan = false;
+            }
+            
+            // ノードの状態を設定
+            void SetNodeState(NodeView view, Node.ILogic nodeLogic) {
+                if (nodeLogic.IsRunning) {
+                    view.SetNodeState(NodeView.State.Running);
                 }
                 else {
-                    switch (logic.State) {
+                    switch (nodeLogic.State) {
                         case Node.State.Success:
-                            nodeView.SetNodeState(NodeView.State.Success);
+                            view.SetNodeState(NodeView.State.Success);
                             break;
                         case Node.State.Failure:
-                            nodeView.SetNodeState(NodeView.State.Failure);
+                            view.SetNodeState(NodeView.State.Failure);
                             break;
                         default:
-                            nodeView.SetNodeState(NodeView.State.Default);
+                            view.SetNodeState(NodeView.State.Default);
                             break;
                     }
+                }
+            }
+            
+            // 実行履歴の反映
+            foreach (var path in _behaviourTreeController.ExecutedPaths) {
+                var prevView = _tempNodeViews.FirstOrDefault(x => x.Node == path.prev.TargetNode);
+                var nextView = _tempNodeViews.FirstOrDefault(x => x.Node == path.next.TargetNode);
+                var edge = _tempNodeEdges.FirstOrDefault(x =>
+                    ((NodeView)x.input.node).Node == path.next.TargetNode &&
+                    ((NodeView)x.output.node).Node == path.prev.TargetNode);
+                
+                if (prevView != null) {
+                    SetNodeState(prevView, path.prev);
+                }
+                
+                if (nextView != null) {
+                    SetNodeState(nextView, path.next);
+                }
+
+                if (edge != null) {
+                    edge.IsRan = true;
                 }
             }
         }

@@ -7,17 +7,18 @@ namespace GameAiBehaviour.Editor {
     /// エディタ用のノードエッジ
     /// </summary>
     public class NodeEdge : Edge {
-        private bool _running;
+        // 実行したか
+        private bool _ran;
         
-        // 実行中状態
-        public bool IsRunning {
-            get => _running;
+        // 実行状態
+        public bool IsRan {
+            get => _ran;
             set {
-                if (value == _running) {
+                if (value == _ran) {
                     return;
                 }
                 
-                _running = value;
+                _ran = value;
                 UpdateEdgeControl();
             }
         }
@@ -65,7 +66,7 @@ namespace GameAiBehaviour.Editor {
         /// エッジコントロールの色更新
         /// </summary>
         private void UpdateEdgeControlColors() {
-            if (IsRunning) {
+            if (IsRan) {
                 edgeControl.inputColor = new Color(1, 1, 0, 1);
                 edgeControl.outputColor = new Color(1, 1, 0, 1);
             }

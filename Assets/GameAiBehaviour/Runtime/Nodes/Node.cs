@@ -160,6 +160,9 @@ namespace GameAiBehaviour {
                     onResult?.Invoke(State.Success);
                     yield break;
                 }
+                
+                // 実行パスを記憶
+                Controller.AddExecutedPath(this, logic);
 
                 // Logicが存在する場合、さらにRoutineを実行
                 yield return logic.ExecuteRoutine();

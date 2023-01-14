@@ -16,6 +16,25 @@ MonoBehaviour:
   position: {x: 537, y: -116.30002}
   title: 
   child: {fileID: 299288502928017254}
+--- !u!114 &-8624722297150084614
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2ffeaf9c266e452186527cce6c550d0, type: 3}
+  m_Name: WhileNode
+  m_EditorClassIdentifier: 
+  guid: 57c8b7e71e3a935478fb3a8bf7bfd185
+  position: {x: 1293, y: 546}
+  title: 
+  child: {fileID: 2519555516715744621}
+  conditions:
+    conditions:
+    - {fileID: -1704354767421863799}
 --- !u!114 &-8116135557820861484
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -90,6 +109,23 @@ MonoBehaviour:
     constValue: 1
     propertyName: 
   operatorType: 0
+--- !u!114 &-3049482232281172655
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75175185b19834050a6c660744cf3fc7, type: 3}
+  m_Name: RepeatNode
+  m_EditorClassIdentifier: 
+  guid: d6f7840b3ec2e3646a3ce82d480ac0ea
+  position: {x: 1118, y: 463}
+  title: 
+  child: {fileID: -2794889183983282705}
+  count: 2
 --- !u!114 &-2794889183983282705
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -103,10 +139,31 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: daf24234488114343a23cc5a97af2934
-  position: {x: 1123, y: 464}
+  position: {x: 1118, y: 547}
   title: 
   logType: 3
   text: F
+--- !u!114 &-1704354767421863799
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d92910406f2c45dfb507fe9d0faba4f, type: 3}
+  m_Name: BooleanCondition
+  m_EditorClassIdentifier: 
+  leftValue:
+    useProperty: 1
+    constValue: 0
+    propertyName: Check
+  rightValue:
+    useProperty: 0
+    constValue: 1
+    propertyName: 
+  operatorType: 0
 --- !u!114 &-1021410459844980417
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -127,7 +184,7 @@ MonoBehaviour:
     useProperty: 0
     constValue: 10
     propertyName: 
-  operatorType: 5
+  operatorType: 2
 --- !u!114 &-969401283568649419
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -145,7 +202,7 @@ MonoBehaviour:
   title: 
   children:
   - {fileID: 3485847957161675038}
-  - {fileID: -2794889183983282705}
+  - {fileID: -3049482232281172655}
   - {fileID: 1622228549096825288}
 --- !u!114 &-624816096900473424
 MonoBehaviour:
@@ -201,6 +258,8 @@ MonoBehaviour:
   - {fileID: -8116135557820861484}
   - {fileID: 639150554604916338}
   - {fileID: -7048618745569939380}
+  - {fileID: -3049482232281172655}
+  - {fileID: -8624722297150084614}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &299288502928017254
 MonoBehaviour:
@@ -252,7 +311,7 @@ MonoBehaviour:
   guid: c79b09c633366445798418ce2a1d9327
   position: {x: 1293, y: 464}
   title: 
-  child: {fileID: 2519555516715744621}
+  child: {fileID: -8624722297150084614}
   conditions:
     conditions:
     - {fileID: 3947253764233059779}
@@ -344,7 +403,7 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: bb07fdc03f455401f935ac4eda6cb025
-  position: {x: 1293, y: 546.56}
+  position: {x: 1293.0001, y: 627.6725}
   title: 
   logType: 3
   text: G
@@ -383,9 +442,9 @@ MonoBehaviour:
     propertyName: 
   rightValue:
     useProperty: 0
-    constValue: 0
+    constValue: 1
     propertyName: 
-  operatorType: 1
+  operatorType: 0
 --- !u!114 &4673337000884205205
 MonoBehaviour:
   m_ObjectHideFlags: 1

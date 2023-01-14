@@ -38,6 +38,9 @@ namespace GameAiBehaviour {
                         yield break;
                     }
                 }
+                
+                // 一度も実行されない場合を見越して成功にしておく
+                SetState(State.Success);
             }
         }
 

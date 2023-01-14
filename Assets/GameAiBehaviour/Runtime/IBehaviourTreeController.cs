@@ -34,5 +34,10 @@ namespace GameAiBehaviour {
         /// TickTimerのリセット
         /// </summary>
         void ResetTickTimer();
+
+        /// <summary>
+        /// 実行パスの追加
+        /// </summary>
+        void AddExecutedPath(Node.ILogic prev, Node.ILogic next);
     }
 }
