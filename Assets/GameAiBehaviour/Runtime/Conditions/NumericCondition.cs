@@ -8,9 +8,8 @@ namespace GameAiBehaviour {
     public abstract class NumericCondition<T, TValueObject> : ValueCondition<T, TValueObject>
         where T : IComparable
         where TValueObject : ValueObject<T> {
-
         // 演算子
-        public NumericOperatorType operatorType = NumericOperatorType.Equal;  
+        public NumericOperatorType operatorType = NumericOperatorType.Equal;
 
         // 条件タイトル
         public override string ConditionTitle => $"{leftValue} {operatorType.GetMark()} {rightValue}";

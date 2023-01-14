@@ -15,15 +15,15 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 // 子がいない場合は失敗
                 if (Node.child == null) {
                     SetState(State.Failure);
                     yield break;
                 }
-                
+
                 // 条件判定に失敗したら失敗
                 if (!Node.conditions.Check(Controller.Blackboard)) {
                     SetState(State.Failure);
@@ -31,10 +31,10 @@ namespace GameAiBehaviour {
                 }
 
                 // 接続先ノードの実行
-                yield return UpdateNodeRoutine(Node.child, SetState);
+                yield return ExecuteNodeRoutine(Node.child, SetState);
             }
         }
-        
+
         [Tooltip("条件")]
         public ConditionGroup conditions = new ConditionGroup();
 

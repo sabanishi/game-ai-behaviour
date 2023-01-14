@@ -18,7 +18,7 @@ namespace GameAiBehaviour.Editor {
         private BehaviourTreeView _graphView;
         private InspectorView _inspectorView;
         private BlackboardView _blackboardView;
-        
+
         // BehaviourTreeControllerのオーナー
         private IBehaviourTreeControllerOwner _owner;
 

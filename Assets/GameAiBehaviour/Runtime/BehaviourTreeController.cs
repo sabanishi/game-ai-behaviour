@@ -204,7 +204,7 @@ namespace GameAiBehaviour {
 
                 // RootNode起点のRoutineを生成
                 var rootLogic = ((IBehaviourTreeController)this).FindLogic(_rootNode);
-                _nodeLogicRoutine = new NodeLogicRoutine(rootLogic.UpdateRoutine());
+                _nodeLogicRoutine = new NodeLogicRoutine(rootLogic.ExecuteRoutine());
                 ThinkTime = 0.0f;
 
                 // ルーチン実行

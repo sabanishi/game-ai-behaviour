@@ -107,7 +107,7 @@ MonoBehaviour:
   m_Name: SequencerNode
   m_EditorClassIdentifier: 
   guid: fa43ecf0c612e43e8ad061a7b29186b4
-  position: {x: 954, y: 333}
+  position: {x: 954, y: 321.50003}
   title: 
   children:
   - {fileID: 3485847957161675038}

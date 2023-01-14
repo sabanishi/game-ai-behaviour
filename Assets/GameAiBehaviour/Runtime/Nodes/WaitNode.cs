@@ -14,9 +14,9 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 var startTime = Controller.ThinkTime;
 
                 // 時間経過するまで待ち合わせ

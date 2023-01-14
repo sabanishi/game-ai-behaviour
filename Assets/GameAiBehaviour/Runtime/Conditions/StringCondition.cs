@@ -10,7 +10,7 @@ namespace GameAiBehaviour {
         /// </summary>
         [Serializable]
         public class ValueObject : ValueObject<string> {
-        }  
+        }
 
         // 条件タイトル
         public override string ConditionTitle => $"[String]{base.ConditionTitle}";

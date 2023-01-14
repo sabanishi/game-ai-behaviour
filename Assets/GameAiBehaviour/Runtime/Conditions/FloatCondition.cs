@@ -11,7 +11,7 @@ namespace GameAiBehaviour {
         [Serializable]
         public class ValueObject : ValueObject<float> {
         }
-        
+
         public override string ConditionTitle => $"[Float]{base.ConditionTitle}";
 
         /// <summary>

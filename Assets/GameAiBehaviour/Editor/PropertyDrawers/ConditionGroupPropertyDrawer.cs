@@ -17,10 +17,10 @@ namespace GameAiBehaviour.Editor {
             public SerializedProperty listProperty;
             public ReorderableList reorderableList;
         }
-        
+
         // Conditionの詳細表示用BoxのPadding
         private const float BoxPadding = 2;
-        
+
         private Dictionary<string, PropertyInfo> _propertyInfos = new Dictionary<string, PropertyInfo>();
         private PropertyInfo _propertyInfo;
 
@@ -35,10 +35,12 @@ namespace GameAiBehaviour.Editor {
                 rect.height = _propertyInfo.reorderableList.GetHeight();
                 _propertyInfo.reorderableList.DoList(rect);
                 rect.y += rect.height;
-                
+
                 // 選択中の物があった場合、その描画を行う
-                if (_propertyInfo.reorderableList.index >= 0 && _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
-                    var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
+                if (_propertyInfo.reorderableList.index >= 0 &&
+                    _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
+                    var element =
+                        _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                     var condition = element.objectReferenceValue as Condition;
                     if (condition != null) {
                         var serializedObj = new SerializedObject(condition);
@@ -72,7 +74,8 @@ namespace GameAiBehaviour.Editor {
             }
 
             // 選択中の物があった場合、その分の高さを加える
-            if (_propertyInfo.reorderableList.index >= 0 && _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
+            if (_propertyInfo.reorderableList.index >= 0 &&
+                _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
                 var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
                 var condition = element.objectReferenceValue as Condition;
                 if (condition != null) {
@@ -82,13 +85,12 @@ namespace GameAiBehaviour.Editor {
 
             return height;
         }
-        
+
         /// <summary>
         /// 初期化処理
         /// </summary>
-        private void Initialize(SerializedProperty property)
-        {
-            if (_propertyInfos.TryGetValue(property.propertyPath, out _propertyInfo)){
+        private void Initialize(SerializedProperty property) {
+            if (_propertyInfos.TryGetValue(property.propertyPath, out _propertyInfo)) {
                 return;
             }
 
@@ -118,6 +120,7 @@ namespace GameAiBehaviour.Editor {
                     // ラベルの高さ
                     return EditorGUIUtility.singleLineHeight;
                 }
+
                 return EditorGUI.GetPropertyHeight(prop);
             };
             reorderableList.onAddDropdownCallback = (rect, list) => {
@@ -134,6 +137,7 @@ namespace GameAiBehaviour.Editor {
                         AssetDatabase.SaveAssets();
                     });
                 }
+
                 menu.ShowAsContext();
             };
             reorderableList.onRemoveCallback = list => {
@@ -142,14 +146,12 @@ namespace GameAiBehaviour.Editor {
                 AssetDatabase.SaveAssets();
                 reorderableList.index--;
             };
-            Undo.undoRedoPerformed += () => {
-
-            };
+            Undo.undoRedoPerformed += () => { };
             _propertyInfo.reorderableList = reorderableList;
 
             _propertyInfos.Add(property.propertyPath, _propertyInfo);
         }
-        
+
         /// <summary>
         /// RectにPaddingを加える
         /// </summary>

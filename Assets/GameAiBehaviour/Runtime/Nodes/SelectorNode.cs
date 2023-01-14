@@ -13,14 +13,14 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 // 順番に実行トライ
                 for (var i = 0; i < Node.children.Length; i++) {
                     var node = Node.children[i];
-                    yield return UpdateNodeRoutine(node, SetState);
-                    
+                    yield return ExecuteNodeRoutine(node, SetState);
+
                     // 成功していた場合、完了とする
                     if (State == State.Success) {
                         yield break;

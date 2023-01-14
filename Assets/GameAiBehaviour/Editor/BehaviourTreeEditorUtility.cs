@@ -17,7 +17,7 @@ namespace GameAiBehaviour {
             if (tree == null) {
                 return null;
             }
-            
+
             var serializedObj = new SerializedObject(tree);
             var nodes = serializedObj.FindProperty("nodes");
 
@@ -46,7 +46,7 @@ namespace GameAiBehaviour {
             if (tree == null || node == null) {
                 return;
             }
-            
+
             var serializedObj = new SerializedObject(tree);
             var nodesProp = serializedObj.FindProperty("nodes");
 
@@ -84,7 +84,7 @@ namespace GameAiBehaviour {
 
             EditorUtility.SetDirty(tree);
         }
-        
+
         /// <summary>
         /// ノードの複製
         /// </summary>
@@ -103,13 +103,13 @@ namespace GameAiBehaviour {
 
                 dict[baseNode] = node;
             }
-            
+
             // 参照先をつなぎなおし（参照先がないものはクリア）
             foreach (var node in dict.Values) {
                 var nodeObj = new SerializedObject(node);
                 var childProp = nodeObj.FindProperty("child");
                 var childrenProp = nodeObj.FindProperty("children");
-            
+
                 nodeObj.Update();
 
                 if (childProp != null) {
@@ -149,7 +149,7 @@ namespace GameAiBehaviour {
             if (parent == null || child == null) {
                 return;
             }
-            
+
             var parentObj = new SerializedObject(parent);
             var childProp = parentObj.FindProperty("child");
             var childrenProp = parentObj.FindProperty("children");
@@ -178,7 +178,7 @@ namespace GameAiBehaviour {
             if (parent == null || child == null) {
                 return;
             }
-            
+
             var parentObj = new SerializedObject(parent);
             var childProp = parentObj.FindProperty("child");
             var childrenProp = parentObj.FindProperty("children");
@@ -216,7 +216,7 @@ namespace GameAiBehaviour {
             if (parent == null) {
                 return;
             }
-            
+
             var parentObj = new SerializedObject(parent);
             var childrenProp = parentObj.FindProperty("children");
 
@@ -230,7 +230,7 @@ namespace GameAiBehaviour {
                 }
 
                 list.Sort((a, b) => a.position.x.CompareTo(b.position.x));
-                
+
                 for (var i = 0; i < childrenProp.arraySize; i++) {
                     childrenProp.GetArrayElementAtIndex(i).objectReferenceValue = list[i];
                 }
@@ -248,7 +248,7 @@ namespace GameAiBehaviour {
             if (node == null) {
                 return;
             }
-            
+
             var nodeObj = new SerializedObject(node);
             var conditionGroup = nodeObj.FindProperty("conditions");
             if (conditionGroup == null) {
@@ -306,7 +306,7 @@ namespace GameAiBehaviour {
             // アセットの削除
             Undo.DestroyObjectImmediate(condition);
         }
-        
+
         /// <summary>
         /// ノードの複製
         /// </summary>
@@ -314,7 +314,7 @@ namespace GameAiBehaviour {
             if (tree == null || baseNode == null) {
                 return null;
             }
-            
+
             var serializedObj = new SerializedObject(tree);
             var nodes = serializedObj.FindProperty("nodes");
 
@@ -325,12 +325,12 @@ namespace GameAiBehaviour {
             node.position += Vector2.one * 50;
             Undo.RegisterCreatedObjectUndo(node, "DuplicateNode");
             AssetDatabase.AddObjectToAsset(node, tree);
-            
+
             var nodeObj = new SerializedObject(node);
             var conditionsProp = nodeObj.FindProperty("conditions");
-            
+
             nodeObj.Update();
-            
+
             // 条件の複製
             if (conditionsProp != null) {
                 var list = conditionsProp.FindPropertyRelative("conditions");

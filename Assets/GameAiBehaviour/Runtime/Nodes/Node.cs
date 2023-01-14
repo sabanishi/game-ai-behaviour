@@ -36,7 +36,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行ルーチン
             /// </summary>
-            IEnumerator UpdateRoutine();
+            IEnumerator ExecuteRoutine();
 
             /// <summary>
             /// キャンセル処理
@@ -85,14 +85,14 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            IEnumerator ILogic.UpdateRoutine() {
+            IEnumerator ILogic.ExecuteRoutine() {
                 // 実行開始
                 IsRunning = true;
                 
                 // Override用コード実行
-                yield return UpdateRoutineInternal();
+                yield return ExecuteRoutineInternal();
                 
                 // 実行完了
                 IsRunning = false;
@@ -122,9 +122,9 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン(Override用)
+            /// 実行ルーチン(Override用)
             /// </summary>
-            protected virtual IEnumerator UpdateRoutineInternal() {
+            protected virtual IEnumerator ExecuteRoutineInternal() {
                 State = State.Success;
                 yield break;
             }
@@ -145,7 +145,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// ノードの実行
             /// </summary>
-            protected IEnumerator UpdateNodeRoutine(Node node, Action<State> onResult) {
+            protected IEnumerator ExecuteNodeRoutine(Node node, Action<State> onResult) {
                 var logic = Controller.FindLogic(node);
                 
                 // Logicが存在しない場合、完了扱い
@@ -157,7 +157,7 @@ namespace GameAiBehaviour {
                 }
 
                 // Logicが存在する場合、さらにRoutineを実行
-                yield return logic.UpdateRoutine();
+                yield return logic.ExecuteRoutine();
                 onResult?.Invoke(logic.State);
             }
         }

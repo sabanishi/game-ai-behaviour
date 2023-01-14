@@ -7,8 +7,7 @@ namespace GameAiBehaviour.Editor {
     /// Property型用のPropertyDrawer
     /// </summary>
     [CustomPropertyDrawer(typeof(Property))]
-    public class PropertyPropertyDrawer : PropertyDrawer
-    {
+    public class PropertyPropertyDrawer : PropertyDrawer {
         /// <summary>
         /// GUI描画
         /// </summary>
@@ -18,16 +17,16 @@ namespace GameAiBehaviour.Editor {
             var rect = position;
             rect.y += EditorGUIUtility.standardVerticalSpacing;
             rect.height = height;
-            
+
             property.serializedObject.Update();
-            
+
             // タイプ切り替え
             var type = property.FindPropertyRelative("propertyType");
             using (var scope = new EditorGUI.ChangeCheckScope()) {
                 type.enumValueIndex = EditorGUI.Popup(rect, GUIContent.none, type.enumValueIndex,
                     type.enumDisplayNames.Select(x => new GUIContent(x)).ToArray());
             }
-            
+
             // プロパティ名/タイプ毎の値の描画
             rect.y += offset;
             var left = rect;
@@ -52,10 +51,10 @@ namespace GameAiBehaviour.Editor {
                     val = property.FindPropertyRelative("booleanValue");
                     break;
             }
-            
+
             EditorGUI.PropertyField(left, name, GUIContent.none);
             EditorGUI.PropertyField(right, val, GUIContent.none);
-            
+
             property.serializedObject.ApplyModifiedProperties();
         }
 
@@ -63,7 +62,8 @@ namespace GameAiBehaviour.Editor {
         /// GUI高さ取得
         /// </summary>
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-            return (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * 2 + EditorGUIUtility.standardVerticalSpacing;
+            return (EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing) * 2 +
+                   EditorGUIUtility.standardVerticalSpacing;
         }
     }
 }

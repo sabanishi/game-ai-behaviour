@@ -8,7 +8,7 @@ namespace GameAiBehaviour {
     public sealed class RepeatNode : DecoratorNode {
         private class Logic : Logic<RepeatNode> {
             private int _index;
-            
+
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -16,20 +16,20 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 // 子がいない場合は失敗
                 if (Node.child == null) {
                     SetState(State.Failure);
                     yield break;
                 }
-                
+
                 // 指定回数繰り返す
                 for (var i = 0; i < Node.count; i++) {
                     // 接続先ノードの実行
-                    yield return UpdateNodeRoutine(Node.child, SetState);
-                    
+                    yield return ExecuteNodeRoutine(Node.child, SetState);
+
                     // 成功していたら継続
                     if (State == State.Success) {
                         yield return this;
@@ -41,7 +41,7 @@ namespace GameAiBehaviour {
                 }
             }
         }
-        
+
         [Tooltip("繰り返し回数")]
         public int count = 1;
 

@@ -10,18 +10,18 @@ namespace GameAiBehaviour {
     public abstract class Condition : ScriptableObject {
         // 条件タイトル表示名
         public virtual string ConditionTitle => $"{GetType().Name}";
-        
+
         /// <summary>
         /// 判定
         /// </summary>
         public abstract bool Check(Blackboard blackboard);
-        
+
 #if UNITY_EDITOR
         /// <summary>
         /// インスペクタ描画
         /// </summary>
         public abstract void OnInspectorGUI(Rect position, SerializedObject serializedObject);
-        
+
         /// <summary>
         /// インスペクタ描画時の高さ取得
         /// </summary>

@@ -20,7 +20,7 @@ namespace GameAiBehaviour {
             if (CurrentTree == null) {
                 return EditorGUI.TextField(rect, propertyName);
             }
-            
+
             // Treeがある場合は、BlackboardのPropertyを使ったPopup
             var propertyNames = Array.Empty<string>();
             if (CurrentTree.blackboardAsset != null) {
@@ -29,6 +29,7 @@ namespace GameAiBehaviour {
                     .Select(x => x.propertyName)
                     .ToArray();
             }
+
             if (propertyNames.Length <= 0) {
                 propertyNames = new[] { "Empty" };
             }

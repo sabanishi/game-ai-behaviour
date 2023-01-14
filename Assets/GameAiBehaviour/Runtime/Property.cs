@@ -13,7 +13,7 @@ namespace GameAiBehaviour {
             String,
             Boolean,
         }
-        
+
         // プロパティ名
         public string propertyName = "Property Name";
         // プロパティタイプ

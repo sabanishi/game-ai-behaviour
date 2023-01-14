@@ -36,7 +36,7 @@
 
             return source.ToString();
         }
-        
+
         /// <summary>
         /// 記号の取得
         /// </summary>

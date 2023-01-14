@@ -11,7 +11,7 @@ namespace GameAiBehaviour.Editor {
     /// </summary>
     public class NodeView : GraphNode {
         private Label _descriptionLabel;
-        
+
         public sealed override string title {
             get => base.title;
             set {
@@ -23,7 +23,7 @@ namespace GameAiBehaviour.Editor {
                 }
             }
         }
-        
+
         public string Description {
             get {
                 if (_descriptionLabel.style.display == DisplayStyle.None) {
@@ -50,11 +50,11 @@ namespace GameAiBehaviour.Editor {
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public NodeView(Node node) 
+        public NodeView(Node node)
             : base("Assets/GameAiBehaviour/Editor/Resources/node_view.uxml") {
             // パーツ取得
             _descriptionLabel = this.Q<Label>("description");
-            
+
             Node = node;
             viewDataKey = node.guid;
             title = node.title;
@@ -67,7 +67,7 @@ namespace GameAiBehaviour.Editor {
             // ポート作成
             CreateInputPort(node);
             CreateOutputPort(node);
-            
+
             // Style適用
             SetupClasses(node);
         }

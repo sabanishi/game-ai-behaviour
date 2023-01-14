@@ -6,7 +6,6 @@ namespace GameAiBehaviour {
     /// </summary>
     public sealed class ObserveActionNodeHandler<TNode> : ActionNodeHandler<TNode>
         where TNode : HandleableActionNode {
-
         private Func<TNode, bool> _enterFunc;
         private Func<TNode, IActionNodeHandler.State> _updateFunc;
         private Action<TNode> _exitAction;
@@ -23,7 +22,7 @@ namespace GameAiBehaviour {
         public void SetEnterAction(Func<TNode, bool> enterFunc) {
             _enterFunc = enterFunc;
         }
-        
+
         /// <summary>
         /// 更新時処理登録
         /// </summary>

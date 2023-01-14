@@ -78,7 +78,7 @@ namespace GameAiBehaviour.Editor {
             var localMousePos = _graphView.contentViewContainer.WorldToLocal(worldMousePos);
             node.position = localMousePos;
             _graphView.CreateNodeView(node);
-            
+
             AssetDatabase.SaveAssets();
             return true;
         }

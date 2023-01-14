@@ -11,18 +11,17 @@
             Failure,
             Running,
         }
-        
+
         bool OnEnter(HandleableActionNode node);
         State OnUpdate(HandleableActionNode node);
         void OnExit(HandleableActionNode node);
     }
-    
+
     /// <summary>
     /// 実行ノードハンドリング用基底クラス
     /// </summary>
     public abstract class ActionNodeHandler<TNode> : IActionNodeHandler
         where TNode : HandleableActionNode {
-
         /// <summary>
         /// コンストラクタ
         /// </summary>
@@ -58,6 +57,7 @@
         /// <summary>
         /// 実行ノードの終了処理
         /// </summary>
-        protected virtual void OnExitInternal(TNode node) {}
+        protected virtual void OnExitInternal(TNode node) {
+        }
     }
 }

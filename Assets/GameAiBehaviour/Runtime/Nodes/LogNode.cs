@@ -14,9 +14,9 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 Debug.unityLogger.Log(Node.logType, Node.text);
                 SetState(State.Success);
                 yield break;

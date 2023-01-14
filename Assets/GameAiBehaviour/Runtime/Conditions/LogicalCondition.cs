@@ -8,9 +8,8 @@ namespace GameAiBehaviour {
     public abstract class LogicalCondition<T, TValueObject> : ValueCondition<T, TValueObject>
         where T : IComparable
         where TValueObject : ValueObject<T> {
-        
         // 演算子
-        public OperatorType operatorType = OperatorType.Equal;  
+        public OperatorType operatorType = OperatorType.Equal;
 
         public override string ConditionTitle => $"{leftValue} {operatorType.GetMark()} {rightValue}";
 

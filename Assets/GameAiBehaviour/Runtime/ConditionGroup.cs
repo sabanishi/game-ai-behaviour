@@ -8,7 +8,7 @@ namespace GameAiBehaviour {
     public sealed class ConditionGroup {
         // 判定条件リスト
         public Condition[] conditions = Array.Empty<Condition>();
-        
+
         /// <summary>
         /// 判定
         /// </summary>

@@ -23,7 +23,7 @@ namespace GameAiBehaviour.Editor {
         private class SerializableNodes {
             public Node[] nodes;
         }
-            
+
         public Action<NodeView[]> OnChangedSelectionNodeViews;
         public BehaviourTree Data { get; private set; }
 
@@ -45,7 +45,7 @@ namespace GameAiBehaviour.Editor {
 
             // 変更通知監視
             graphViewChanged += OnGraphViewChanged;
-            
+
             // コピー
             serializeGraphElements += OnSerializeGraphElements;
             // ペースト
@@ -224,7 +224,7 @@ namespace GameAiBehaviour.Editor {
             if (nodeViews.Length <= 0 || Data == null) {
                 return "";
             }
-            
+
             // Node情報をシリアライズ化
             var serializableNodes = new SerializableNodes();
             serializableNodes.nodes = nodeViews.Select(x => x.Node).ToArray();
@@ -238,16 +238,16 @@ namespace GameAiBehaviour.Editor {
             if (string.IsNullOrEmpty(data) || Data == null) {
                 return;
             }
-            
+
             // Node情報をデシリアライズ
             var serializableNodes = JsonUtility.FromJson<SerializableNodes>(data);
             var newNodes = BehaviourTreeEditorUtility.DuplicateNodes(Data, serializableNodes.nodes)
                 .ToList();
-            
+
             // ツリー情報を再構築
             Load(Data);
             AssetDatabase.SaveAssets();
-            
+
             // 新しいNodeを選択状態にする
             var newNodeViews = nodes.OfType<NodeView>()
                 .Where(x => newNodes.Contains(x.Node))

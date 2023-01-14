@@ -15,9 +15,9 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 // 子がいない場合は失敗
                 if (Node.child == null) {
                     SetState(State.Failure);
@@ -27,7 +27,7 @@ namespace GameAiBehaviour {
                 // 条件判定に失敗するまで繰り返す
                 while (Node.conditions.Check(Controller.Blackboard)) {
                     // 接続先ノードの実行
-                    yield return UpdateNodeRoutine(Node.child, SetState);
+                    yield return ExecuteNodeRoutine(Node.child, SetState);
                     
                     // 成功していたら処理継続
                     if (State == State.Success) {

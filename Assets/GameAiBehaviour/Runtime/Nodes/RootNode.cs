@@ -13,17 +13,18 @@ namespace GameAiBehaviour {
             /// </summary>
             public Logic(IBehaviourTreeController controller, RootNode node) : base(controller, node) {
             }
+
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 var child = Node.child;
                 if (child != null) {
-                    yield return UpdateNodeRoutine(child, SetState);
+                    yield return ExecuteNodeRoutine(child, SetState);
                 }
             }
         }
-        
+
         [HideInInspector, Tooltip("接続先ノード")]
         public Node child;
 

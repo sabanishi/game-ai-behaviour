@@ -14,9 +14,9 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected sealed override IEnumerator UpdateRoutineInternal() {
+            protected sealed override IEnumerator ExecuteRoutineInternal() {
                 var handler = Controller.GetActionHandler(Node);
 
                 // Handlerが無ければ、ログを出して終了

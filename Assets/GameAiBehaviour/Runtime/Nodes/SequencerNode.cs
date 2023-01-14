@@ -11,16 +11,16 @@ namespace GameAiBehaviour {
             /// </summary>
             public Logic(IBehaviourTreeController controller, SequencerNode node) : base(controller, node) {
             }
-            
+
             /// <summary>
-            /// 更新ルーチン
+            /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator UpdateRoutineInternal() {
+            protected override IEnumerator ExecuteRoutineInternal() {
                 // 順番に実行
                 for (var i = 0; i < Node.children.Length; i++) {
                     var node = Node.children[i];
-                    yield return UpdateNodeRoutine(node, SetState);
-                    
+                    yield return ExecuteNodeRoutine(node, SetState);
+
                     // 成功していたら待機
                     if (State == State.Success) {
                         yield return this;

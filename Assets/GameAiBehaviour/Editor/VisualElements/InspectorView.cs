@@ -69,6 +69,7 @@ namespace GameAiBehaviour.Editor {
                         _editor.OnInspectorGUI();
                         _scroll = scrollScope.scrollPosition;
                     }
+
                     if (scope.changed) {
                         OnChangedValue?.Invoke(_editor.targets);
                     }

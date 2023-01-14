@@ -27,7 +27,7 @@ namespace GameAiBehaviour {
             _stack = new Stack<object>();
             ((IEnumerator)this).Reset();
         }
-        
+
         /// <summary>
         /// Routineを進める
         /// </summary>

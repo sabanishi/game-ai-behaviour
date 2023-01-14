@@ -15,7 +15,7 @@ namespace GameAiBehaviour {
 
         // GUI描画の際に使用するPropertyの使用可能型フィルタ
         protected abstract Property.Type[] PropertyTypeFilters { get; }
-        
+
 #if UNITY_EDITOR
         /// <summary>
         /// インスペクタ描画
@@ -29,13 +29,13 @@ namespace GameAiBehaviour {
             var valueWidth = (position.width - operatorWidth - padding * 2) / 2 - padding * 2;
             var height = EditorGUIUtility.singleLineHeight;
             var rect = position;
-            
+
             // プロパティ描画
             void DrawValueObject(Rect pos, SerializedProperty prop) {
                 var useProperty = prop.FindPropertyRelative("useProperty");
                 var constValue = prop.FindPropertyRelative("constValue");
                 var propertyName = prop.FindPropertyRelative("propertyName");
-                
+
                 var r = rect;
                 r.height = height;
                 r.y += padding;
@@ -43,18 +43,19 @@ namespace GameAiBehaviour {
                 useProperty.boolValue ^= GUI.Button(r, buttonLabel);
                 r.y += height + padding * 2;
                 if (useProperty.boolValue) {
-                    propertyName.stringValue = BehaviourTreeEditorGUI.PropertyNameField(r, propertyName.stringValue, PropertyTypeFilters);
+                    propertyName.stringValue =
+                        BehaviourTreeEditorGUI.PropertyNameField(r, propertyName.stringValue, PropertyTypeFilters);
                 }
                 else {
                     EditorGUI.PropertyField(r, constValue, GUIContent.none);
                 }
             }
-            
+
             // 左辺
             rect.width = valueWidth;
             rect.x += padding;
             DrawValueObject(rect, leftProp);
-            
+
             // 演算子
             rect.width = operatorWidth;
             rect.x += valueWidth + padding * 2;
@@ -63,9 +64,10 @@ namespace GameAiBehaviour {
                 r.height = height;
                 r.y += (height + padding * 2) * 0.5f + padding;
                 var labels = GetOperatorTypeLabels();
-                operatorProp.enumValueIndex = EditorGUI.Popup(r, operatorProp.enumValueIndex, labels, EditorStyles.miniButton);
+                operatorProp.enumValueIndex =
+                    EditorGUI.Popup(r, operatorProp.enumValueIndex, labels, EditorStyles.miniButton);
             }
-            
+
             // 右辺
             rect.width = valueWidth;
             rect.x += operatorWidth + padding * 2;
@@ -112,14 +114,14 @@ namespace GameAiBehaviour {
         private T GetLeftValue(Blackboard blackboard) {
             return GetValue(blackboard, leftValue);
         }
-        
+
         /// <summary>
         /// 右辺値の取得
         /// </summary>
         private T GetRightValue(Blackboard blackboard) {
             return GetValue(blackboard, rightValue);
         }
-        
+
         /// <summary>
         /// 値の取得
         /// </summary>
@@ -127,6 +129,7 @@ namespace GameAiBehaviour {
             if (string.IsNullOrEmpty(valueObject.propertyName)) {
                 return valueObject.constValue;
             }
+
             return GetPropertyValue(blackboard, valueObject.propertyName, valueObject.constValue);
         }
     }
