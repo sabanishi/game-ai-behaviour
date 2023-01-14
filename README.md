@@ -6,7 +6,7 @@
 * データ構造と実行処理を分離しやすくして、依存関係を切り離しやすいクラス設計
 * シンプルな機能や拡張設計
 #### 背景
-既存のBehaviourTreeは、AIを取り巻く環境としてヘビーな物が多く、BehaviourTreeをワンポイントで使いたいなと思いさ作成したツールです。
+既存のBehaviourTreeは、AIを取り巻く環境としてヘビーな物が多く、BehaviourTreeをワンポイントで使いたいなと思って作成したツールです。
 ## セットアップ
 #### インストール
 1. Window > Package ManagerからPackage Managerを開く
