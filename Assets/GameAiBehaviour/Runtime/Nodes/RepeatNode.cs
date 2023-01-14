@@ -52,6 +52,8 @@ namespace GameAiBehaviour {
         [Tooltip("繰り返し回数")]
         public int count = 1;
 
+        public override string Description => $"x {count}";
+
         /// <summary>
         /// ロジックの生成
         /// </summary>

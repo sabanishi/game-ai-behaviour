@@ -442,7 +442,7 @@ MonoBehaviour:
     propertyName: 
   rightValue:
     useProperty: 0
-    constValue: 1
+    constValue: 0
     propertyName: 
   operatorType: 0
 --- !u!114 &4673337000884205205
@@ -494,7 +494,7 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: 2bd241b28201a41589a5eb77aa4936c6
-  position: {x: 730, y: 81.5}
+  position: {x: 733, y: 72.36}
   title: 
   logType: 3
   text: D
