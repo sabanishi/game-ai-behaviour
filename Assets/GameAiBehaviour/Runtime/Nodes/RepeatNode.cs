@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -15,44 +16,29 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 開始処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _index = 0;
-            }
-
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 子がいない場合は失敗
                 if (Node.child == null) {
-                    return State.Failure;
+                    SetState(State.Failure);
+                    yield break;
                 }
                 
-                // 条件判定
-                if (_index >= Node.count) {
-                    return State.Success;
+                // 指定回数繰り返す
+                for (var i = 0; i < Node.count; i++) {
+                    // 接続先ノードの実行
+                    yield return UpdateNodeRoutine(Node.child, SetState);
+                    
+                    // 成功していたら継続
+                    if (State == State.Success) {
+                        yield return this;
+                    }
+                    // 失敗していたら完了
+                    else if (State == State.Failure) {
+                        yield break;
+                    }
                 }
-
-                // 戻り実行の際は実行中として終わる
-                if (back) {
-                    return State.Running;
-                }
-
-                // 接続先ノードの実行
-                var state = UpdateNode(Node.child, deltaTime);
-                _index++;
-                
-                if (state == State.Running) {
-                    return State.Running;
-                }
-                
-                // 終了していて指定回数を超えている場合、終了
-                if (_index >= Node.count) {
-                    return State.Success;
-                }
-                
-                return State.Running;
             }
         }
         

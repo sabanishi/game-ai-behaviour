@@ -7,8 +7,8 @@ namespace GameAiBehaviour {
     public sealed class ObserveActionNodeHandler<TNode> : ActionNodeHandler<TNode>
         where TNode : HandleableActionNode {
 
-        private Action<TNode> _enterAction;
-        private Func<TNode, float, Node.State> _updateFunc;
+        private Func<TNode, bool> _enterFunc;
+        private Func<TNode, IActionNodeHandler.State> _updateFunc;
         private Action<TNode> _exitAction;
 
         /// <summary>
@@ -20,14 +20,14 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 開始時処理登録
         /// </summary>
-        public void SetEnterAction(Action<TNode> enterAction) {
-            _enterAction = enterAction;
+        public void SetEnterAction(Func<TNode, bool> enterFunc) {
+            _enterFunc = enterFunc;
         }
         
         /// <summary>
         /// 更新時処理登録
         /// </summary>
-        public void SetUpdateFunc(Func<TNode, float, Node.State> updateFunc) {
+        public void SetUpdateFunc(Func<TNode, IActionNodeHandler.State> updateFunc) {
             _updateFunc = updateFunc;
         }
 
@@ -41,15 +41,15 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 実行ノードの開始処理
         /// </summary>
-        protected override void OnEnterInternal(TNode node) {
-            _enterAction?.Invoke(node);
+        protected override bool OnEnterInternal(TNode node) {
+            return _enterFunc?.Invoke(node) ?? true;
         }
 
         /// <summary>
         /// 実行ノードの更新処理
         /// </summary>
-        protected override Node.State OnUpdateInternal(TNode node, float deltaTime) {
-            return _updateFunc?.Invoke(node, deltaTime) ?? Node.State.Success;
+        protected override IActionNodeHandler.State OnUpdateInternal(TNode node) {
+            return _updateFunc?.Invoke(node) ?? IActionNodeHandler.State.Success;
         }
 
         /// <summary>

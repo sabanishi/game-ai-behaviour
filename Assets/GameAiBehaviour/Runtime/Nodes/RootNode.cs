@@ -7,34 +7,25 @@ namespace GameAiBehaviour {
     /// 起点となるノード
     /// </summary>
     public sealed class RootNode : Node {
-        [HideInInspector, Tooltip("接続先ノード")]
-        public Node child;
-
         private class Logic : Logic<RootNode> {
             /// <summary>
             /// コンストラクタ
             /// </summary>
             public Logic(IBehaviourTreeController controller, RootNode node) : base(controller, node) {
             }
-
             /// <summary>
-            /// 実行処理
+            /// 更新ルーチン
             /// </summary>
-            /// <returns></returns>
-            protected override State OnUpdate(float deltaTime, bool back) {
-                // 戻り実行の際は完了扱い
-                if (back) {
-                    return State.Success;
-                }
-                
+            protected override IEnumerator UpdateRoutineInternal() {
                 var child = Node.child;
                 if (child != null) {
-                    return UpdateNode(child, deltaTime);
+                    yield return UpdateNodeRoutine(child, SetState);
                 }
-
-                return State.Failure;
             }
         }
+        
+        [HideInInspector, Tooltip("接続先ノード")]
+        public Node child;
 
         /// <summary>
         /// ロジックの生成

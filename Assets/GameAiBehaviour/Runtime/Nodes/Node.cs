@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 namespace GameAiBehaviour {
@@ -10,7 +11,6 @@ namespace GameAiBehaviour {
         public enum State {
             Inactive,
             Failure,
-            Running,
             Success,
         }
 
@@ -19,19 +19,29 @@ namespace GameAiBehaviour {
         /// </summary>
         public interface ILogic : IDisposable {
             /// <summary>
+            /// 制御対象のNode
+            /// </summary>
+            Node TargetNode { get; }
+
+            /// <summary>
+            /// 現在の状態
+            /// </summary>
+            State State { get; }
+
+            /// <summary>
             /// 初期化処理
             /// </summary>
             void Initialize();
 
             /// <summary>
-            /// 実行処理
+            /// 実行ルーチン
             /// </summary>
-            State Update(float deltaTime, bool back);
+            IEnumerator UpdateRoutine();
 
             /// <summary>
             /// キャンセル処理
             /// </summary>
-            void Cancel();
+            void Reset();
         }
 
         /// <summary>
@@ -39,15 +49,16 @@ namespace GameAiBehaviour {
         /// </summary>
         protected abstract class Logic<TNode> : ILogic
             where TNode : Node {
-            // 開始済みか
-            private bool _started;
-            
             // 現在の状態
             public State State { get; private set; }
+            // 実行中か
+            public bool IsRunning { get; private set; }
+            // 制御対象のNode
+            Node ILogic.TargetNode => Node;
             // 制御用コントローラ
             protected IBehaviourTreeController Controller { get; private set; }
             // 参照元のノード
-            protected TNode Node { get; private set; }
+            protected TNode Node { get; }
 
             /// <summary>
             /// コンストラクタ
@@ -62,80 +73,92 @@ namespace GameAiBehaviour {
             /// 初期化処理
             /// </summary>
             public void Initialize() {
-                OnInitialize();
+                InitializeInternal();
             }
 
             /// <summary>
             /// 廃棄時処理
             /// </summary>
             public void Dispose() {
-                Cancel();
-                OnDispose();
+                ((ILogic)this).Reset();
+                DisposeInternal();
             }
 
             /// <summary>
-            /// 更新処理
+            /// 更新ルーチン
             /// </summary>
-            public State Update(float deltaTime, bool back) {
-                Start();
+            IEnumerator ILogic.UpdateRoutine() {
+                // 実行開始
+                IsRunning = true;
+                
+                // Override用コード実行
+                yield return UpdateRoutineInternal();
+                
+                // 実行完了
+                IsRunning = false;
+            }
 
-                var state = OnUpdate(deltaTime, back);
-                State = state;
-
-                if (state != State.Running) {
-                    Stop();
+            /// <summary>
+            /// リセット処理
+            /// </summary>
+            void ILogic.Reset() {
+                if (State != State.Inactive) {
+                    ResetInternal();
+                    State = State.Inactive;
+                    IsRunning = false;
                 }
-
-                return state;
             }
 
             /// <summary>
-            /// キャンセル処理
+            /// 初期化処理(Override用)
             /// </summary>
-            public void Cancel() {
-                Stop();
+            protected virtual void InitializeInternal() {
             }
 
-            protected virtual void OnInitialize() {
+            /// <summary>
+            /// 削除処理(Override用)
+            /// </summary>
+            protected virtual void DisposeInternal() {
             }
 
-            protected virtual void OnDispose() {
+            /// <summary>
+            /// 更新ルーチン(Override用)
+            /// </summary>
+            protected virtual IEnumerator UpdateRoutineInternal() {
+                State = State.Success;
+                yield break;
             }
 
-            protected virtual void OnStart() {
+            /// <summary>
+            /// 思考リセット時の処理(Override用)
+            /// </summary>
+            protected virtual void ResetInternal() {
             }
 
-            protected abstract State OnUpdate(float deltaTime, bool back);
-
-            protected virtual void OnStop() {
+            /// <summary>
+            /// 状態の変更
+            /// </summary>
+            protected void SetState(State state) {
+                State = state;
             }
 
             /// <summary>
             /// ノードの実行
             /// </summary>
-            protected State UpdateNode(Node node, float deltaTime) {
-                return Controller.UpdateNode(node, deltaTime, false);
-            }
-
-            /// <summary>
-            /// 開始処理
-            /// </summary>
-            private void Start() {
-                if (!_started) {
-                    OnStart();
-                    _started = true;
+            protected IEnumerator UpdateNodeRoutine(Node node, Action<State> onResult) {
+                var logic = Controller.FindLogic(node);
+                
+                // Logicが存在しない場合、完了扱い
+                if (logic == null) {
+                    Debug.Log($"Skip node logic. {node.GetType().Name}");
+                    yield return State.Success;
+                    onResult?.Invoke(State.Success);
+                    yield break;
                 }
-            }
 
-            /// <summary>
-            /// 停止処理
-            /// </summary>
-            private void Stop() {
-                if (_started) {
-                    OnStop();
-                    _started = false;
-                    State = State.Inactive;
-                }
+                // Logicが存在する場合、さらにRoutineを実行
+                yield return logic.UpdateRoutine();
+                onResult?.Invoke(logic.State);
             }
         }
 
@@ -165,7 +188,8 @@ namespace GameAiBehaviour {
         /// 値変化通知
         /// </summary>
         private void OnValidate() {
-            hideFlags |= HideFlags.HideInHierarchy;
+            //hideFlags |= HideFlags.HideInHierarchy;
+            hideFlags &= ~HideFlags.HideInHierarchy;
         }
     }
 }

@@ -1,11 +1,12 @@
-﻿namespace GameAiBehaviour {
+﻿using System.Collections;
+using UnityEngine;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// ハンドリング拡張可能な実行ノード（アプリケーション依存度の高いActionNodeはこちらを使う）
     /// </summary>
     public abstract class HandleableActionNode : ActionNode {
         private class Logic : Logic<HandleableActionNode> {
-            private IActionNodeHandler _actionNodeHandler;
-
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -13,32 +14,38 @@
             }
 
             /// <summary>
-            /// 開始処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _actionNodeHandler = Controller.GetActionHandler(Node);
-                _actionNodeHandler?.OnEnter(Node);
-            }
+            protected sealed override IEnumerator UpdateRoutineInternal() {
+                var handler = Controller.GetActionHandler(Node);
 
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
-                // Handlerがあればそれを使用
-                if (_actionNodeHandler != null) {
-                    var result = _actionNodeHandler.OnUpdate(Node, deltaTime);
-                    return result;
+                // Handlerが無ければ、ログを出して終了
+                if (handler == null) {
+                    Debug.Log($"Invoke ActionNode[{GetType().Name}]");
+                    SetState(State.Success);
+                    yield break;
                 }
-                
-                // 無ければそのまま終わる
-                return State.Success;
-            }
 
-            /// <summary>
-            /// 停止時処理
-            /// </summary>
-            protected override void OnStop() {
-                _actionNodeHandler?.OnExit(Node);
+                // 開始処理実行、Enterで失敗したらその時点でエラー
+                if (!handler.OnEnter(Node)) {
+                    SetState(State.Failure);
+                    handler.OnEnter(Node);
+                    yield break;
+                }
+
+                // 更新処理実行
+                while (true) {
+                    var state = handler.OnUpdate(Node);
+                    if (state != IActionNodeHandler.State.Running) {
+                        SetState(state == IActionNodeHandler.State.Success ? State.Success : State.Failure);
+                        break;
+                    }
+
+                    yield return this;
+                }
+
+                // 終了処理実行
+                handler.OnExit(Node);
             }
         }
 

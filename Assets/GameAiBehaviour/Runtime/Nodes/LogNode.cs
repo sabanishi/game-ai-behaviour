@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -11,13 +12,14 @@ namespace GameAiBehaviour {
             /// </summary>
             public Logic(IBehaviourTreeController controller, LogNode node) : base(controller, node) {
             }
-            
+
             /// <summary>
-            /// 実行処理
+            /// 更新ルーチン
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
+            protected override IEnumerator UpdateRoutineInternal() {
                 Debug.unityLogger.Log(Node.logType, Node.text);
-                return State.Success;
+                SetState(State.Success);
+                yield break;
             }
         }
 

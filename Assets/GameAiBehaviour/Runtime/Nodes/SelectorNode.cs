@@ -1,4 +1,6 @@
-﻿namespace GameAiBehaviour {
+﻿using System.Collections;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// 選択用ノード
     /// </summary>
@@ -11,22 +13,22 @@
             }
 
             /// <summary>
-            /// 実行処理
+            /// 更新ルーチン
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
-                // 戻り実行の際は完了扱い
-                if (back) {
-                    return State.Success;
-                }
-                
-                foreach (var child in Node.children) {
-                    var state = UpdateNode(child, deltaTime);
-                    if (state != State.Failure) {
-                        return state;
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 順番に実行トライ
+                for (var i = 0; i < Node.children.Length; i++) {
+                    var node = Node.children[i];
+                    yield return UpdateNodeRoutine(node, SetState);
+                    
+                    // 成功していた場合、完了とする
+                    if (State == State.Success) {
+                        yield break;
                     }
                 }
 
-                return State.Failure;
+                // 誰も実行できなかった場合、失敗とする
+                SetState(State.Failure);
             }
         }
 

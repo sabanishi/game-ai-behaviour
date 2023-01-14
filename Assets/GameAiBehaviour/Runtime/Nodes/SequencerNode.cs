@@ -1,59 +1,39 @@
-﻿namespace GameAiBehaviour {
+﻿using System.Collections;
+using UnityEngine;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// シーケンスノード
     /// </summary>
     public sealed class SequencerNode : CompositeNode {
         private class Logic : Logic<SequencerNode> {
-            // 実行対象のNextNodeインデックス
-            private int _index = 0;
-
             /// <summary>
             /// コンストラクタ
             /// </summary>
             public Logic(IBehaviourTreeController controller, SequencerNode node) : base(controller, node) {
             }
-
+            
             /// <summary>
-            /// 開始処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _index = 0;
-            }
-
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
-                var children = Node.children;
-                
-                // 実行ノードが全て終わった
-                if (_index >= children.Length) {
-                    return State.Success;
-                }
-
-                // 戻り実行の際は実行中として終わる
-                if (back) {
-                    return State.Running;
-                }
-
-                // 接続先ノード実行
-                if (_index < children.Length) {
-                    var state = UpdateNode(children[_index], deltaTime);
-                    _index++;
-
-                    // 失敗していたらSequenceNode自体を失敗にする
-                    if (state == State.Failure) {
-                        return State.Failure;
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 順番に実行
+                for (var i = 0; i < Node.children.Length; i++) {
+                    var node = Node.children[i];
+                    yield return UpdateNodeRoutine(node, SetState);
+                    
+                    // 成功していたら待機
+                    if (State == State.Success) {
+                        yield return this;
+                    }
+                    // 失敗していた場合、そのまま失敗として終了
+                    else if (State == State.Failure) {
+                        yield break;
                     }
                 }
 
-                // 全てのNodeが実行終わっていたら完了
-                if (_index >= children.Length) {
-                    return State.Success;
-                }
-
-                // それ以外は継続中
-                return State.Running;
+                // 誰も実行できなかった場合、失敗とする
+                SetState(State.Failure);
             }
         }
 

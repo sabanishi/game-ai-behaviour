@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: dat_blackboard_hoge
   m_EditorClassIdentifier: 
   properties:
-  - propertyName: aaa
-    propertyType: 1
+  - propertyName: Sample
+    propertyType: 0
     integerValue: 0
-    floatValue: 1
+    floatValue: 0
     stringValue: 
     booleanValue: 0
-  - propertyName: test
-    propertyType: 0
+  - propertyName: TargetDistance
+    propertyType: 1
     integerValue: 0
     floatValue: 0
     stringValue: 

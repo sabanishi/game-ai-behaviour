@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 namespace GameAiBehaviour {
@@ -14,25 +15,23 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 実行処理
+            /// 更新ルーチン
             /// </summary>
-            protected override State OnUpdate(float deltaTime, bool back) {
-                // 戻り実行の際は完了扱い
-                if (back) {
-                    return State.Success;
-                }
-                
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 子がいない場合は失敗
                 if (Node.child == null) {
-                    return State.Failure;
+                    SetState(State.Failure);
+                    yield break;
                 }
                 
-                // 条件判定
+                // 条件判定に失敗したら失敗
                 if (!Node.conditions.Check(Controller.Blackboard)) {
-                    return State.Failure;
+                    SetState(State.Failure);
+                    yield break;
                 }
 
                 // 接続先ノードの実行
-                return UpdateNode(Node.child, deltaTime);
+                yield return UpdateNodeRoutine(Node.child, SetState);
             }
         }
         
