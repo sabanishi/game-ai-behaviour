@@ -148,7 +148,7 @@ namespace GameAiBehaviour.Editor {
         /// <summary>
         /// NodeLogicの状態を更新
         /// </summary>
-        public void RefreshNodeLogicStatus() {
+        public void RefreshNodeLogicState() {
             if (_behaviourTreeController == null) {
                 return;
             }

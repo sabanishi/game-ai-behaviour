@@ -21,6 +21,8 @@ namespace GameAiBehaviour.Editor {
 
         // BehaviourTreeControllerのオーナー
         private IBehaviourTreeControllerOwner _owner;
+        // Playingモードの初期化フラグ
+        private bool _playingInitFlag;
 
         /// <summary>
         /// 開く処理
@@ -90,12 +92,41 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
+        /// アクティブ時処理
+        /// </summary>
+        private void OnEnable() {
+            EditorApplication.playModeStateChanged += OnChangedPlayModeState;
+            _playingInitFlag = false;
+        }
+
+        /// <summary>
+        /// 非アクティブ時処理
+        /// </summary>
+        private void OnDisable() {
+            EditorApplication.playModeStateChanged -= OnChangedPlayModeState;
+        }
+
+        /// <summary>
         /// 更新処理
         /// </summary>
         private void Update() {
-            if (_behaviourTreeView != null) {
-                _behaviourTreeView.RefreshNodeLogicStatus();
+            if (_behaviourTreeView == null) {
+                return;
             }
+
+            if (Application.isPlaying) {
+                if (!_playingInitFlag) {
+                    RefreshOwner();
+                    _playingInitFlag = true;
+                }
+            }
+
+            // Controllerの設定
+            _blackboardView.SetController(_owner?.BehaviourTreeController);
+            _behaviourTreeView.SetController(_owner?.BehaviourTreeController);
+
+            // LogicStateの反映
+            _behaviourTreeView.RefreshNodeLogicState();
         }
 
         /// <summary>
@@ -110,6 +141,37 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
+        /// Ownerインスタンスのリフレッシュ
+        /// </summary>
+        private void RefreshOwner() {
+            var activeGameObject = Selection.activeGameObject;
+
+            if (activeGameObject != null) {
+                var owner = activeGameObject.GetComponentInParent<IBehaviourTreeControllerOwner>();
+                _owner = owner;
+            }
+            else {
+                _owner = null;
+            }
+        }
+
+        /// <summary>
+        /// 再生状態の変化通知
+        /// </summary>
+        private void OnChangedPlayModeState(PlayModeStateChange stateChange) {
+            if (_behaviourTreeView == null) {
+                return;
+            }
+
+            if (stateChange == PlayModeStateChange.ExitingPlayMode) {
+                _owner = null;
+                _blackboardView.SetController(null);
+                _behaviourTreeView.SetController(null);
+                _playingInitFlag = false;
+            }
+        }
+
+        /// <summary>
         /// 選択オブジェクトの変化通知
         /// </summary>
         private void OnSelectionChange() {
@@ -118,22 +180,8 @@ namespace GameAiBehaviour.Editor {
             if (treeData != null) {
                 Setup(treeData);
             }
-
-            var activeGameObject = Selection.activeGameObject;
-
-            if (activeGameObject != null) {
-                var owner = activeGameObject.GetComponentInParent<IBehaviourTreeControllerOwner>();
-                _owner = owner;
-            }
-
-            if (_owner != null) {
-                _blackboardView.SetController(_owner.BehaviourTreeController);
-                _behaviourTreeView.SetController(_owner.BehaviourTreeController);
-            }
-            else {
-                _blackboardView.SetController(null);
-                _behaviourTreeView.SetController(null);
-            }
+            
+            RefreshOwner();
         }
     }
 }
