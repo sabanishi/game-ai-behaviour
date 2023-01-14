@@ -25,3 +25,9 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     booleanValue: 0
+  - propertyName: Reset
+    propertyType: 3
+    integerValue: 0
+    floatValue: 0
+    stringValue: 
+    booleanValue: 0
