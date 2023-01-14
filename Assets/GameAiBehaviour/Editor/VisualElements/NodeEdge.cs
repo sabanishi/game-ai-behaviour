@@ -7,9 +7,21 @@ namespace GameAiBehaviour.Editor {
     /// エディタ用のノードエッジ
     /// </summary>
     public class NodeEdge : Edge {
-        // 実行中状態
-        public bool IsRunning { get; set; }
+        private bool _running;
         
+        // 実行中状態
+        public bool IsRunning {
+            get => _running;
+            set {
+                if (value == _running) {
+                    return;
+                }
+                
+                _running = value;
+                UpdateEdgeControl();
+            }
+        }
+
         /// <summary>
         /// 選択時処理
         /// </summary>
@@ -54,8 +66,8 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         private void UpdateEdgeControlColors() {
             if (IsRunning) {
-                edgeControl.inputColor = new Color(1, 0.95f, 0, 0.5f);
-                edgeControl.outputColor = new Color(1, 0.95f, 0, 0.5f);
+                edgeControl.inputColor = new Color(1, 1, 0, 1);
+                edgeControl.outputColor = new Color(1, 1, 0, 1);
             }
         }
     }
