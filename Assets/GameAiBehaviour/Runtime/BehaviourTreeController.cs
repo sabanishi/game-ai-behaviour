@@ -178,10 +178,7 @@ namespace GameAiBehaviour {
             _tickTimer = TickInterval;
 
             void UpdateRoutine() {
-                var finish = !_nodeLogicRoutine.MoveNext();
-                Debug.Log($"{_nodeLogicRoutine.Current?.GetType()}_{CurrentState}");
-                
-                if (finish) {
+                if (!_nodeLogicRoutine.MoveNext()) {
                     _nodeLogicRoutine = null;
                 }
             }
@@ -203,8 +200,6 @@ namespace GameAiBehaviour {
                 // ルーチン実行
                 UpdateRoutine();
             }
-            
-            Debug.LogWarning($"Running:{IsRunning}, State:{CurrentState}");
         }
 
         /// <summary>

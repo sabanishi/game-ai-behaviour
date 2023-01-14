@@ -188,8 +188,7 @@ namespace GameAiBehaviour {
         /// 値変化通知
         /// </summary>
         private void OnValidate() {
-            //hideFlags |= HideFlags.HideInHierarchy;
-            hideFlags &= ~HideFlags.HideInHierarchy;
+            hideFlags |= HideFlags.HideInHierarchy;
         }
     }
 }
