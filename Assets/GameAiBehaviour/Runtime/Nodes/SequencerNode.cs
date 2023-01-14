@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -6,54 +7,34 @@ namespace GameAiBehaviour {
     /// </summary>
     public sealed class SequencerNode : CompositeNode {
         private class Logic : Logic<SequencerNode> {
-            // 実行対象のNextNodeインデックス
-            private int _index = 0;
-
             /// <summary>
             /// コンストラクタ
             /// </summary>
             public Logic(IBehaviourTreeController controller, SequencerNode node) : base(controller, node) {
             }
-
+            
             /// <summary>
-            /// 開始処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _index = 0;
-            }
-
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate() {
-                var children = Node.children;
-
-                // 先頭ノードを実行
-                if (_index < children.Length) {
-                    UpdateNode(children[_index]);
-                }
-                else {
-                    return State.Failure;
-                }
-
-                return State;
-            }
-
-            /// <summary>
-            /// 子要素の更新結果通知
-            /// </summary>
-            protected override State OnUpdatedChild(ILogic childNodeLogic) {
-                // 成功していたらRunningへ
-                if (childNodeLogic.State == State.Success) {
-                    _index++;
-                    if (_index < Node.children.Length) {
-                        return State.Running;
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 順番に実行
+                for (var i = 0; i < Node.children.Length; i++) {
+                    var node = Node.children[i];
+                    yield return UpdateNodeRoutine(node, SetState);
+                    
+                    // 成功していたらRunning扱い
+                    if (State == State.Success) {
+                        SetState(State.Running);
+                        yield return null;
                     }
-
-                    return State.Success;
+                    // 失敗していた場合、そのまま失敗として終了
+                    else if (State == State.Failure) {
+                        yield break;
+                    }
                 }
 
-                return childNodeLogic.State;
+                // 誰も実行できなかった場合、失敗とする
+                SetState(State.Failure);
             }
         }
 

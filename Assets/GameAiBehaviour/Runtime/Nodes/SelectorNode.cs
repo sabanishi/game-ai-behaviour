@@ -1,11 +1,11 @@
-﻿namespace GameAiBehaviour {
+﻿using System.Collections;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// 選択用ノード
     /// </summary>
     public sealed class SelectorNode : CompositeNode {
         private class Logic : Logic<SelectorNode> {
-            private int _index;
-            
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -13,43 +13,22 @@
             }
 
             /// <summary>
-            /// 開始時処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _index = 0;
-            }
-
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate() {
-                // 先頭を実行
-                if (_index < Node.children.Length) {
-                    var node = Node.children[_index];
-                    UpdateNode(node);
-                }
-                else {
-                    return State.Failure;
-                }
-
-                return State;
-            }
-
-            /// <summary>
-            /// 子要素の更新通知
-            /// </summary>
-            protected override State OnUpdatedChild(ILogic childNodeLogic) {
-                // 実行に失敗したら次を実行
-                if (childNodeLogic.State == State.Failure) {
-                    _index++;
-                    if (_index < Node.children.Length) {
-                        UpdateNode(Node.children[_index]);
-                        return State;
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 順番に実行トライ
+                for (var i = 0; i < Node.children.Length; i++) {
+                    var node = Node.children[i];
+                    yield return UpdateNodeRoutine(node, SetState);
+                    
+                    // 成功していた場合、完了とする
+                    if (State == State.Success) {
+                        yield break;
                     }
                 }
-                
-                // 子要素の状態と同じにする
-                return childNodeLogic.State;
+
+                // 誰も実行できなかった場合、失敗とする
+                SetState(State.Failure);
             }
         }
 

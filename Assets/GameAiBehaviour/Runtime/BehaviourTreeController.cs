@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -22,8 +23,6 @@ namespace GameAiBehaviour {
         // Rootノード
         private RootNode _rootNode;
         private float _tickTimer;
-        // 実行中ノードスタック
-        private List<Node> _runningNodes = new List<Node>();
         // ノードロジック
         private Dictionary<Node, Node.ILogic> _logics = new Dictionary<Node, Node.ILogic>();
         // アクションハンドラ情報
@@ -31,6 +30,8 @@ namespace GameAiBehaviour {
         // アクションノードハンドラ
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
             new Dictionary<Node, IActionNodeHandler>();
+        // 実行用ルーチン
+        private StateRoutine _stateRoutine;
 
         // プロパティ管理用Blackboard
         public Blackboard Blackboard { get; private set; } = new Blackboard();
@@ -137,7 +138,7 @@ namespace GameAiBehaviour {
                 logic.Value.Reset();
             }
 
-            _runningNodes.Clear();
+            _stateRoutine = null;
         }
 
         /// <summary>
@@ -152,8 +153,8 @@ namespace GameAiBehaviour {
                 pair.Value.Dispose();
             }
 
-            _runningNodes.Clear();
             _logics.Clear();
+            _stateRoutine = null;
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -165,7 +166,7 @@ namespace GameAiBehaviour {
             if (_data == null || _rootNode == null) {
                 return;
             }
-            
+
             // Tickタイマー更新
             if (_tickTimer > 0.0f) {
                 _tickTimer -= deltaTime;
@@ -175,66 +176,43 @@ namespace GameAiBehaviour {
                 _tickTimer = TickInterval;
             }
 
-            // スタックの更新
-            void UpdateStack(Node childNode) {
-                if (_runningNodes.Count <= 0) {
-                    return;
-                }
-
-                // ノードの実行
-                var lastIndex = _runningNodes.Count - 1;
-                var lastNode = _runningNodes[lastIndex];
-                _runningNodes.RemoveAt(lastIndex);
-                _state = UpdateRunningNode(lastNode, childNode);
-
-                if (_state != Node.State.Running) {
-                    // 再起的実行
-                    UpdateStack(lastNode);
+            void UpdateRoutine() {
+                var finish = !_stateRoutine.MoveNext();
+                _state = _stateRoutine.Current;
+                Debug.Log(_state);
+                
+                if (finish) {
+                    _stateRoutine = null;
                 }
             }
 
-            // 実行中ノードがあれば実行
-            if (_runningNodes.Count > 0) {
-                UpdateStack(null);
+            if (_stateRoutine != null) {
+                // ルーチン実行
+                UpdateRoutine();
             }
             else {
                 // Logicの状態をリセット
                 foreach (var logic in _logics) {
                     logic.Value.Reset();
                 }
+
+                // RootNode起点のRoutineを生成
+                var rootLogic = FindLogic(_rootNode);
+                _stateRoutine = new StateRoutine(rootLogic.UpdateRoutine());
                 
-                // ルートノードの実行
-                _state = ((IBehaviourTreeController)this).UpdateNode(null, _rootNode);
+                // ルーチン実行
+                UpdateRoutine();
             }
-
-            // ステータスが実行中でなければ、実行中スタックをクリア
-            if (_state != Node.State.Running) {
-                _runningNodes.Clear();
-            }
-        }
-
-        /// <summary>
-        /// ノードの実行
-        /// </summary>
-        Node.State IBehaviourTreeController.UpdateNode(Node.ILogic parentNodeLogic, Node node) {
-            var logic = GetLogic(node);
-            if (logic == null) {
-                return Node.State.Failure;
-            }
-
-            _runningNodes.Add(node);
-            logic.Update(parentNodeLogic);
-            if (logic.State != Node.State.Running) {
-                _runningNodes.Remove(node);
-            }
-
-            return logic.State;
         }
 
         /// <summary>
         /// ActionNodeのハンドリング用インスタンスを取得
         /// </summary>
         IActionNodeHandler IBehaviourTreeController.GetActionHandler(HandleableActionNode node) {
+            if (node == null) {
+                return null;
+            }
+            
             if (_actionNodeHandlers.TryGetValue(node, out var handler)) {
                 return handler;
             }
@@ -253,33 +231,13 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
-        /// 実行中ノードの更新
+        /// ノード用ロジックを検索
         /// </summary>
-        private Node.State UpdateRunningNode(Node node, Node childNode) {
-            var logic = GetLogic(node);
-            if (logic == null) {
-                return Node.State.Failure;
-            }
-
-            var childLogic = GetLogic(childNode);
-
-            _runningNodes.Add(node);
-            logic.UpdateRunning(childLogic);
-            if (logic.State != Node.State.Running) {
-                _runningNodes.Remove(node);
-            }
-
-            return logic.State;
-        }
-
-        /// <summary>
-        /// ノード用のロジック取得
-        /// </summary>
-        private Node.ILogic GetLogic(Node node) {
+        public Node.ILogic FindLogic(Node node) {
             if (node == null) {
                 return null;
             }
-            
+
             if (_logics.TryGetValue(node, out var logic)) {
                 return logic;
             }

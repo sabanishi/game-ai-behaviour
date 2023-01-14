@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -6,8 +7,6 @@ namespace GameAiBehaviour {
     /// </summary>
     public abstract class HandleableActionNode : ActionNode {
         private class Logic : Logic<HandleableActionNode> {
-            private IActionNodeHandler _actionNodeHandler;
-
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -15,40 +14,37 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 開始処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _actionNodeHandler = Controller.GetActionHandler(Node);
-                _actionNodeHandler?.OnEnter(Node);
-            }
-
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate() {
-                // Handlerがあればそれを使用
-                if (_actionNodeHandler != null) {
-                    var result = _actionNodeHandler.OnUpdate(Node);
-                    return result;
+            protected sealed override IEnumerator UpdateRoutineInternal() {
+                var handler = Controller.GetActionHandler(Node);
+                
+                // Handlerが無ければ、ログを出して終了
+                if (handler == null) {
+                    Debug.Log($"Invoke ActionNode[{GetType().Name}]");
+                    SetState(State.Success);
+                    yield break;
                 }
                 
-                // 無ければそのまま終わる
-                Debug.Log($"Invoke ActionNode[{GetType().Name}]");
-                return State.Success;
-            }
+                // 開始処理実行
+                handler.OnEnter(Node);
+                
+                // 更新処理実行
+                while (true) {
+                    SetState(handler.OnUpdate(Node));
+                    
+                    // 実行中なら繰り返す
+                    if (State == State.Running) {
+                        yield return null;
+                        continue;
+                    }
 
-            /// <summary>
-            /// 子要素実行通知
-            /// </summary>
-            protected override State OnUpdatedChild(ILogic childNodeLogic) {
-                return State.Failure;
-            }
-
-            /// <summary>
-            /// 停止時処理
-            /// </summary>
-            protected override void OnStop() {
-                _actionNodeHandler?.OnExit(Node);
+                    // 実行が終わった場合、終了させる
+                    break;
+                }
+                
+                // 終了処理実行
+                handler.OnExit(Node);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -15,42 +16,30 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 開始処理
+            /// 更新ルーチン
             /// </summary>
-            protected override void OnStart() {
-                _index = 0;
-            }
-
-            /// <summary>
-            /// 実行処理
-            /// </summary>
-            protected override State OnUpdate() {
+            protected override IEnumerator UpdateRoutineInternal() {
+                // 子がいない場合は失敗
                 if (Node.child == null) {
-                    return State.Failure;
+                    SetState(State.Failure);
+                    yield break;
                 }
                 
-                // 条件判定
-                if (_index >= Node.count) {
-                    return State.Success;
+                // 指定回数繰り返す
+                for (var i = 0; i < Node.count; i++) {
+                    // 接続先ノードの実行
+                    yield return UpdateNodeRoutine(Node.child, SetState);
+                    
+                    // 成功していたらRunning扱い
+                    if (State == State.Success) {
+                        SetState(State.Running);
+                        yield return null;
+                    }
+                    // 失敗していたら失敗して抜け出す
+                    else if (State == State.Failure) {
+                        yield break;
+                    }
                 }
-
-                // 接続先ノードの実行
-                UpdateNode(Node.child);
-
-                return State;
-            }
-
-            /// <summary>
-            /// 子要素の更新結果通知
-            /// </summary>
-            protected override State OnUpdatedChild(ILogic childNodeLogic) {
-                // 失敗していたら失敗
-                if (childNodeLogic.State == State.Failure) {
-                    return State.Failure;
-                }
-                
-                // それ以外は実行中
-                return State.Running;
             }
         }
         

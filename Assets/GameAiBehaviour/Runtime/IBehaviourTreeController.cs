@@ -1,4 +1,6 @@
-﻿namespace GameAiBehaviour {
+﻿using System.Collections;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// BehaviourTree制御用のインターフェース
     /// </summary>
@@ -7,11 +9,11 @@
         /// Blackboard
         /// </summary>
         Blackboard Blackboard { get; }
-        
+
         /// <summary>
-        /// ノードの実行
+        /// ノード用ロジックを検索
         /// </summary>
-        Node.State UpdateNode(Node.ILogic parentNodeLogic, Node node);
+        Node.ILogic FindLogic(Node node);
 
         /// <summary>
         /// ノードにBindされているHandlerの取得
