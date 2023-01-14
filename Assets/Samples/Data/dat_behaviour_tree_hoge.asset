@@ -16,6 +16,40 @@ MonoBehaviour:
   position: {x: 537, y: -116.30002}
   title: 
   child: {fileID: 299288502928017254}
+--- !u!114 &-8116135557820861484
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9063987a68c79c44d89f8f57869fd9d1, type: 3}
+  m_Name: SelectorNode
+  m_EditorClassIdentifier: 
+  guid: 92dc2848810d6b24684060e6b86cd5b0
+  position: {x: 491, y: 229}
+  title: 
+  children:
+  - {fileID: 5383493273251367993}
+  - {fileID: -7048618745569939380}
+--- !u!114 &-7048618745569939380
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 350b68dc642b2704f8a4a50178971ced, type: 3}
+  m_Name: ThroughNode
+  m_EditorClassIdentifier: 
+  guid: 6f9ed2878714fb14e909ac252972b633
+  position: {x: 545, y: 343}
+  title: "\u4F55\u3082\u3057\u306A\u3044"
+  child: {fileID: 639150554604916338}
 --- !u!114 &-6950444865005838857
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -72,7 +106,7 @@ MonoBehaviour:
   position: {x: 1123, y: 464}
   title: 
   logType: 3
-  text: E
+  text: F
 --- !u!114 &-1021410459844980417
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -164,6 +198,9 @@ MonoBehaviour:
   - {fileID: 4673337000884205205}
   - {fileID: 6490966200509395454}
   - {fileID: 5383493273251367993}
+  - {fileID: -8116135557820861484}
+  - {fileID: 639150554604916338}
+  - {fileID: -7048618745569939380}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &299288502928017254
 MonoBehaviour:
@@ -183,6 +220,23 @@ MonoBehaviour:
   children:
   - {fileID: 1917303352956534878}
   - {fileID: 6227504010875714103}
+--- !u!114 &639150554604916338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02751b745a0a64ae8a46d045246f2b11, type: 3}
+  m_Name: LogNode
+  m_EditorClassIdentifier: 
+  guid: a4bc077dc97c76848bf249afc2d46300
+  position: {x: 545, y: 444}
+  title: 
+  logType: 3
+  text: C
 --- !u!114 &1622228549096825288
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -220,7 +274,7 @@ MonoBehaviour:
   children:
   - {fileID: -6950444865005838857}
   - {fileID: 2283124608860793593}
-  - {fileID: 5383493273251367993}
+  - {fileID: -8116135557820861484}
   - {fileID: 2118217804359472935}
   - {fileID: 4673337000884205205}
   - {fileID: 2429685045730779452}
@@ -240,7 +294,7 @@ MonoBehaviour:
   position: {x: 715, y: 410.00003}
   title: 
   logType: 3
-  text: B
+  text: A
 --- !u!114 &2283124608860793593
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -254,10 +308,10 @@ MonoBehaviour:
   m_Name: LogNode
   m_EditorClassIdentifier: 
   guid: 2aa5215b8aa78024388398f822e0c96e
-  position: {x: 320, y: 229}
+  position: {x: 321.15005, y: 229.00003}
   title: 
   logType: 3
-  text: A
+  text: B
 --- !u!114 &2429685045730779452
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -293,7 +347,7 @@ MonoBehaviour:
   position: {x: 1293, y: 546.56}
   title: 
   logType: 3
-  text: F
+  text: G
 --- !u!114 &3485847957161675038
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -310,7 +364,7 @@ MonoBehaviour:
   position: {x: 931, y: 464}
   title: 
   logType: 3
-  text: C
+  text: E
 --- !u!114 &3947253764233059779
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -362,7 +416,7 @@ MonoBehaviour:
   m_Name: IfNode
   m_EditorClassIdentifier: 
   guid: 702cece5eefc53e4d827e986435037e1
-  position: {x: 470, y: 229}
+  position: {x: 373, y: 343}
   title: 
   child: {fileID: 6490966200509395454}
   conditions:
@@ -398,5 +452,5 @@ MonoBehaviour:
   m_Name: ResetNode
   m_EditorClassIdentifier: 
   guid: a6bcff4fbfe20fb428fb3d8539ebf480
-  position: {x: 470, y: 308}
+  position: {x: 373, y: 443.5}
   title: 
