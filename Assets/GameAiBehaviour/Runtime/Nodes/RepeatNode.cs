@@ -30,12 +30,11 @@ namespace GameAiBehaviour {
                     // 接続先ノードの実行
                     yield return UpdateNodeRoutine(Node.child, SetState);
                     
-                    // 成功していたらRunning扱い
+                    // 成功していたら継続
                     if (State == State.Success) {
-                        SetState(State.Running);
-                        yield return null;
+                        yield return this;
                     }
-                    // 失敗していたら失敗して抜け出す
+                    // 失敗していたら完了
                     else if (State == State.Failure) {
                         yield break;
                     }

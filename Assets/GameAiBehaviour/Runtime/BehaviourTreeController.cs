@@ -18,8 +18,6 @@ namespace GameAiBehaviour {
 
         // 実行データ
         private BehaviourTree _data;
-        // 実行状態
-        private Node.State _state = Node.State.Success;
         // Rootノード
         private RootNode _rootNode;
         private float _tickTimer;
@@ -31,12 +29,16 @@ namespace GameAiBehaviour {
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
             new Dictionary<Node, IActionNodeHandler>();
         // 実行用ルーチン
-        private StateRoutine _stateRoutine;
+        private NodeLogicRoutine _nodeLogicRoutine;
 
         // プロパティ管理用Blackboard
         public Blackboard Blackboard { get; private set; } = new Blackboard();
         // 思考頻度
         public float TickInterval { get; set; } = 1;
+        // 現在の実行状態
+        public Node.State CurrentState => _nodeLogicRoutine?.Current?.State ?? Node.State.Inactive;
+        // 実行中か
+        public bool IsRunning => _nodeLogicRoutine != null;
 
         /// <summary>
         /// コンストラクタ
@@ -65,8 +67,8 @@ namespace GameAiBehaviour {
         /// <param name="updateFunc">更新関数</param>
         /// <param name="enterAction">開始関数</param>
         /// <param name="exitAction">終了関数</param>
-        public void BindActionNodeHandler<TNode>(Func<TNode, Node.State> updateFunc,
-            Action<TNode> enterAction = null, Action<TNode> exitAction = null)
+        public void BindActionNodeHandler<TNode>(Func<TNode, IActionNodeHandler.State> updateFunc,
+            Func<TNode, bool> enterAction = null, Action<TNode> exitAction = null)
             where TNode : HandleableActionNode {
             BindActionNodeHandler<TNode, ObserveActionNodeHandler<TNode>>(handler => {
                 handler.SetEnterAction(enterAction);
@@ -138,7 +140,7 @@ namespace GameAiBehaviour {
                 logic.Value.Reset();
             }
 
-            _stateRoutine = null;
+            _nodeLogicRoutine = null;
         }
 
         /// <summary>
@@ -154,7 +156,7 @@ namespace GameAiBehaviour {
             }
 
             _logics.Clear();
-            _stateRoutine = null;
+            _nodeLogicRoutine = null;
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -172,21 +174,19 @@ namespace GameAiBehaviour {
                 _tickTimer -= deltaTime;
                 return;
             }
-            else {
-                _tickTimer = TickInterval;
-            }
+            
+            _tickTimer = TickInterval;
 
             void UpdateRoutine() {
-                var finish = !_stateRoutine.MoveNext();
-                _state = _stateRoutine.Current;
-                Debug.Log(_state);
+                var finish = !_nodeLogicRoutine.MoveNext();
+                Debug.Log($"{_nodeLogicRoutine.Current?.GetType()}_{CurrentState}");
                 
                 if (finish) {
-                    _stateRoutine = null;
+                    _nodeLogicRoutine = null;
                 }
             }
 
-            if (_stateRoutine != null) {
+            if (_nodeLogicRoutine != null) {
                 // ルーチン実行
                 UpdateRoutine();
             }
@@ -198,11 +198,13 @@ namespace GameAiBehaviour {
 
                 // RootNode起点のRoutineを生成
                 var rootLogic = FindLogic(_rootNode);
-                _stateRoutine = new StateRoutine(rootLogic.UpdateRoutine());
+                _nodeLogicRoutine = new NodeLogicRoutine(rootLogic.UpdateRoutine());
                 
                 // ルーチン実行
                 UpdateRoutine();
             }
+            
+            Debug.LogWarning($"Running:{IsRunning}, State:{CurrentState}");
         }
 
         /// <summary>

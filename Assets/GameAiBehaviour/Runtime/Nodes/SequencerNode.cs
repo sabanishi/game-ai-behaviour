@@ -22,10 +22,9 @@ namespace GameAiBehaviour {
                     var node = Node.children[i];
                     yield return UpdateNodeRoutine(node, SetState);
                     
-                    // 成功していたらRunning扱い
+                    // 成功していたら待機
                     if (State == State.Success) {
-                        SetState(State.Running);
-                        yield return null;
+                        yield return this;
                     }
                     // 失敗していた場合、そのまま失敗として終了
                     else if (State == State.Failure) {

@@ -3,8 +3,17 @@
     /// 実行ノードハンドリング用インターフェース
     /// </summary>
     public interface IActionNodeHandler {
-        void OnEnter(HandleableActionNode node);
-        Node.State OnUpdate(HandleableActionNode node);
+        /// <summary>
+        /// Action状態
+        /// </summary>
+        public enum State {
+            Success,
+            Failure,
+            Running,
+        }
+        
+        bool OnEnter(HandleableActionNode node);
+        State OnUpdate(HandleableActionNode node);
         void OnExit(HandleableActionNode node);
     }
     
@@ -20,11 +29,11 @@
         public ActionNodeHandler() {
         }
 
-        void IActionNodeHandler.OnEnter(HandleableActionNode node) {
-            OnEnterInternal((TNode)node);
+        bool IActionNodeHandler.OnEnter(HandleableActionNode node) {
+            return OnEnterInternal((TNode)node);
         }
 
-        Node.State IActionNodeHandler.OnUpdate(HandleableActionNode node) {
+        IActionNodeHandler.State IActionNodeHandler.OnUpdate(HandleableActionNode node) {
             return OnUpdateInternal((TNode)node);
         }
 
@@ -35,13 +44,15 @@
         /// <summary>
         /// 実行ノードの開始処理
         /// </summary>
-        protected virtual void OnEnterInternal(TNode node) {}
+        protected virtual bool OnEnterInternal(TNode node) {
+            return true;
+        }
 
         /// <summary>
         /// 実行ノードの更新処理
         /// </summary>
-        protected virtual Node.State OnUpdateInternal(TNode node) {
-            return Node.State.Success;
+        protected virtual IActionNodeHandler.State OnUpdateInternal(TNode node) {
+            return IActionNodeHandler.State.Success;
         }
 
         /// <summary>

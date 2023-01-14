@@ -11,7 +11,6 @@ namespace GameAiBehaviour {
         public enum State {
             Inactive,
             Failure,
-            Running,
             Success,
         }
 
@@ -53,7 +52,7 @@ namespace GameAiBehaviour {
             // 現在の状態
             public State State { get; private set; }
             // 実行中か
-            public bool IsRunning => State == State.Running;
+            public bool IsRunning { get; private set; }
             // 制御対象のNode
             Node ILogic.TargetNode => Node;
             // 制御用コントローラ
@@ -89,15 +88,14 @@ namespace GameAiBehaviour {
             /// 更新ルーチン
             /// </summary>
             IEnumerator ILogic.UpdateRoutine() {
-                // 初期値はSuccessにしておく
-                State = State.Success;
+                // 実行開始
+                IsRunning = true;
                 
                 // Override用コード実行
                 yield return UpdateRoutineInternal();
                 
-                // 現在の状態をルーチン実行元に通知
-                yield return State;
-                Debug.LogWarning($"{Node.GetType().Name}:{State}");
+                // 実行完了
+                IsRunning = false;
             }
 
             /// <summary>
@@ -107,6 +105,7 @@ namespace GameAiBehaviour {
                 if (State != State.Inactive) {
                     ResetInternal();
                     State = State.Inactive;
+                    IsRunning = false;
                 }
             }
 

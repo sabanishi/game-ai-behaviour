@@ -4,17 +4,17 @@ using System.Collections.Generic;
 
 namespace GameAiBehaviour {
     /// <summary>
-    /// State実行用コルーチン
+    /// NodeLogic実行用コルーチン
     /// </summary>
-    public class StateRoutine : IEnumerator {
+    public class NodeLogicRoutine : IEnumerator {
         private IEnumerator _enumerator;
         private Stack<object> _stack;
-        private Node.State _current;
+        private Node.ILogic _current;
 
         // 完了しているか
         public bool IsDone { get; private set; }
-        // 現在のState
-        public Node.State Current => _current;
+        // 現在のNodeLogic
+        public Node.ILogic Current => _current;
         // Interface実装用
         object IEnumerator.Current => _current;
 
@@ -22,7 +22,7 @@ namespace GameAiBehaviour {
         /// コンストラクタ
         /// </summary>
         /// <param name="enumerator">実行対象のEnumerator</param>
-        public StateRoutine(IEnumerator enumerator) {
+        public NodeLogicRoutine(IEnumerator enumerator) {
             _enumerator = enumerator;
             _stack = new Stack<object>();
             ((IEnumerator)this).Reset();
@@ -42,7 +42,7 @@ namespace GameAiBehaviour {
         public void Reset() {
             _stack.Clear();
             _stack.Push(_enumerator);
-            _current = Node.State.Inactive;
+            _current = null;
             IsDone = false;
         }
 
@@ -58,20 +58,11 @@ namespace GameAiBehaviour {
 
             // スタックを取り出して、処理を進める
             var peek = _stack.Peek();
-            
-            // nullはRunning扱い
-            if (peek == null) {
-                _current = Node.State.Running;
-                _stack.Pop();
-            }
-            // State返却
-            else if (peek is Node.State state) {
-                _current = state;
-                _stack.Pop();
 
-                if (state != Node.State.Running) {
-                    Update();
-                }
+            // NodeLogic返却はCurrentを更新して待つ(Running扱い)
+            if (peek is Node.ILogic logic) {
+                _current = logic;
+                _stack.Pop();
             }
             // Stack追加呼び出し
             else if (peek is IEnumerator enumerator) {
