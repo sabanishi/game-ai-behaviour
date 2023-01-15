@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if UNITY_EDITOR
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -10,6 +11,21 @@ namespace GameAiBehaviour {
     /// BehaviourTreeのエディタ用ユーティリティ
     /// </summary>
     public static class BehaviourTreeEditorUtility {
+        /// <summary>
+        /// ノードの表示名を取得
+        /// </summary>
+        public static string GetNodeDisplayTitle(Node node) {
+            if (node == null) {
+                return "Null";
+            }
+            
+            if (string.IsNullOrEmpty(node.title)) {
+                return ObjectNames.NicifyVariableName(node.GetType().Name);
+            }
+
+            return node.title;
+        }
+        
         /// <summary>
         /// ノードの生成
         /// </summary>
@@ -363,3 +379,4 @@ namespace GameAiBehaviour {
         }
     }
 }
+#endif

@@ -116,6 +116,9 @@ namespace GameAiBehaviour.Editor {
                 else if (node is DecoratorNode decorator) {
                     CreateEdge(node, decorator.child);
                 }
+                else if (node is FunctionRootNode functionRoot) {
+                    CreateEdge(node, functionRoot.child);
+                }
                 else if (node is RootNode root) {
                     CreateEdge(node, root.child);
                 }

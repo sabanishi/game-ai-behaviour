@@ -3,6 +3,7 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -11,6 +12,34 @@ namespace GameAiBehaviour {
     public static class BehaviourTreeEditorGUI {
         // 現在描画中のツリー
         public static BehaviourTree CurrentTree { get; set; }
+
+        /// <summary>
+        /// 特定ノードの参照を設定するためのフィールド
+        /// </summary>
+        public static T NodeField<T>(Rect rect, GUIContent label, T current)
+            where T : Node {
+            // Treeがない場合は非アクティブなObjectField
+            if (CurrentTree == null) {
+                using (new EditorGUI.DisabledScope()) {
+                    return EditorGUI.ObjectField(rect, label, null, typeof(T), false) as T;
+                }
+            }
+            
+            // Treeがある場合は、Treeに含まれている該当Nodeの参照を使ったPopup
+            var targetNodes = CurrentTree.nodes
+                .OfType<T>()
+                .ToList();
+            var targetNodeLabels = targetNodes.Select(BehaviourTreeEditorUtility.GetNodeDisplayTitle)
+                .ToArray();
+            var currentIndex = Mathf.Max(0, targetNodes.IndexOf(current));
+            currentIndex = EditorGUI.Popup(rect, label.text, currentIndex, targetNodeLabels);
+
+            if (currentIndex >= 0 && currentIndex < targetNodes.Count) {
+                return targetNodes[currentIndex];
+            }
+
+            return current;
+        }
 
         /// <summary>
         /// プロパティ名のGUI描画

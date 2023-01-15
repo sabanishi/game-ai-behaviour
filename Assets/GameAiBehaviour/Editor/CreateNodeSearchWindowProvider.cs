@@ -59,6 +59,9 @@ namespace GameAiBehaviour.Editor {
                     AddTreeEntry(type, 2);
                 }
             }
+            
+            AddTreeGroupEntry("Etc", 1);
+            AddTreeEntry(typeof(FunctionRootNode), 2);
 
             return entries;
         }

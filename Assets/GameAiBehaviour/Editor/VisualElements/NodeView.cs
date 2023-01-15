@@ -26,7 +26,7 @@ namespace GameAiBehaviour.Editor {
             get => base.title;
             set {
                 if (string.IsNullOrEmpty(value)) {
-                    base.title = ObjectNames.NicifyVariableName(Node.GetType().Name);
+                    base.title = BehaviourTreeEditorUtility.GetNodeDisplayTitle(Node);
                 }
                 else {
                     base.title = value;
@@ -168,6 +168,9 @@ namespace GameAiBehaviour.Editor {
             else if (node is RootNode) {
                 port = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
             }
+            else if (node is FunctionRootNode) {
+                port = InstantiatePort(Orientation.Vertical, Direction.Output, Port.Capacity.Single, typeof(bool));
+            }
 
             if (port != null) {
                 port.portName = "";
@@ -194,6 +197,9 @@ namespace GameAiBehaviour.Editor {
             }
             else if (node is LinkNode) {
                 AddToClassList("link");
+            }
+            else if (node is FunctionRootNode) {
+                AddToClassList("function");
             }
             else if (node is RootNode) {
                 AddToClassList("root");

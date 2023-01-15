@@ -66,7 +66,7 @@ MonoBehaviour:
   m_Name: SubTreeNode
   m_EditorClassIdentifier: 
   guid: 8958c4af200059541a79c74d1d6eb172
-  position: {x: 338, y: 54}
+  position: {x: 326, y: 82.000015}
   title: 
   connectTree: {fileID: 11400000, guid: ce6744b6203f19c4e85d0ae1749df4bf, type: 2}
 --- !u!114 &-7048618745569939380
@@ -104,6 +104,22 @@ MonoBehaviour:
   conditions:
     conditions:
     - {fileID: -624816096900473424}
+--- !u!114 &-6035141168896095301
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c2cf769ece98d749b8dfeccca27e99e, type: 3}
+  m_Name: FunctionNode
+  m_EditorClassIdentifier: 
+  guid: 522b0494f6a4cec4a9e4612f865d9959
+  position: {x: 154.00003, y: 81.00003}
+  title: 
+  functionRoot: {fileID: -909098928808776949}
 --- !u!114 &-3740395930079640521
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -142,6 +158,23 @@ MonoBehaviour:
   title: 
   child: {fileID: -2794889183983282705}
   count: 2
+--- !u!114 &-3033307032264944086
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02751b745a0a64ae8a46d045246f2b11, type: 3}
+  m_Name: LogNode
+  m_EditorClassIdentifier: 
+  guid: 0246f0d571e18184783cbc2bbfb58258
+  position: {x: 1128.0005, y: 63.000042}
+  title: 
+  logType: 3
+  text: Test2
 --- !u!114 &-2794889183983282705
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -220,6 +253,22 @@ MonoBehaviour:
   - {fileID: 3485847957161675038}
   - {fileID: -3049482232281172655}
   - {fileID: 1622228549096825288}
+--- !u!114 &-909098928808776949
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce9182aecdbf12f48b7073347ab91c53, type: 3}
+  m_Name: FunctionRootNode
+  m_EditorClassIdentifier: 
+  guid: 366813818635cce43a82dc54505e50df
+  position: {x: 1128, y: -25.000004}
+  title: Test2
+  child: {fileID: -3033307032264944086}
 --- !u!114 &-624816096900473424
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -278,6 +327,11 @@ MonoBehaviour:
   - {fileID: -3049482232281172655}
   - {fileID: -8624722297150084614}
   - {fileID: -7915352268930177905}
+  - {fileID: 6684506668937368026}
+  - {fileID: -6035141168896095301}
+  - {fileID: -909098928808776949}
+  - {fileID: 3621230470430876040}
+  - {fileID: -3033307032264944086}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &299288502928017254
 MonoBehaviour:
@@ -292,9 +346,10 @@ MonoBehaviour:
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
   guid: 6f2bc7f51659c4edf85269f210981d58
-  position: {x: 537, y: -24.64}
+  position: {x: 537, y: -25.00002}
   title: 
   children:
+  - {fileID: -6035141168896095301}
   - {fileID: -7915352268930177905}
   - {fileID: 1917303352956534878}
   - {fileID: 6227504010875714103}
@@ -443,6 +498,23 @@ MonoBehaviour:
   title: 
   logType: 3
   text: E
+--- !u!114 &3621230470430876040
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02751b745a0a64ae8a46d045246f2b11, type: 3}
+  m_Name: LogNode
+  m_EditorClassIdentifier: 
+  guid: 51cd890663901ae48b1b096eea080491
+  position: {x: 938, y: 62.999992}
+  title: 
+  logType: 3
+  text: Test1
 --- !u!114 &3947253764233059779
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -532,3 +604,19 @@ MonoBehaviour:
   guid: a6bcff4fbfe20fb428fb3d8539ebf480
   position: {x: 373, y: 443.5}
   title: 
+--- !u!114 &6684506668937368026
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce9182aecdbf12f48b7073347ab91c53, type: 3}
+  m_Name: FunctionRootNode
+  m_EditorClassIdentifier: 
+  guid: 95b9636846c8bb244a6a7f30b99eb6f4
+  position: {x: 938, y: -25}
+  title: Test1
+  child: {fileID: 3621230470430876040}

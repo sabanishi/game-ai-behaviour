@@ -12,6 +12,7 @@
 
 #input {
     align-items: center;
+    min-height: 14px;
 }
 
 #output {
@@ -152,7 +153,6 @@
 
 .root #input {
     background-color: rgb(217, 116, 66);
-    min-height: 14px;
 }
 
 .decorator #input {
@@ -169,6 +169,10 @@
 
 .link #input {
     background-color: rgb(156, 65, 217);
+}
+
+.function #input {
+    background-color: rgb(217, 68, 68);
 }
 
 .node #output {
