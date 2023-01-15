@@ -111,7 +111,7 @@ https://github.com/DaitokuAmygame-ai-behaviour.git?path=/Assets/GameAiBehaviour#
   * 他のBehaviourTreeアセットのRootNodeを実行するためのノード
 
 #### Blackboard
-![image](https://user-images.githubusercontent.com/6957962/212540180-02c1f40a-641c-4b0a-b095-a44e02a5889a.png)
+![image](https://user-images.githubusercontent.com/6957962/212540180-02c1f40a-641c-4b0a-b095-a44e02a5889a.png)  
 プロパティを定義し、実行中プログラムからこの値を書き換える事で、Treeの分岐などに動的な影響を与えるために使用します  
 また、ここで定義したプロパティは「If, While」といった条件指定を行うノードにて使用可能になっています
 * Property
