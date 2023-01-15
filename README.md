@@ -19,12 +19,12 @@
 ```json
 {
     "dependencies": {
-        "com.daitokuamy.gamaibehaviour": "https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour"
+        "com.daitokuamy.gameaibehaviour": "https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour"
     }
 }
 ```
 バージョンを指定したい場合には以下のように記述します。  
-https://github.com/DaitokuAmygame-ai-behaviour.git?path=/Assets/GameAiBehaviour#1.0.0
+https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour#1.0.0
 ## 使い方
 #### アセット作成
 1. ProjectViewの右クリックメニューから、BehaviourTreeのアセットを作成する  
