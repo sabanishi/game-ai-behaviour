@@ -52,6 +52,90 @@ _controller.Update(Time.deltaTime);
 ```C#
 _controller.Cleanup();
 ```
+
+## 拡張方法
+#### 純粋なActionNodeを増やす方法(シーン依存度が低い物)
+* ActionNodeを継承したクラスを作成する
+```C#
+public sealed class HogeNode : ActionNode {
+  private class Logic : Logic<HogeNode> {
+    /// <summary>
+    /// コンストラクタ
+    /// </summary>
+    public Logic(IBehaviourTreeRunner runner, HogeNode node) : base(runner, node) {
+    }
+    
+    /// <summary>
+    /// 実行ルーチン
+    /// </summary>
+    protected override IEnumerator ExecuteRoutineInternal() {
+      /* 実行処理 */
+      SetState(State.Success);
+      yield break;
+    }
+  }
+
+  /* シリアライズしたい情報 */
+  [Tooltip("出力内容のログ")]
+  public string hoge = "";
+
+  /// <summary>
+  /// ロジックの生成
+  /// </summary>
+  public override ILogic CreateLogic(IBehaviourTreeRunner runner) {
+    return new Logic(runner, this);
+  }
+}
+```
+#### HandleableActionNodeを増やす方法(シーン依存度が低い物)
+* HandleableActionNodeを継承したクラスを作成する
+```C#
+public class FooNode : HandleableActionNode {
+  [Tooltip("サンプルから文字を取得するためのキー")]
+  public string sampleKey;
+}
+```
+* Controllerに処理をBindする
+```C#
+_controller.BindActionNodeHandler<FooNode>(node => {
+  /* ここに実際の更新処理 */
+  Debug.Log(GetSampleText(node.sampleKey));
+
+  // Successを返すと処理が完了、Failureなら失敗、Runningなら継続
+  return IActionNodeHandler.State.Success;
+});
+```
+* ControllerにHandlerクラスをBindする(別のBind方法)
+```C#
+public class FooNodeHandler : ActionNodeHandler<FooNode> {
+  private Sample _sample;
+  
+  public void Setup(Sample sample) {
+    _sample = sample;
+  }
+  
+  protected override bool OnEnterInternal(FooNode node) {
+    /* 開始処理(falseを返すと実行失敗) */
+    return true;
+  }
+
+  protected override IActionNodeHandler.State OnUpdateInternal(FooNode node) {
+    /* 更新処理 */
+    Debug.Log(_sample.GetSampleText(node.sampleKey));
+    return IActionNodeHandler.State.Success;
+  }
+
+  protected override void OnExitInternal(FooNode node) {
+    /* 終了処理 */
+  }
+}
+```
+```C#
+_controller.BindActionNodeHandler<FooNode, FooNodeHandler>(onInit: handler => {
+  handler.Setup(this);
+});
+```
+
 ## 機能
 #### Root
 * Root Node  
