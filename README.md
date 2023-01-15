@@ -37,8 +37,21 @@ https://github.com/DaitokuAmygame-ai-behaviour.git?path=/Assets/GameAiBehaviour#
 2. 右クリックメニューから、必要なノードを作成してパスの接続やパラメータの編集を行う  
 ![image](https://user-images.githubusercontent.com/6957962/212539969-ed96e7d6-6f18-4295-91e3-a3e4f7bd04c4.png)  
 ![image](https://user-images.githubusercontent.com/6957962/212540090-19ac57b0-865a-4cb0-9b87-b27f3a9d15ae.png)
-
-
+#### コードからの実行
+* 初期化
+```C#
+_controller = new BehaviourTreeController();
+_controller.TickInterval = 1.0f; // 思考頻度
+_controller.Setup(_behaviourTree); // BehaviourTreeアセットの参照
+```
+* 更新
+```C#
+_controller.Update(Time.deltaTime);
+```
+* 終了
+```C#
+_controller.Cleanup();
+```
 ## 機能
 #### Root
 * Root Node  
