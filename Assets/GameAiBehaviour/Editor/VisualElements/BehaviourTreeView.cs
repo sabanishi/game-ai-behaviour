@@ -241,18 +241,18 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         public override void ClearSelection() {
             base.ClearSelection();
-            OnChangedSelectionNodeViews?.Invoke(new NodeView[0]);
+            OnChangedSelectionNodeViews?.Invoke(Array.Empty<NodeView>());
         }
 
         /// <summary>
         /// Edgeの生成
         /// </summary>
-        private void CreateEdge(Node parent, Node child) {
-            if (parent == null || child == null) {
+        private void CreateEdge(Node parentNode, Node child) {
+            if (parentNode == null || child == null) {
                 return;
             }
 
-            var parentElement = GetElementByGuid(parent.guid) as NodeView;
+            var parentElement = GetElementByGuid(parentNode.guid) as NodeView;
             var childElement = GetElementByGuid(child.guid) as NodeView;
             if (parentElement != null && childElement != null) {
                 var edge = parentElement.Output.ConnectTo<NodeEdge>(childElement.Input);
