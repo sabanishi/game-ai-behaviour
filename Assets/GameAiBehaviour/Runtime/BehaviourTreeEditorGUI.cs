@@ -29,16 +29,17 @@ namespace GameAiBehaviour {
             var targetNodes = CurrentTree.nodes
                 .OfType<T>()
                 .ToList();
-            var targetNodeLabels = targetNodes.Select(BehaviourTreeEditorUtility.GetNodeDisplayTitle)
+            var targetNodeLabels = new [] { "None" }
+                .Concat(targetNodes.Select(BehaviourTreeEditorUtility.GetNodeDisplayTitle))
                 .ToArray();
-            var currentIndex = Mathf.Max(0, targetNodes.IndexOf(current));
+            var currentIndex = targetNodes.IndexOf(current) + 1;
             currentIndex = EditorGUI.Popup(rect, label.text, currentIndex, targetNodeLabels);
 
-            if (currentIndex >= 0 && currentIndex < targetNodes.Count) {
-                return targetNodes[currentIndex];
+            if (currentIndex - 1 >= 0) {
+                return targetNodes[currentIndex - 1];
             }
 
-            return current;
+            return null;
         }
 
         /// <summary>
