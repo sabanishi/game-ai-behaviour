@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace GameAiBehaviour.Editor {
     /// <summary>
@@ -14,8 +12,8 @@ namespace GameAiBehaviour.Editor {
     public class ConditionGroupPropertyDrawer : PropertyDrawer {
         // プロパティ毎の情報
         private class PropertyInfo {
-            public SerializedProperty listProperty;
-            public ReorderableList reorderableList;
+            public SerializedProperty ListProperty;
+            public ReorderableList ReorderableList;
         }
 
         // Conditionの詳細表示用BoxのPadding
@@ -32,15 +30,15 @@ namespace GameAiBehaviour.Editor {
             Initialize(property);
             using (new EditorGUI.PropertyScope(position, label, property)) {
                 var rect = position;
-                rect.height = _propertyInfo.reorderableList.GetHeight();
-                _propertyInfo.reorderableList.DoList(rect);
+                rect.height = _propertyInfo.ReorderableList.GetHeight();
+                _propertyInfo.ReorderableList.DoList(rect);
                 rect.y += rect.height;
 
                 // 選択中の物があった場合、その描画を行う
-                if (_propertyInfo.reorderableList.index >= 0 &&
-                    _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
+                if (_propertyInfo.ReorderableList.index >= 0 &&
+                    _propertyInfo.ReorderableList.index < _propertyInfo.ReorderableList.count) {
                     var element =
-                        _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
+                        _propertyInfo.ListProperty.GetArrayElementAtIndex(_propertyInfo.ReorderableList.index);
                     var condition = element.objectReferenceValue as Condition;
                     if (condition != null) {
                         var serializedObj = new SerializedObject(condition);
@@ -66,7 +64,7 @@ namespace GameAiBehaviour.Editor {
             Initialize(property);
             var height = 0.0f;
             try {
-                height = _propertyInfo.reorderableList.GetHeight();
+                height = _propertyInfo.ReorderableList.GetHeight();
             }
             catch {
                 _propertyInfos.Remove(property.propertyPath);
@@ -74,9 +72,9 @@ namespace GameAiBehaviour.Editor {
             }
 
             // 選択中の物があった場合、その分の高さを加える
-            if (_propertyInfo.reorderableList.index >= 0 &&
-                _propertyInfo.reorderableList.index < _propertyInfo.reorderableList.count) {
-                var element = _propertyInfo.listProperty.GetArrayElementAtIndex(_propertyInfo.reorderableList.index);
+            if (_propertyInfo.ReorderableList.index >= 0 &&
+                _propertyInfo.ReorderableList.index < _propertyInfo.ReorderableList.count) {
+                var element = _propertyInfo.ListProperty.GetArrayElementAtIndex(_propertyInfo.ReorderableList.index);
                 var condition = element.objectReferenceValue as Condition;
                 if (condition != null) {
                     height += condition.GetInspectorGUIHeight(new SerializedObject(condition)) + BoxPadding * 2;
@@ -95,12 +93,12 @@ namespace GameAiBehaviour.Editor {
             }
 
             _propertyInfo = new PropertyInfo();
-            _propertyInfo.listProperty = property.FindPropertyRelative("conditions");
+            _propertyInfo.ListProperty = property.FindPropertyRelative("conditions");
 
             // ReorderableListを初期化
-            var reorderableList = new ReorderableList(property.serializedObject, _propertyInfo.listProperty);
+            var reorderableList = new ReorderableList(property.serializedObject, _propertyInfo.ListProperty);
             reorderableList.drawHeaderCallback = rect => EditorGUI.LabelField(rect, property.displayName);
-            reorderableList.drawElementCallback = (rect, index, active, focused) => {
+            reorderableList.drawElementCallback = (rect, index, _, _) => {
                 var prop = reorderableList.serializedProperty.GetArrayElementAtIndex(index);
                 var condition = prop.objectReferenceValue as Condition;
                 if (condition != null) {
@@ -123,7 +121,7 @@ namespace GameAiBehaviour.Editor {
 
                 return EditorGUI.GetPropertyHeight(prop);
             };
-            reorderableList.onAddDropdownCallback = (rect, list) => {
+            reorderableList.onAddDropdownCallback = (_, list) => {
                 var menu = new GenericMenu();
                 var conditionTypes = TypeCache.GetTypesDerivedFrom(typeof(Condition))
                     .Where(x => !x.IsAbstract && !x.IsGenericType)
@@ -132,7 +130,7 @@ namespace GameAiBehaviour.Editor {
                     var t = type;
                     menu.AddItem(new GUIContent(type.Name), false, () => {
                         // 条件の生成
-                        BehaviourTreeEditorUtility.CreateCondition(_propertyInfo.listProperty, t);
+                        BehaviourTreeEditorUtility.CreateCondition(_propertyInfo.ListProperty, t);
                         list.index = list.count - 1;
                         AssetDatabase.SaveAssets();
                     });
@@ -142,12 +140,12 @@ namespace GameAiBehaviour.Editor {
             };
             reorderableList.onRemoveCallback = list => {
                 // 条件の削除
-                BehaviourTreeEditorUtility.DeleteCondition(_propertyInfo.listProperty, list.index);
+                BehaviourTreeEditorUtility.DeleteCondition(_propertyInfo.ListProperty, list.index);
                 AssetDatabase.SaveAssets();
                 reorderableList.index--;
             };
             Undo.undoRedoPerformed += () => { };
-            _propertyInfo.reorderableList = reorderableList;
+            _propertyInfo.ReorderableList = reorderableList;
 
             _propertyInfos.Add(property.propertyPath, _propertyInfo);
         }

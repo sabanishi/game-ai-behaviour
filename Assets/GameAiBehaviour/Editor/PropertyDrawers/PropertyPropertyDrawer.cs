@@ -22,7 +22,7 @@ namespace GameAiBehaviour.Editor {
 
             // タイプ切り替え
             var type = property.FindPropertyRelative("propertyType");
-            using (var scope = new EditorGUI.ChangeCheckScope()) {
+            using (new EditorGUI.ChangeCheckScope()) {
                 type.enumValueIndex = EditorGUI.Popup(rect, GUIContent.none, type.enumValueIndex,
                     type.enumDisplayNames.Select(x => new GUIContent(x)).ToArray());
             }

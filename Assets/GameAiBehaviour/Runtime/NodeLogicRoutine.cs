@@ -7,8 +7,8 @@ namespace GameAiBehaviour {
     /// NodeLogic実行用コルーチン
     /// </summary>
     public class NodeLogicRoutine : IEnumerator {
-        private IEnumerator _enumerator;
-        private Stack<object> _stack;
+        private readonly IEnumerator _enumerator;
+        private readonly Stack<object> _stack;
         private Node.ILogic _current;
 
         // 完了しているか

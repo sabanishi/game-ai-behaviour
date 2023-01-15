@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UnityEditor;
-using Object = UnityEngine.Object;
 
 namespace GameAiBehaviour {
     /// <summary>

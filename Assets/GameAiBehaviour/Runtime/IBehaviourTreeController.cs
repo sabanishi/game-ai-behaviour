@@ -1,6 +1,4 @@
-﻿using System.Collections;
-
-namespace GameAiBehaviour {
+﻿namespace GameAiBehaviour {
     /// <summary>
     /// BehaviourTree制御用のインターフェース
     /// </summary>
