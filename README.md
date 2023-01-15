@@ -25,6 +25,20 @@
 ```
 バージョンを指定したい場合には以下のように記述します。  
 https://github.com/DaitokuAmygame-ai-behaviour.git?path=/Assets/GameAiBehaviour#1.0.0
+## 使い方
+#### アセット作成
+1. ProjectViewの右クリックメニューから、BehaviourTreeのアセットを作成する  
+![image](https://user-images.githubusercontent.com/6957962/212539690-4eef8c1a-9738-4661-977f-23440ab55f3c.png)
+2. (Blackboard用のAssetがない場合)同じように、Blackboard用のアセットを作成する  
+![image](https://user-images.githubusercontent.com/6957962/212539727-c7a3d3a3-2af1-4966-825f-d226a3403fdf.png)
+#### BehaviourTreeのエディタでの編集
+1. BehaviourTree用のアセットをダブルクリックで開き、Blackboard用のアセットの参照を設定する
+![image](https://user-images.githubusercontent.com/6957962/212539880-ac460da8-7997-4439-bc9e-4747147472c5.png)
+2. 右クリックメニューから、必要なノードを作成してパスの接続やパラメータの編集を行う  
+![image](https://user-images.githubusercontent.com/6957962/212539969-ed96e7d6-6f18-4295-91e3-a3e4f7bd04c4.png)  
+![image](https://user-images.githubusercontent.com/6957962/212540090-19ac57b0-865a-4cb0-9b87-b27f3a9d15ae.png)
+
+
 ## 機能
 #### Root
 * Root Node  
