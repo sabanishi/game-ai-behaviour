@@ -9,7 +9,7 @@ namespace GameAiBehaviour.Editor {
     public class NodeEdge : Edge {
         // 実行したか
         private bool _ran;
-        
+
         // 実行状態
         public bool IsRan {
             get => _ran;
@@ -17,7 +17,7 @@ namespace GameAiBehaviour.Editor {
                 if (value == _ran) {
                     return;
                 }
-                
+
                 _ran = value;
                 UpdateEdgeControl();
             }
@@ -42,22 +42,20 @@ namespace GameAiBehaviour.Editor {
         /// <summary>
         /// EdgeControl更新時
         /// </summary>
-        public override bool UpdateEdgeControl()
-        {
+        public override bool UpdateEdgeControl() {
             if (!base.UpdateEdgeControl()) {
                 return false;
             }
-            
+
             UpdateEdgeControlColors();
-            
+
             return true;
         }
 
         /// <summary>
         /// カスタムスタイル適用時
         /// </summary>
-        protected override void OnCustomStyleResolved(ICustomStyle styles)
-        {
+        protected override void OnCustomStyleResolved(ICustomStyle styles) {
             base.OnCustomStyleResolved(styles);
             UpdateEdgeControlColors();
         }

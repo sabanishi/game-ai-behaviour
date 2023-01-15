@@ -97,7 +97,7 @@ namespace GameAiBehaviour.Editor {
             if (Data == null) {
                 return;
             }
-            
+
             // ルートノードの生成(無ければ)
             CreateRootNode();
 
@@ -160,7 +160,7 @@ namespace GameAiBehaviour.Editor {
             if (_behaviourTreeController == null) {
                 return;
             }
-            
+
             // Node/Edgeの取得
             _tempNodeViews.Clear();
             _tempNodeViews.AddRange(nodes.OfType<NodeView>());
@@ -168,7 +168,7 @@ namespace GameAiBehaviour.Editor {
             _tempNodeEdges.AddRange(_tempNodeViews
                 .SelectMany(x => x.Output?.connections ?? Array.Empty<Edge>())
                 .OfType<NodeEdge>());
-            
+
             // 各種状態のリセット
             foreach (var nodeView in _tempNodeViews) {
                 nodeView.SetNodeState(NodeView.State.Default);
@@ -177,7 +177,7 @@ namespace GameAiBehaviour.Editor {
             foreach (var nodeEdge in _tempNodeEdges) {
                 nodeEdge.IsRan = false;
             }
-            
+
             // ノードの状態を設定
             void SetNodeState(NodeView view, Node.ILogic nodeLogic) {
                 if (nodeLogic.IsRunning) {
@@ -197,7 +197,7 @@ namespace GameAiBehaviour.Editor {
                     }
                 }
             }
-            
+
             // 実行履歴の反映
             foreach (var path in _behaviourTreeController.ExecutedPaths) {
                 var prevView = _tempNodeViews.FirstOrDefault(x => x.Node == path.PrevNodeLogic.TargetNode);
@@ -205,11 +205,11 @@ namespace GameAiBehaviour.Editor {
                 var edge = _tempNodeEdges.FirstOrDefault(x =>
                     ((NodeView)x.input.node).Node == path.NextNodeLogic.TargetNode &&
                     ((NodeView)x.output.node).Node == path.PrevNodeLogic.TargetNode);
-                
+
                 if (prevView != null) {
                     SetNodeState(prevView, path.PrevNodeLogic);
                 }
-                
+
                 if (nextView != null) {
                     SetNodeState(nextView, path.NextNodeLogic);
                 }
@@ -270,7 +270,7 @@ namespace GameAiBehaviour.Editor {
 
             var serializedObj = new SerializedObject(Data);
             var rootNodeProp = serializedObj.FindProperty("rootNode");
-            
+
             // 既に入っている
             if (rootNodeProp.objectReferenceValue != null) {
                 return;
@@ -278,7 +278,7 @@ namespace GameAiBehaviour.Editor {
 
             var nodesProp = serializedObj.FindProperty("nodes");
             var rootNode = default(RootNode);
-            
+
             // 既に作られている
             for (var i = 0; i < nodesProp.arraySize; i++) {
                 var e = nodesProp.GetArrayElementAtIndex(i);
@@ -317,7 +317,7 @@ namespace GameAiBehaviour.Editor {
 
                     return false;
                 });
-                
+
                 graphViewChange.elementsToRemove.ForEach(element => {
                     if (element is NodeView nodeView) {
                         BehaviourTreeEditorUtility.DeleteNode(Data, nodeView.Node);

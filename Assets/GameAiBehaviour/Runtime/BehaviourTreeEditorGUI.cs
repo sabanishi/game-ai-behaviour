@@ -24,12 +24,12 @@ namespace GameAiBehaviour {
                     return EditorGUI.ObjectField(rect, label, null, typeof(T), false) as T;
                 }
             }
-            
+
             // Treeがある場合は、Treeに含まれている該当Nodeの参照を使ったPopup
             var targetNodes = CurrentTree.nodes
                 .OfType<T>()
                 .ToList();
-            var targetNodeLabels = new [] { "None" }
+            var targetNodeLabels = new[] { "None" }
                 .Concat(targetNodes.Select(BehaviourTreeEditorUtility.GetNodeDisplayTitle))
                 .ToArray();
             var currentIndex = targetNodes.IndexOf(current) + 1;

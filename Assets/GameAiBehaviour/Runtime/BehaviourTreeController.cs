@@ -22,7 +22,8 @@ namespace GameAiBehaviour {
         // 思考タイミング用タイマー
         private float _tickTimer;
         // アクションハンドラ情報
-        private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new Dictionary<Type, ActionHandlerInfo>();
+        private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos =
+            new Dictionary<Type, ActionHandlerInfo>();
         // アクションノードハンドラ
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
             new Dictionary<Node, IActionNodeHandler>();
@@ -169,7 +170,7 @@ namespace GameAiBehaviour {
             }
 
             _tickTimer = TickInterval;
-            
+
             // 基本思考の実行
             _baseRunner.Tick(() => ThinkTime = 0.0f);
 

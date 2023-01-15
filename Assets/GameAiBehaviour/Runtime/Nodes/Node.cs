@@ -27,7 +27,7 @@ namespace GameAiBehaviour {
             /// 現在の状態
             /// </summary>
             State State { get; }
-            
+
             /// <summary>
             /// 実行中
             /// </summary>
@@ -162,7 +162,7 @@ namespace GameAiBehaviour {
                     onResult?.Invoke(State.Success);
                     yield break;
                 }
-                
+
                 // 実行パスを記憶
                 Runner.AddExecutedPath(this, logic);
 

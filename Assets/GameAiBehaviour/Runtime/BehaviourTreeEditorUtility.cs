@@ -18,14 +18,14 @@ namespace GameAiBehaviour {
             if (node == null) {
                 return "Null";
             }
-            
+
             if (string.IsNullOrEmpty(node.title)) {
                 return ObjectNames.NicifyVariableName(node.GetType().Name);
             }
 
             return node.title;
         }
-        
+
         /// <summary>
         /// ノードの生成
         /// </summary>

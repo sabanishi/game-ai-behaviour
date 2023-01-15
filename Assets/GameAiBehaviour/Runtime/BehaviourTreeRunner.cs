@@ -13,18 +13,18 @@ namespace GameAiBehaviour {
             public Node.ILogic PrevNodeLogic;
             public Node.ILogic NextNodeLogic;
         }
-        
+
         // 開始ノード
         private Node _startNode;
         // ノードロジックのプールリスト
-        private Dictionary<Node, List<Node.ILogic>> _logicPools = new Dictionary<Node, List<Node.ILogic>>();
+        private readonly Dictionary<Node, List<Node.ILogic>> _logicPools = new Dictionary<Node, List<Node.ILogic>>();
         // 実行用ルーチン
         private NodeLogicRoutine _nodeLogicRoutine;
         // 実行履歴パス
-        private List<Path> _executedPaths = new List<Path>();
+        private readonly List<Path> _executedPaths = new List<Path>();
         // 思考時間
         private float _thinkTime;
-        
+
         // 現在の実行状態
         public Node.State CurrentState => _nodeLogicRoutine?.Current?.State ?? Node.State.Inactive;
         // 実行中か
@@ -61,7 +61,7 @@ namespace GameAiBehaviour {
         /// </summary>
         public void Cleanup() {
             ResetThink();
-            
+
             _startNode = null;
             foreach (var logics in _logicPools.Values) {
                 foreach (var logic in logics) {
@@ -93,7 +93,7 @@ namespace GameAiBehaviour {
             else {
                 // 実行状態をリセット
                 ResetThink();
-                
+
                 // リセット処理通知
                 onReset?.Invoke();
 
@@ -120,7 +120,7 @@ namespace GameAiBehaviour {
                 logics = new List<Node.ILogic>();
                 _logicPools[node] = logics;
             }
-            
+
             // 未使用のLogicを探す
             foreach (var logic in logics) {
                 if (logic.State != Node.State.Inactive) {
@@ -129,7 +129,7 @@ namespace GameAiBehaviour {
 
                 return logic;
             }
-            
+
             // なかった場合は追加して作成
             var newLogic = node.CreateLogic(this);
             newLogic.Initialize();

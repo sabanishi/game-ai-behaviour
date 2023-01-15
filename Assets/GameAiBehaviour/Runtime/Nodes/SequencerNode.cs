@@ -20,7 +20,7 @@ namespace GameAiBehaviour {
                     SetState(State.Failure);
                     yield break;
                 }
-                
+
                 // 順番に実行
                 for (var i = 0; i < Node.children.Length; i++) {
                     var node = Node.children[i];
@@ -32,6 +32,7 @@ namespace GameAiBehaviour {
                         if (i >= Node.children.Length - 1) {
                             break;
                         }
+
                         yield return this;
                     }
                     // 失敗していた場合、そのまま失敗として終了

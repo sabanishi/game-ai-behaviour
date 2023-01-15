@@ -113,7 +113,7 @@ namespace GameAiBehaviour.Editor {
             if (_target == null) {
                 Setup(null);
             }
-            
+
             if (_behaviourTreeView == null) {
                 return;
             }

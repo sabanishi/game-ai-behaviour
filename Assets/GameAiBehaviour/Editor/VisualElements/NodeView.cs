@@ -80,7 +80,7 @@ namespace GameAiBehaviour.Editor {
 
             // Style適用
             SetupClasses(node);
-            
+
             // RootNodeは削除不能
             if (node is RootNode) {
                 capabilities &= ~Capabilities.Deletable;

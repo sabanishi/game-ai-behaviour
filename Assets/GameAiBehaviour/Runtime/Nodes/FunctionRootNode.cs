@@ -21,7 +21,7 @@ namespace GameAiBehaviour {
                     SetState(State.Failure);
                     yield break;
                 }
-                
+
                 yield return ExecuteNodeRoutine(Node.child, SetState);
             }
         }

@@ -43,7 +43,7 @@ namespace GameAiBehaviour.Editor {
             if (targets.Length <= 0 || targets.Select(x => x.GetType()).Distinct().Count() != 1) {
                 return;
             }
-            
+
             ResetSelection();
 
             _editor = UnityEditor.Editor.CreateEditor(targets);

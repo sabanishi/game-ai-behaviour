@@ -36,6 +36,7 @@ namespace GameAiBehaviour {
                         if (i >= Node.count - 1) {
                             break;
                         }
+
                         yield return this;
                     }
                     // 失敗していたら完了
@@ -43,7 +44,7 @@ namespace GameAiBehaviour {
                         yield break;
                     }
                 }
-                
+
                 // 一度も実行されない場合を見越して成功にしておく
                 SetState(State.Success);
             }

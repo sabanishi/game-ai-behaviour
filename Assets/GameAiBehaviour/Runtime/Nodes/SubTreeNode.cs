@@ -22,7 +22,7 @@ namespace GameAiBehaviour {
                     SetState(State.Failure);
                     yield break;
                 }
-                
+
                 // 接続先ノードの実行
                 yield return ExecuteNodeRoutine(Node.connectTree.rootNode, SetState);
             }
