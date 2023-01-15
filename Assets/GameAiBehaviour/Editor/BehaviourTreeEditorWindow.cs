@@ -110,6 +110,10 @@ namespace GameAiBehaviour.Editor {
         /// 更新処理
         /// </summary>
         private void Update() {
+            if (_target == null) {
+                Setup(null);
+            }
+            
             if (_behaviourTreeView == null) {
                 return;
             }
@@ -175,12 +179,6 @@ namespace GameAiBehaviour.Editor {
         /// 選択オブジェクトの変化通知
         /// </summary>
         private void OnSelectionChange() {
-            var treeData = Selection.activeObject as BehaviourTree;
-
-            if (treeData != null) {
-                Setup(treeData);
-            }
-            
             RefreshOwner();
         }
     }

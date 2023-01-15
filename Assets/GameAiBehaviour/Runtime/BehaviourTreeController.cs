@@ -121,7 +121,7 @@ namespace GameAiBehaviour {
                 return;
             }
 
-            _rootNode = _data.nodes.OfType<RootNode>().FirstOrDefault();
+            _rootNode = _data.rootNode;
             _logics = _data.nodes.ToDictionary(x => x, x => x.CreateLogic(this));
             foreach (var pair in _logics) {
                 pair.Value.Initialize();
