@@ -19,7 +19,7 @@
 ```json
 {
     "dependencies": {
-        "com.daitokuamy.gamaibehaviour": "https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour"
+        "com.daitokuamy.gameaibehaviour": "https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour"
     }
 }
 ```
