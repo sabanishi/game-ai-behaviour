@@ -87,7 +87,7 @@ public sealed class HogeNode : ActionNode {
   }
 }
 ```
-#### HandleableActionNodeを増やす方法(シーン依存度が低い物)
+#### HandleableActionNodeを増やす方法(シーン依存度が高い物)
 * HandleableActionNodeを継承したクラスを作成する
 ```C#
 public class FooNode : HandleableActionNode {
