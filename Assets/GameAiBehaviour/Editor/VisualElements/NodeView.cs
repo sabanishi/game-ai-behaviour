@@ -139,6 +139,9 @@ namespace GameAiBehaviour.Editor {
             else if (node is ActionNode) {
                 port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
             }
+            else if (node is LinkNode) {
+                port = InstantiatePort(Orientation.Vertical, Direction.Input, Port.Capacity.Multi, typeof(bool));
+            }
 
             if (port != null) {
                 port.portName = "";
@@ -188,6 +191,9 @@ namespace GameAiBehaviour.Editor {
             }
             else if (node is ActionNode) {
                 AddToClassList("action");
+            }
+            else if (node is LinkNode) {
+                AddToClassList("link");
             }
             else if (node is RootNode) {
                 AddToClassList("root");

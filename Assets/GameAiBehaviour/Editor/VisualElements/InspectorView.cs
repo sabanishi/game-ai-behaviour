@@ -32,6 +32,7 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         public void SetBehaviourTree(BehaviourTree behaviourTree) {
             _behaviourTree = behaviourTree;
+            ResetSelection();
         }
 
         /// <summary>
@@ -42,17 +43,8 @@ namespace GameAiBehaviour.Editor {
             if (targets.Length <= 0 || targets.Select(x => x.GetType()).Distinct().Count() != 1) {
                 return;
             }
-
-            void Clear() {
-                this.Clear();
-
-                if (_editor != null) {
-                    Object.DestroyImmediate(_editor);
-                    _editor = null;
-                }
-            }
-
-            Clear();
+            
+            ResetSelection();
 
             _editor = UnityEditor.Editor.CreateEditor(targets);
 
@@ -78,6 +70,18 @@ namespace GameAiBehaviour.Editor {
                 }
             });
             Add(container);
+        }
+
+        /// <summary>
+        /// 選択している物のリセット
+        /// </summary>
+        public void ResetSelection() {
+            Clear();
+
+            if (_editor != null) {
+                Object.DestroyImmediate(_editor);
+                _editor = null;
+            }
         }
     }
 }

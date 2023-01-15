@@ -53,6 +53,22 @@ MonoBehaviour:
   children:
   - {fileID: 5383493273251367993}
   - {fileID: -7048618745569939380}
+--- !u!114 &-7915352268930177905
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 77e12a70eebfb9448a63c98acb68a7a8, type: 3}
+  m_Name: SubTreeNode
+  m_EditorClassIdentifier: 
+  guid: 8958c4af200059541a79c74d1d6eb172
+  position: {x: 338, y: 54}
+  title: 
+  connectTree: {fileID: 11400000, guid: ce6744b6203f19c4e85d0ae1749df4bf, type: 2}
 --- !u!114 &-7048618745569939380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -261,6 +277,7 @@ MonoBehaviour:
   - {fileID: -7048618745569939380}
   - {fileID: -3049482232281172655}
   - {fileID: -8624722297150084614}
+  - {fileID: -7915352268930177905}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &299288502928017254
 MonoBehaviour:
@@ -275,9 +292,10 @@ MonoBehaviour:
   m_Name: SelectorNode
   m_EditorClassIdentifier: 
   guid: 6f2bc7f51659c4edf85269f210981d58
-  position: {x: 537, y: -21.5}
+  position: {x: 537, y: -24.64}
   title: 
   children:
+  - {fileID: -7915352268930177905}
   - {fileID: 1917303352956534878}
   - {fileID: 6227504010875714103}
 --- !u!114 &639150554604916338

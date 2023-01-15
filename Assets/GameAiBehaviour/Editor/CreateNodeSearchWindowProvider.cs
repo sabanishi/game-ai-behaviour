@@ -43,6 +43,7 @@ namespace GameAiBehaviour.Editor {
                 typeof(CompositeNode),
                 typeof(DecoratorNode),
                 typeof(ActionNode),
+                typeof(LinkNode),
             };
 
             foreach (var groupType in groupTypes) {

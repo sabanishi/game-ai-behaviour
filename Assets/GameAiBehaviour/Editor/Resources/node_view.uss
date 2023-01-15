@@ -167,6 +167,10 @@
     background-color: rgb(65, 217, 167);
 }
 
+.link #input {
+    background-color: rgb(156, 65, 217);
+}
+
 .node #output {
 }
 

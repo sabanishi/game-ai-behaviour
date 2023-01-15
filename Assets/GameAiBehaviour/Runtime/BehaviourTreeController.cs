@@ -269,8 +269,13 @@ namespace GameAiBehaviour {
             if (_logics.TryGetValue(node, out var logic)) {
                 return logic;
             }
+            
+            // なかった場合は作成
+            logic = node.CreateLogic(this);
+            logic.Initialize();
+            _logics[node] = logic;
 
-            return null;
+            return logic;
         }
 
         /// <summary>
