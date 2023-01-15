@@ -90,7 +90,7 @@ public sealed class HogeNode : ActionNode {
 #### HandleableActionNodeを増やす方法(シーン依存度が高い物)
 * HandleableActionNodeを継承したクラスを作成する
 ```C#
-public class FooNode : HandleableActionNode {
+public sealed class FooNode : HandleableActionNode {
   [Tooltip("サンプルから文字を取得するためのキー")]
   public string sampleKey;
 }
