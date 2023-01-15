@@ -11,6 +11,9 @@ namespace GameAiBehaviour {
     /// BehaviourTreeのエディタ用ユーティリティ
     /// </summary>
     public static class BehaviourTreeEditorUtility {
+        // パッケージのRootPath
+        public static string PackageRootPath { get; } = "Packages/com.daitokuamy.gameaibehaviour";
+        
         /// <summary>
         /// ノードの表示名を取得
         /// </summary>
