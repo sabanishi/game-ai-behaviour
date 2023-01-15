@@ -9,9 +9,11 @@ namespace GameAiBehaviour {
     public class BehaviourTree : ScriptableObject {
         [Tooltip("メモ")]
         public string memo = "";
+        [Tooltip("ルートノードへの参照")]
+        public RootNode rootNode;
         [HideInInspector, Tooltip("所持ノードリスト")]
         public Node[] nodes = Array.Empty<Node>();
-        [Tooltip("Blackboard定義用アセット")]
+        [HideInInspector, Tooltip("Blackboard定義用アセット")]
         public BlackboardAsset blackboardAsset;
     }
 }

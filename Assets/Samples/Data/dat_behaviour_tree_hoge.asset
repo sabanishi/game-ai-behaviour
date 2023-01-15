@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Name: dat_behaviour_tree_hoge
   m_EditorClassIdentifier: 
   memo: 
+  rootNode: {fileID: -9096441730182936278}
   nodes:
   - {fileID: -9096441730182936278}
   - {fileID: 1917303352956534878}

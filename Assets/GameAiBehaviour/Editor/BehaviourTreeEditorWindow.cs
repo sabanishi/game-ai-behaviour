@@ -69,7 +69,7 @@ namespace GameAiBehaviour.Editor {
 
             _behaviourTreeView.OnChangedSelectionNodeViews = nodeViews => {
                 // 選択対象の更新
-                _inspectorView.UpdateSelection(nodeViews.Select(x => x.Node).ToArray());
+                _inspectorView.UpdateSelection(nodeViews.Select(x => (Object)x.Node).ToArray());
             };
             _inspectorView.OnChangedValue = targets => {
                 // 編集時はNodeViewをリフレッシュ

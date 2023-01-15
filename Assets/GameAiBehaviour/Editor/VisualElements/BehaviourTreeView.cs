@@ -97,6 +97,9 @@ namespace GameAiBehaviour.Editor {
             if (Data == null) {
                 return;
             }
+            
+            // ルートノードの生成(無ければ)
+            CreateRootNode();
 
             // ノード生成
             foreach (var node in data.nodes) {
@@ -255,6 +258,46 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
+        /// ルートノードの生成(既にあれば何もしない)
+        /// </summary>
+        private void CreateRootNode() {
+            if (Data == null) {
+                return;
+            }
+
+            var serializedObj = new SerializedObject(Data);
+            var rootNodeProp = serializedObj.FindProperty("rootNode");
+            
+            // 既に入っている
+            if (rootNodeProp.objectReferenceValue != null) {
+                return;
+            }
+
+            var nodesProp = serializedObj.FindProperty("nodes");
+            var rootNode = default(RootNode);
+            
+            // 既に作られている
+            for (var i = 0; i < nodesProp.arraySize; i++) {
+                var e = nodesProp.GetArrayElementAtIndex(i);
+                var n = e.objectReferenceValue as Node;
+                if (n is RootNode rn) {
+                    rootNode = rn;
+                    break;
+                }
+            }
+
+            if (rootNode == null) {
+                // 新規で作成
+                rootNode = (RootNode)BehaviourTreeEditorUtility.CreateNode(Data, typeof(RootNode));
+            }
+
+            // 参照の設定
+            serializedObj.Update();
+            rootNodeProp.objectReferenceValue = rootNode;
+            serializedObj.ApplyModifiedProperties();
+        }
+
+        /// <summary>
         /// グラフ変更通知
         /// </summary>
         private GraphViewChange OnGraphViewChanged(GraphViewChange graphViewChange) {
@@ -263,6 +306,15 @@ namespace GameAiBehaviour.Editor {
             }
 
             if (graphViewChange.elementsToRemove != null) {
+                // RootNodeの削除は除外する
+                graphViewChange.elementsToRemove.RemoveAll(x => {
+                    if (x is NodeView nodeView) {
+                        return nodeView.Node is RootNode;
+                    }
+
+                    return false;
+                });
+                
                 graphViewChange.elementsToRemove.ForEach(element => {
                     if (element is NodeView nodeView) {
                         BehaviourTreeEditorUtility.DeleteNode(Data, nodeView.Node);
@@ -316,7 +368,9 @@ namespace GameAiBehaviour.Editor {
 
             // Node情報をシリアライズ化
             var serializableNodes = new SerializableNodes();
-            serializableNodes.nodes = nodeViews.Select(x => x.Node).ToArray();
+            serializableNodes.nodes = nodeViews.Select(x => x.Node)
+                .Where(x => x is not RootNode)
+                .ToArray();
             return JsonUtility.ToJson(serializableNodes);
         }
 
