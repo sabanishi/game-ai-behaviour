@@ -200,18 +200,18 @@ namespace GameAiBehaviour.Editor {
             
             // 実行履歴の反映
             foreach (var path in _behaviourTreeController.ExecutedPaths) {
-                var prevView = _tempNodeViews.FirstOrDefault(x => x.Node == path.prev.TargetNode);
-                var nextView = _tempNodeViews.FirstOrDefault(x => x.Node == path.next.TargetNode);
+                var prevView = _tempNodeViews.FirstOrDefault(x => x.Node == path.PrevNodeLogic.TargetNode);
+                var nextView = _tempNodeViews.FirstOrDefault(x => x.Node == path.NextNodeLogic.TargetNode);
                 var edge = _tempNodeEdges.FirstOrDefault(x =>
-                    ((NodeView)x.input.node).Node == path.next.TargetNode &&
-                    ((NodeView)x.output.node).Node == path.prev.TargetNode);
+                    ((NodeView)x.input.node).Node == path.NextNodeLogic.TargetNode &&
+                    ((NodeView)x.output.node).Node == path.PrevNodeLogic.TargetNode);
                 
                 if (prevView != null) {
-                    SetNodeState(prevView, path.prev);
+                    SetNodeState(prevView, path.PrevNodeLogic);
                 }
                 
                 if (nextView != null) {
-                    SetNodeState(nextView, path.next);
+                    SetNodeState(nextView, path.NextNodeLogic);
                 }
 
                 if (edge != null) {

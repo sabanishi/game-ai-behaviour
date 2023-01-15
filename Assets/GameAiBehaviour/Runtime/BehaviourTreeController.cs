@@ -1,21 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
     /// BehaviourTree制御クラス
     /// </summary>
     public class BehaviourTreeController : IBehaviourTreeController {
-        /// <summary>
-        /// 実行パス
-        /// </summary>
-        public struct Path {
-            public Node.ILogic prev;
-            public Node.ILogic next;
-        }
-        
         /// <summary>
         /// ActionHandler情報
         /// </summary>
@@ -26,36 +17,27 @@ namespace GameAiBehaviour {
 
         // 実行データ
         private BehaviourTree _data;
-        // Rootノード
-        private RootNode _rootNode;
         // 思考リセットフラグ
         private bool _thinkResetFlag;
         // 思考タイミング用タイマー
         private float _tickTimer;
-        // ノードロジックのプールリスト
-        private Dictionary<Node, List<Node.ILogic>> _logicPools = new Dictionary<Node, List<Node.ILogic>>();
         // アクションハンドラ情報
-        private Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new Dictionary<Type, ActionHandlerInfo>();
+        private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new Dictionary<Type, ActionHandlerInfo>();
         // アクションノードハンドラ
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
             new Dictionary<Node, IActionNodeHandler>();
-        // 実行用ルーチン
-        private NodeLogicRoutine _nodeLogicRoutine;
-        // 実行履歴パス
-        private List<Path> _executedPaths = new List<Path>(); 
+
+        // ベースとなるTreeのRunner
+        private BehaviourTreeRunner _baseRunner;
 
         // 思考開始からの経過時間
         public float ThinkTime { get; private set; }
         // プロパティ管理用Blackboard
         public Blackboard Blackboard { get; private set; } = new Blackboard();
         // 思考頻度
-        public float TickInterval { get; set; } = 0;
-        // 現在の実行状態
-        public Node.State CurrentState => _nodeLogicRoutine?.Current?.State ?? Node.State.Inactive;
-        // 実行中か
-        public bool IsRunning => _nodeLogicRoutine != null;
-        // 実行履歴のパス
-        public IReadOnlyList<Path> ExecutedPaths => _executedPaths;
+        public float TickInterval { get; set; }
+        // 実行履歴パス
+        public IReadOnlyList<BehaviourTreeRunner.Path> ExecutedPaths => _baseRunner.ExecutedPaths;
 
         /// <summary>
         /// コンストラクタ
@@ -122,7 +104,7 @@ namespace GameAiBehaviour {
                 return;
             }
 
-            _rootNode = _data.rootNode;
+            _baseRunner = new BehaviourTreeRunner(this, _data.rootNode);
 
             // Blackboard初期化
             if (data.blackboardAsset != null) {
@@ -149,14 +131,7 @@ namespace GameAiBehaviour {
         /// 思考リセット
         /// </summary>
         public void ResetThink() {
-            foreach (var logics in _logicPools.Values) {
-                foreach (var logic in logics) {
-                    logic.Reset();
-                }
-            }
-
-            _nodeLogicRoutine = null;
-            _executedPaths.Clear();
+            _baseRunner?.ResetThink();
             _tickTimer = 0.0f;
         }
 
@@ -168,15 +143,10 @@ namespace GameAiBehaviour {
 
             Blackboard.Clear();
 
-            _data = null;
-            _rootNode = null;
-            foreach (var logics in _logicPools.Values) {
-                foreach (var logic in logics) {
-                    logic.Dispose();
-                }
-            }
+            _baseRunner?.Cleanup();
+            _baseRunner = null;
 
-            _logicPools.Clear();
+            _data = null;
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -185,7 +155,7 @@ namespace GameAiBehaviour {
         /// Tree更新
         /// </summary>
         public void Update(float deltaTime) {
-            if (_data == null || _rootNode == null) {
+            if (_data == null || _baseRunner == null) {
                 return;
             }
 
@@ -199,35 +169,9 @@ namespace GameAiBehaviour {
             }
 
             _tickTimer = TickInterval;
-
-            void UpdateRoutine() {
-                if (!_nodeLogicRoutine.MoveNext()) {
-                    _nodeLogicRoutine = null;
-                }
-            }
-
-            if (_nodeLogicRoutine != null) {
-                // ルーチン実行
-                UpdateRoutine();
-            }
-            else {
-                // 実行状態をリセット
-                foreach (var logics in _logicPools.Values) {
-                    foreach (var logic in logics) {
-                        logic.Reset();
-                    }
-                }
-                
-                _executedPaths.Clear();
-                ThinkTime = 0.0f;
-
-                // RootNode起点のRoutineを生成
-                var rootLogic = ((IBehaviourTreeController)this).FindLogic(_rootNode);
-                _nodeLogicRoutine = new NodeLogicRoutine(rootLogic.ExecuteRoutine());
-
-                // ルーチン実行
-                UpdateRoutine();
-            }
+            
+            // 基本思考の実行
+            _baseRunner.Tick();
 
             // 思考リセットフラグが立っていたらリセットする
             if (_thinkResetFlag) {
@@ -262,37 +206,6 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
-        /// ノード用ロジックを検索
-        /// </summary>
-        Node.ILogic IBehaviourTreeController.FindLogic(Node node) {
-            if (node == null) {
-                return null;
-            }
-
-            // Poolを探す
-            if (!_logicPools.TryGetValue(node, out var logics)) {
-                // 無ければ追加
-                logics = new List<Node.ILogic>();
-                _logicPools[node] = logics;
-            }
-            
-            // 未使用のLogicを探す
-            foreach (var logic in logics) {
-                if (logic.State != Node.State.Inactive) {
-                    continue;
-                }
-
-                return logic;
-            }
-            
-            // なかった場合は追加して作成
-            var newLogic = node.CreateLogic(this);
-            newLogic.Initialize();
-            logics.Add(newLogic);
-            return newLogic;
-        }
-
-        /// <summary>
         /// 思考リセット
         /// </summary>
         void IBehaviourTreeController.ResetThink() {
@@ -304,13 +217,6 @@ namespace GameAiBehaviour {
         /// </summary>
         void IBehaviourTreeController.ResetTickTimer() {
             _tickTimer = 0.0f;
-        }
-
-        /// <summary>
-        /// 実行パスの追加
-        /// </summary>
-        void IBehaviourTreeController.AddExecutedPath(Node.ILogic prev, Node.ILogic next) {
-            _executedPaths.Add(new Path { prev = prev, next = next });
         }
     }
 }

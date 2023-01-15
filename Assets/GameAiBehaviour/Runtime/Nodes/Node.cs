@@ -60,16 +60,18 @@ namespace GameAiBehaviour {
             public bool IsRunning { get; private set; }
             // 制御対象のNode
             Node ILogic.TargetNode => Node;
-            // 制御用コントローラ
-            protected IBehaviourTreeController Controller { get; private set; }
+            // 実行用のランナー
+            protected IBehaviourTreeRunner Runner { get; private set; }
+            // 制御用のコントローラー
+            protected IBehaviourTreeController Controller => Runner?.Controller;
             // 参照元のノード
             protected TNode Node { get; }
 
             /// <summary>
             /// コンストラクタ
             /// </summary>
-            public Logic(IBehaviourTreeController controller, TNode node) {
-                Controller = controller;
+            public Logic(IBehaviourTreeRunner runner, TNode node) {
+                Runner = runner;
                 Node = node;
                 State = State.Inactive;
             }
@@ -151,7 +153,7 @@ namespace GameAiBehaviour {
             /// ノードの実行
             /// </summary>
             protected IEnumerator ExecuteNodeRoutine(Node node, Action<State> onResult) {
-                var logic = Controller.FindLogic(node);
+                var logic = Runner.FindLogic(node);
 
                 // Logicが存在しない場合、完了扱い
                 if (logic == null) {
@@ -162,7 +164,7 @@ namespace GameAiBehaviour {
                 }
                 
                 // 実行パスを記憶
-                Controller.AddExecutedPath(this, logic);
+                Runner.AddExecutedPath(this, logic);
 
                 // Logicが存在する場合、さらにRoutineを実行
                 yield return logic.ExecuteRoutine();
@@ -183,7 +185,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ロジックの生成
         /// </summary>
-        public abstract ILogic CreateLogic(IBehaviourTreeController controller);
+        public abstract ILogic CreateLogic(IBehaviourTreeRunner runner);
 
         /// <summary>
         /// 生成時処理

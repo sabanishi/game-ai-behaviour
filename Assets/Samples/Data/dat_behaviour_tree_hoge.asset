@@ -541,7 +541,7 @@ MonoBehaviour:
     propertyName: 
   rightValue:
     useProperty: 0
-    constValue: 0
+    constValue: 1
     propertyName: 
   operatorType: 0
 --- !u!114 &4673337000884205205

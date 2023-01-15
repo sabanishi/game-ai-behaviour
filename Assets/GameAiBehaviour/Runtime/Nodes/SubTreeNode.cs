@@ -10,7 +10,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// コンストラクタ
             /// </summary>
-            public Logic(IBehaviourTreeController controller, SubTreeNode node) : base(controller, node) {
+            public Logic(IBehaviourTreeRunner runner, SubTreeNode node) : base(runner, node) {
             }
 
             /// <summary>
@@ -33,8 +33,8 @@ namespace GameAiBehaviour {
 
         public override string Description => connectTree == null ? "Empty" : $"to {connectTree.name}";
 
-        public override ILogic CreateLogic(IBehaviourTreeController controller) {
-            return new Logic(controller, this);
+        public override ILogic CreateLogic(IBehaviourTreeRunner runner) {
+            return new Logic(runner, this);
         }
     }
 }
