@@ -68,7 +68,7 @@ MonoBehaviour:
   guid: 8958c4af200059541a79c74d1d6eb172
   position: {x: 326, y: 82.000015}
   title: 
-  connectTree: {fileID: 11400000, guid: ce6744b6203f19c4e85d0ae1749df4bf, type: 2}
+  connectTree: {fileID: 0}
 --- !u!114 &-7048618745569939380
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -83,7 +83,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: 6f9ed2878714fb14e909ac252972b633
   position: {x: 545, y: 343}
-  title: "\u4F55\u3082\u3057\u306A\u3044"
+  title: 
   child: {fileID: 639150554604916338}
 --- !u!114 &-6950444865005838857
 MonoBehaviour:
@@ -119,7 +119,7 @@ MonoBehaviour:
   guid: 522b0494f6a4cec4a9e4612f865d9959
   position: {x: 154.00003, y: 81.00003}
   title: 
-  functionRoot: {fileID: 6684506668937368026}
+  functionRoot: {fileID: 0}
 --- !u!114 &-3740395930079640521
 MonoBehaviour:
   m_ObjectHideFlags: 1

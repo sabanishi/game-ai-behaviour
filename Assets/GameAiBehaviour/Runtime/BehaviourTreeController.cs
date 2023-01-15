@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -31,8 +32,8 @@ namespace GameAiBehaviour {
         private bool _thinkResetFlag;
         // 思考タイミング用タイマー
         private float _tickTimer;
-        // ノードロジック
-        private Dictionary<Node, Node.ILogic> _logics = new Dictionary<Node, Node.ILogic>();
+        // ノードロジックのプールリスト
+        private Dictionary<Node, List<Node.ILogic>> _logicPools = new Dictionary<Node, List<Node.ILogic>>();
         // アクションハンドラ情報
         private Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new Dictionary<Type, ActionHandlerInfo>();
         // アクションノードハンドラ
@@ -122,10 +123,6 @@ namespace GameAiBehaviour {
             }
 
             _rootNode = _data.rootNode;
-            _logics = _data.nodes.ToDictionary(x => x, x => x.CreateLogic(this));
-            foreach (var pair in _logics) {
-                pair.Value.Initialize();
-            }
 
             // Blackboard初期化
             if (data.blackboardAsset != null) {
@@ -152,8 +149,10 @@ namespace GameAiBehaviour {
         /// 思考リセット
         /// </summary>
         public void ResetThink() {
-            foreach (var logic in _logics) {
-                logic.Value.Reset();
+            foreach (var logics in _logicPools.Values) {
+                foreach (var logic in logics) {
+                    logic.Reset();
+                }
             }
 
             _nodeLogicRoutine = null;
@@ -171,11 +170,13 @@ namespace GameAiBehaviour {
 
             _data = null;
             _rootNode = null;
-            foreach (var pair in _logics) {
-                pair.Value.Dispose();
+            foreach (var logics in _logicPools.Values) {
+                foreach (var logic in logics) {
+                    logic.Dispose();
+                }
             }
 
-            _logics.Clear();
+            _logicPools.Clear();
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -211,8 +212,10 @@ namespace GameAiBehaviour {
             }
             else {
                 // 実行状態をリセット
-                foreach (var logic in _logics) {
-                    logic.Value.Reset();
+                foreach (var logics in _logicPools.Values) {
+                    foreach (var logic in logics) {
+                        logic.Reset();
+                    }
                 }
                 
                 _executedPaths.Clear();
@@ -266,16 +269,27 @@ namespace GameAiBehaviour {
                 return null;
             }
 
-            if (_logics.TryGetValue(node, out var logic)) {
+            // Poolを探す
+            if (!_logicPools.TryGetValue(node, out var logics)) {
+                // 無ければ追加
+                logics = new List<Node.ILogic>();
+                _logicPools[node] = logics;
+            }
+            
+            // 未使用のLogicを探す
+            foreach (var logic in logics) {
+                if (logic.State != Node.State.Inactive) {
+                    continue;
+                }
+
                 return logic;
             }
             
-            // なかった場合は作成
-            logic = node.CreateLogic(this);
-            logic.Initialize();
-            _logics[node] = logic;
-
-            return logic;
+            // なかった場合は追加して作成
+            var newLogic = node.CreateLogic(this);
+            newLogic.Initialize();
+            logics.Add(newLogic);
+            return newLogic;
         }
 
         /// <summary>
