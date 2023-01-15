@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -74,7 +75,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// Tick
         /// </summary>
-        public void Tick() {
+        public void Tick(Action onReset = null) {
             if (_startNode == null) {
                 return;
             }
@@ -92,6 +93,9 @@ namespace GameAiBehaviour {
             else {
                 // 実行状態をリセット
                 ResetThink();
+                
+                // リセット処理通知
+                onReset?.Invoke();
 
                 // 起点NodeのRoutineを生成
                 var startLogic = ((IBehaviourTreeRunner)this).FindLogic(_startNode);

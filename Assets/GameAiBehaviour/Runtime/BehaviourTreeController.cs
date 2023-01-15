@@ -171,7 +171,7 @@ namespace GameAiBehaviour {
             _tickTimer = TickInterval;
             
             // 基本思考の実行
-            _baseRunner.Tick();
+            _baseRunner.Tick(() => ThinkTime = 0.0f);
 
             // 思考リセットフラグが立っていたらリセットする
             if (_thinkResetFlag) {
