@@ -559,8 +559,8 @@ MonoBehaviour:
   guid: ae25a7a966136594c9d3b401baefe618
   position: {x: 790, y: 229}
   title: 
-  subRoutine: {fileID: 0}
-  duration: 1
+  subRoutine: {fileID: 6684506668937368026}
+  duration: 3
   resetTickTimer: 1
 --- !u!114 &5383493273251367993
 MonoBehaviour:

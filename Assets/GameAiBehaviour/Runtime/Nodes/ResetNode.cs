@@ -15,7 +15,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行ルーチン
             /// </summary>
-            protected override IEnumerator ExecuteRoutineInternal() {
+            protected override IEnumerator ExecuteActionRoutineInternal() {
                 // 思考リセット
                 Controller.ResetThink();
                 // 完了

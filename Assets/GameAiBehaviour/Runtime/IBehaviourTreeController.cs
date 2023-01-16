@@ -27,5 +27,15 @@
         /// TickTimerのリセット
         /// </summary>
         void ResetTickTimer();
+
+        /// <summary>
+        /// サブルーチンの設定
+        /// </summary>
+        void SetSubRoutine(Node.ILogic parent, Node startNode);
+
+        /// <summary>
+        /// サブルーチンの削除
+        /// </summary>
+        void ResetSubRoutine(Node.ILogic parent);
     }
 }

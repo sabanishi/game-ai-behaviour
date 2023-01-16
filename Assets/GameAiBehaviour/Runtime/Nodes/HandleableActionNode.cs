@@ -16,7 +16,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// 実行ルーチン
             /// </summary>
-            protected sealed override IEnumerator ExecuteRoutineInternal() {
+            protected sealed override IEnumerator ExecuteActionRoutineInternal() {
                 var handler = Controller.GetActionHandler(Node);
 
                 // Handlerが無ければ、ログを出して終了
@@ -32,6 +32,11 @@ namespace GameAiBehaviour {
                     handler.OnEnter(Node);
                     yield break;
                 }
+                
+                // サブルーチン実行
+                if (Node.subRoutine != null) {
+                    Controller.SetSubRoutine(this, Node.subRoutine);
+                }
 
                 // 更新処理実行
                 while (true) {
@@ -42,6 +47,11 @@ namespace GameAiBehaviour {
                     }
 
                     yield return this;
+                }
+                
+                // サブルーチン停止
+                if (Node.subRoutine != null) {
+                    Controller.ResetSubRoutine(this);
                 }
 
                 // 終了処理実行

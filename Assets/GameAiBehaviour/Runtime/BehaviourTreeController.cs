@@ -30,6 +30,9 @@ namespace GameAiBehaviour {
 
         // ベースとなるTreeのRunner
         private BehaviourTreeRunner _baseRunner;
+        // サブルーチン用のRunner
+        private Dictionary<Node.ILogic, BehaviourTreeRunner> _subRoutineRunners =
+            new Dictionary<Node.ILogic, BehaviourTreeRunner>();
 
         // 思考開始からの経過時間
         public float ThinkTime { get; private set; }
@@ -132,7 +135,11 @@ namespace GameAiBehaviour {
         /// 思考リセット
         /// </summary>
         public void ResetThink() {
+            foreach (var runner in _subRoutineRunners.Values) {
+                runner?.ResetThink();
+            }
             _baseRunner?.ResetThink();
+
             _tickTimer = 0.0f;
         }
 
@@ -144,6 +151,10 @@ namespace GameAiBehaviour {
 
             Blackboard.Clear();
 
+            foreach (var runner in _subRoutineRunners.Values) {
+                runner?.Cleanup();
+            }
+            _subRoutineRunners.Clear();
             _baseRunner?.Cleanup();
             _baseRunner = null;
 
@@ -173,6 +184,11 @@ namespace GameAiBehaviour {
 
             // 基本思考の実行
             _baseRunner.Tick(() => ThinkTime = 0.0f);
+
+            // サブルーチンの実行
+            foreach (var runner in _subRoutineRunners.Values) {
+                runner.Tick();
+            }
 
             // 思考リセットフラグが立っていたらリセットする
             if (_thinkResetFlag) {
@@ -218,6 +234,32 @@ namespace GameAiBehaviour {
         /// </summary>
         void IBehaviourTreeController.ResetTickTimer() {
             _tickTimer = 0.0f;
+        }
+
+        /// <summary>
+        /// サブルーチンの設定
+        /// </summary>
+        void IBehaviourTreeController.SetSubRoutine(Node.ILogic parent, Node startNode) {
+            ((IBehaviourTreeController)this).ResetSubRoutine(parent);
+
+            if (startNode == null) {
+                return;
+            }
+
+            var runner = new BehaviourTreeRunner(this, startNode);
+            _subRoutineRunners[parent] = runner;
+        }
+
+        /// <summary>
+        /// サブルーチンの削除
+        /// </summary>
+        void IBehaviourTreeController.ResetSubRoutine(Node.ILogic parent) {
+            if (!_subRoutineRunners.TryGetValue(parent, out var runner) || runner == null) {
+                return;
+            }
+
+            runner.Cleanup();
+            _subRoutineRunners.Remove(parent);
         }
     }
 }
