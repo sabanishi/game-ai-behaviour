@@ -61,7 +61,7 @@ namespace GameAiBehaviour.Editor {
         /// コンストラクタ
         /// </summary>
         public NodeView(Node node)
-            : base($"{BehaviourTreeEditorUtility.PackageRootPath}/Editor/Resources/behaviour_tree_node_view.uxml") {
+            : base(AssetDatabase.GetAssetPath(BehaviourTreeEditorUtility.RootAsset.nodeUxml)) {
             // パーツ取得
             _descriptionLabel = this.Q<Label>("description");
 

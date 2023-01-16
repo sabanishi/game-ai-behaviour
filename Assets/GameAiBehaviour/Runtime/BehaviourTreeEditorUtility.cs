@@ -11,25 +11,17 @@ namespace GameAiBehaviour {
     /// BehaviourTreeのエディタ用ユーティリティ
     /// </summary>
     public static class BehaviourTreeEditorUtility {
-        // パッケージのRootPath
-        private static string _packageRootPath;
-        public static string PackageRootPath {
+        private static GameAiBehaviourRootAsset _rootAsset;
+        // アセットのルートとなるアセット
+        public static GameAiBehaviourRootAsset RootAsset {
             get {
-                if (_packageRootPath == null) {
-                    // ダミーを読み込んで場所を特定
-                    var dummyAsset = Resources.Load<TextAsset>("behaviour_tree_dummy");
-                    var path = AssetDatabase.GetAssetPath(dummyAsset);
-                    if (path.StartsWith("Assets/")) {
-                        _packageRootPath = "Assets/GameAiBehaviour";
-                    }
-                    else {
-                        _packageRootPath = "Packages/com.daitokuamy.gameaibehaviour";
-                    }
+                if (_rootAsset == null) {
+                    _rootAsset = Resources.Load<GameAiBehaviourRootAsset>("dat_game_ai_behaviour_root_asset");
                 }
 
-                return _packageRootPath;
+                return _rootAsset;
             }
-        }
+        } 
         
         /// <summary>
         /// ノードの表示名を取得
