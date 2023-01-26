@@ -18,9 +18,13 @@ namespace GameAiBehaviour {
             /// 実行ルーチン
             /// </summary>
             protected override IEnumerator ExecuteRoutineInternal() {
-                // ランダムに実行トライ
+                // ランダムに実行
                 var orderedIndices = Enumerable.Range(0, Node.children.Length)
-                    .OrderBy(_ => Random.Range(0, 100))
+                    .Where(i => Node.weights[i] > float.Epsilon)
+                    .OrderByDescending(i => {
+                        var weight = Node.weights[i];
+                        return Random.Range(0, weight);
+                    })
                     .ToArray();
                 
                 for (var i = 0; i < orderedIndices.Length; i++) {
@@ -38,6 +42,9 @@ namespace GameAiBehaviour {
                 SetState(State.Failure);
             }
         }
+
+        [Tooltip("選択重み")]
+        public FloatChildNodeValueGroup weights;
 
         /// <summary>
         /// ロジックの生成

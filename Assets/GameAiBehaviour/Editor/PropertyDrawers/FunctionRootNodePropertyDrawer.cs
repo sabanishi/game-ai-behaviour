@@ -15,10 +15,8 @@ namespace GameAiBehaviour.Editor {
             rect.y += EditorGUIUtility.standardVerticalSpacing;
             rect.height = EditorGUIUtility.singleLineHeight;
 
-            property.serializedObject.Update();
             property.objectReferenceValue = BehaviourTreeEditorGUI.NodeField(rect, label,
                 property.objectReferenceValue as FunctionRootNode);
-            property.serializedObject.ApplyModifiedProperties();
         }
 
         /// <summary>
