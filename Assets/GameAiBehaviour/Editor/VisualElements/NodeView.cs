@@ -20,7 +20,8 @@ namespace GameAiBehaviour.Editor {
             Running,
         }
 
-        private Label _descriptionLabel;
+        private readonly Label _subTitleLabel;
+        private readonly Label _descriptionLabel;
 
         public sealed override string title {
             get => base.title;
@@ -34,6 +35,25 @@ namespace GameAiBehaviour.Editor {
             }
         }
 
+        public string SubTitle {
+            get {
+                if (_subTitleLabel.style.display == DisplayStyle.None) {
+                    return "";
+                }
+
+                return _subTitleLabel.text;
+            }
+            set {
+                if (string.IsNullOrEmpty(value)) {
+                    _subTitleLabel.text = "";
+                    _subTitleLabel.style.display = DisplayStyle.None;
+                }
+                else {
+                    _subTitleLabel.style.display = DisplayStyle.Flex;
+                    _subTitleLabel.text = value;
+                }
+            }
+        }
         public string Description {
             get {
                 if (_descriptionLabel.style.display == DisplayStyle.None) {
@@ -63,11 +83,13 @@ namespace GameAiBehaviour.Editor {
         public NodeView(Node node)
             : base(AssetDatabase.GetAssetPath(BehaviourTreeEditorUtility.RootAsset.nodeUxml)) {
             // パーツ取得
+            _subTitleLabel = this.Q<Label>("subtitle");
             _descriptionLabel = this.Q<Label>("description");
 
             Node = node;
             viewDataKey = node.guid;
             title = node.title;
+            SubTitle = node.SubTitle;
             Description = node.Description;
 
             // 座標設定
@@ -92,6 +114,7 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         public void Refresh() {
             title = Node.title;
+            SubTitle = Node.SubTitle;
             Description = Node.Description;
         }
 

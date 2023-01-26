@@ -38,5 +38,10 @@ namespace GameAiBehaviour {
         
         [Tooltip("実行中に動かすサブルーチン")]
         public FunctionRootNode subRoutine;
+
+#if UNITY_EDITOR
+        public sealed override string SubTitle =>
+            subRoutine == null ? "" : $"SubRoutine:{BehaviourTreeEditorUtility.GetNodeDisplayTitle(subRoutine)}";
+#endif
     }
 }

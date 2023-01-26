@@ -179,6 +179,8 @@ namespace GameAiBehaviour {
         [Tooltip("タイトル")]
         public string title;
 
+        // サブタイトル
+        public virtual string SubTitle => "";
         // 説明文
         public virtual string Description => "";
 
