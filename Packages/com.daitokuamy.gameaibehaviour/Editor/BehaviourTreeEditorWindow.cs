@@ -58,9 +58,9 @@ namespace GameAiBehaviour.Editor {
         private void CreateGUI() {
             // Xml, Style読み込み
             var root = rootVisualElement;
-            var uxml = Resources.Load<VisualTreeAsset>("behaviour_tree_editor_window");
+            var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uxml");
             uxml.CloneTree(root);
-            var styleSheet = Resources.Load<StyleSheet>("behaviour_tree_editor_window");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uss");
             root.styleSheets.Add(styleSheet);
 
             _behaviourTreeView = root.Q<BehaviourTreeView>();

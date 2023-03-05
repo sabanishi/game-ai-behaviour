@@ -81,7 +81,7 @@ namespace GameAiBehaviour.Editor {
         /// コンストラクタ
         /// </summary>
         public NodeView(Node node)
-            : base(AssetDatabase.GetAssetPath(BehaviourTreeEditorUtility.RootAsset.nodeUxml)) {
+            : base("Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_node_view.uxml") {
             // パーツ取得
             _subTitleLabel = this.Q<Label>("subtitle");
             _descriptionLabel = this.Q<Label>("description");

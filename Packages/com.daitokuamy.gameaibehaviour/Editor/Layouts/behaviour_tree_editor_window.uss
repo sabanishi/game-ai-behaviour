@@ -1,0 +1,31 @@
+.grid-background {
+    --grid-background-color: rgb(32, 32, 32);
+    --line-color: rgba(64, 64, 64, 0.2);
+    --thick-line-color: rgba(80, 80, 80, 0.3);
+    --spacing: 10;
+}
+
+#inspector-label {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#inspector-content {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#blackboard-label {
+    padding-left: 2px;
+    padding-right: 2px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+}
+
+#blackboard-content {
+    flex-shrink: 2;
+}

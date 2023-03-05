@@ -11,18 +11,6 @@ namespace GameAiBehaviour {
     /// BehaviourTreeのエディタ用ユーティリティ
     /// </summary>
     public static class BehaviourTreeEditorUtility {
-        private static GameAiBehaviourRootAsset _rootAsset;
-        // アセットのルートとなるアセット
-        public static GameAiBehaviourRootAsset RootAsset {
-            get {
-                if (_rootAsset == null) {
-                    _rootAsset = Resources.Load<GameAiBehaviourRootAsset>("dat_game_ai_behaviour_root_asset");
-                }
-
-                return _rootAsset;
-            }
-        } 
-        
         /// <summary>
         /// ノードの表示名を取得
         /// </summary>
