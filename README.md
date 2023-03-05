@@ -12,19 +12,19 @@
 1. Window > Package ManagerからPackage Managerを開く
 2. 「+」ボタン > Add package from git URL
 3. 以下を入力してインストール
-   * https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour
+   * https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Packages/com.daitokuamy.gameaibehaviour
    ![image](https://user-images.githubusercontent.com/6957962/209446846-c9b35922-d8cb-4ba3-961b-52a81515c808.png)
 
 あるいはPackages/manifest.jsonを開き、dependenciesブロックに以下を追記します。
 ```json
 {
     "dependencies": {
-        "com.daitokuamy.gameaibehaviour": "https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour"
+        "com.daitokuamy.gameaibehaviour": "https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Packages/com.daitokuamy.gameaibehaviour"
     }
 }
 ```
 バージョンを指定したい場合には以下のように記述します。  
-https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Assets/GameAiBehaviour#1.0.0
+https://github.com/DaitokuAmy/game-ai-behaviour.git?path=/Packages/com.daitokuamy.gameaibehaviour#1.0.0
 ## 使い方
 #### アセット作成
 1. ProjectViewの右クリックメニューから、BehaviourTreeのアセットを作成する  
