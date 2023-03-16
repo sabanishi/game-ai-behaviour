@@ -324,6 +324,84 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// MissingしたSubAssetsを削除する
+        /// </summary>
+        public static void RemoveMissingSubAssets(Object targetAsset) {
+            // 退避用のInstanceの生成
+            var targetName = targetAsset.name;
+            var newInstance = ScriptableObject.CreateInstance(targetAsset.GetType());
+            EditorUtility.CopySerialized(targetAsset, newInstance);
+
+            var oldPath = AssetDatabase.GetAssetPath(targetAsset);
+            var newPath = oldPath.Replace(".asset", "CLONE.asset");
+            AssetDatabase.CreateAsset(newInstance, newPath);
+            AssetDatabase.ImportAsset(newPath);
+
+            // SubAssetsのHideFlagを無効にする
+            var subAssets = AssetDatabase.LoadAllAssetsAtPath(oldPath);
+            var hideFlagsList = new HideFlags[subAssets.Length];
+            for (var i = 0; i < subAssets.Length; i++) {
+                // 破損した物
+                if (subAssets[i] == null) {
+                    continue;
+                }
+
+                // HideFlagをキャッシュし、表示状態にする
+                hideFlagsList[i] = subAssets[i].hideFlags;
+                subAssets[i].hideFlags = HideFlags.None;
+                EditorUtility.SetDirty(subAssets[i]);
+            }
+
+            EditorUtility.SetDirty(targetAsset);
+            AssetDatabase.SaveAssets();
+
+            // 可視化されているSubAssetsの親を移動させる
+            var validSubAssets = AssetDatabase.LoadAllAssetRepresentationsAtPath(oldPath);
+            for (var i = 0; i < validSubAssets.Length; i++) {
+                // 破損した物
+                if (validSubAssets[i] == null) {
+                    continue;
+                }
+
+                // サブアセットを移動させる
+                AssetDatabase.RemoveObjectFromAsset(validSubAssets[i]);
+                AssetDatabase.AddObjectToAsset(validSubAssets[i], newInstance);
+            }
+
+            AssetDatabase.ImportAsset(oldPath);
+            AssetDatabase.ImportAsset(newPath);
+
+            // HideFlagをリセットする
+            for (var i = 0; i < subAssets.Length; i++) {
+                // 破損した物
+                if (subAssets[i] == null) {
+                    continue;
+                }
+
+                subAssets[i].hideFlags = hideFlagsList[i];
+                EditorUtility.SetDirty(subAssets[i]);
+            }
+            
+            // 名前を直す
+            newInstance.name = targetName;
+
+            EditorUtility.SetDirty(newInstance);
+            AssetDatabase.SaveAssets();
+
+            // metaを残しつつ、新しいインスタンスに差し替える
+            var directoryName = System.IO.Path.GetDirectoryName(Application.dataPath) ?? "";
+            var globalOldPath = System.IO.Path.Combine(directoryName, oldPath);
+            var globalNewPath = System.IO.Path.Combine(directoryName, newPath);
+
+            System.IO.File.Delete(globalOldPath);
+            System.IO.File.Delete(globalNewPath + ".meta");
+            System.IO.File.Move(globalNewPath, globalOldPath);
+
+            AssetDatabase.Refresh();
+        }
+
+
+        /// <summary>
         /// ノードの複製
         /// </summary>
         private static Node DuplicateNode(BehaviourTree tree, Node baseNode) {

@@ -190,6 +190,7 @@ namespace GameAiBehaviour.Editor {
                 return;
             }
 
+            var cleanAsset = false;
             var serializedObj = new SerializedObject(tree);
             serializedObj.Update();
             var nodesProp = serializedObj.FindProperty("nodes");
@@ -198,6 +199,7 @@ namespace GameAiBehaviour.Editor {
                 if (trackProp.objectReferenceValue == null) {
                     nodesProp.DeleteArrayElementAtIndex(i);
                     i--;
+                    cleanAsset = true;
                     continue;
                 }
 
@@ -210,6 +212,7 @@ namespace GameAiBehaviour.Editor {
                         if (prop.objectReferenceValue == null) {
                             childrenProp.DeleteArrayElementAtIndex(j);
                             j--;
+                            cleanAsset = true;
                         }
                     }
                 }
@@ -225,6 +228,11 @@ namespace GameAiBehaviour.Editor {
             }
 
             serializedObj.ApplyModifiedPropertiesWithoutUndo();
+            
+            // アセットに不備があった場合、SubAssetsをクリーンアップする
+            if (cleanAsset) {
+                BehaviourTreeEditorUtility.RemoveMissingSubAssets(tree);
+            }
         }
     }
 }

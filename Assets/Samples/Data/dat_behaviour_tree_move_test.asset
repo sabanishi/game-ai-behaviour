@@ -34,6 +34,59 @@ MonoBehaviour:
   subRoutine: {fileID: 0}
   offset: {x: 0, y: 1, z: 0}
   duration: 1
+--- !u!114 &-4738421218151290539
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f20ca020fcdcbff4cb6cf4a92eb703db, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: f014b8d988251da45be1a68507b4ea56
+  position: {x: 596, y: -141.68}
+  title: 
+  child: {fileID: -3690041635190747449}
+--- !u!114 &-3970728055153770963
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 845a4755881228740b6d718d57780e7b
+  position: {x: 596, y: 107}
+  title: 
+  subRoutine: {fileID: 0}
+  offset: {x: 0, y: 1, z: 0}
+  duration: 1
+--- !u!114 &-3690041635190747449
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe1dcdbfdacd874c896be43fbb7c097, type: 3}
+  m_Name: SequencerNode
+  m_EditorClassIdentifier: 
+  guid: ffdbbb6c5d4ab493dad71b5c59dfc12f
+  position: {x: 596, y: -58}
+  title: 
+  children:
+  - {fileID: 7918046232546823091}
+  - {fileID: -3970728055153770963}
+  - {fileID: 603175685962450420}
 --- !u!114 &-2530226767552434641
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -65,13 +118,13 @@ MonoBehaviour:
   m_Name: dat_behaviour_tree_move_test
   m_EditorClassIdentifier: 
   memo: 
-  rootNode: {fileID: -9096441730182936278}
+  rootNode: {fileID: -4738421218151290539}
   nodes:
-  - {fileID: -9096441730182936278}
-  - {fileID: 596210178676479787}
-  - {fileID: 8588395444656792971}
-  - {fileID: -6863292961588240826}
-  - {fileID: -2530226767552434641}
+  - {fileID: -4738421218151290539}
+  - {fileID: -3690041635190747449}
+  - {fileID: 7918046232546823091}
+  - {fileID: -3970728055153770963}
+  - {fileID: 603175685962450420}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &596210178676479787
 MonoBehaviour:
@@ -87,6 +140,42 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   guid: 9b977f5b2ad554cf6b3f35b07953a82c
   position: {x: 410, y: 76}
+  title: 
+  subRoutine: {fileID: 0}
+  offset: {x: 0, y: 0, z: 1}
+  duration: 1
+--- !u!114 &603175685962450420
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 141e80b2e0361444aace2cffb4413087
+  position: {x: 761, y: 107}
+  title: 
+  subRoutine: {fileID: 0}
+  offset: {x: 0, y: -1, z: -1}
+  duration: 1
+--- !u!114 &7918046232546823091
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 2ce1b5ff1f92d2b48b89dae058da2ce8
+  position: {x: 432, y: 107}
   title: 
   subRoutine: {fileID: 0}
   offset: {x: 0, y: 0, z: 1}
