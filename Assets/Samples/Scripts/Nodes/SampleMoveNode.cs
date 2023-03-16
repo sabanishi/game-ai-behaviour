@@ -19,7 +19,7 @@ public class SampleMoveNode : HandleableActionNode {
 public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
     private Agent _owner;
     private CancellationTokenSource _cancellationTokenSource;
-    private bool _finished;
+    private UniTask _uniTask;
 
     /// <summary>
     /// 初期化処理
@@ -34,9 +34,7 @@ public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
     /// </summary>
     protected override bool OnEnterInternal(SampleMoveNode node) {
         _cancellationTokenSource = new CancellationTokenSource();
-        _finished = false;
-        _owner.MoveAsync(node.offset, node.duration, _cancellationTokenSource.Token)
-            .ContinueWith(() => _finished = true);
+        _uniTask = _owner.MoveAsync(node.offset, node.duration, _cancellationTokenSource.Token);
         return true;
     }
 
@@ -44,8 +42,7 @@ public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
     /// ノード更新時処理
     /// </summary>
     protected override IActionNodeHandler.State OnUpdateInternal(SampleMoveNode node) {
-        // 完了を待つ
-        if (!_finished) {
+        if (_uniTask.Status == UniTaskStatus.Pending) {
             return IActionNodeHandler.State.Running;
         }
 

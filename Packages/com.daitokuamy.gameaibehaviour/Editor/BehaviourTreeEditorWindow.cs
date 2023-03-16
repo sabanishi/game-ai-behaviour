@@ -151,8 +151,7 @@ namespace GameAiBehaviour.Editor {
             var activeGameObject = Selection.activeGameObject;
 
             if (activeGameObject != null && Application.isPlaying) {
-                var owner = activeGameObject.GetComponentInParent<IBehaviourTreeControllerOwner>();
-                _owner = owner;
+                _owner = activeGameObject.GetComponentInParent<IBehaviourTreeControllerOwner>();
             }
             else {
                 _owner = null;
