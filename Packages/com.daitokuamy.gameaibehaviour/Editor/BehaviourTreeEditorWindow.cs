@@ -138,6 +138,7 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         private void Setup(BehaviourTree data) {
             var serializedObj = data != null ? new SerializedObject(data) : null;
+            CleanBehaviourTree(data);
             _target = data;
             _behaviourTreeView.Load(_target);
             _blackboardView.SetBehaviourTreeObject(serializedObj);
@@ -179,6 +180,51 @@ namespace GameAiBehaviour.Editor {
         /// </summary>
         private void OnSelectionChange() {
             RefreshOwner();
+        }
+
+        /// <summary>
+        /// BehaviourTreeの中身をクリーンする
+        /// </summary>
+        private void CleanBehaviourTree(BehaviourTree tree) {
+            if (tree == null) {
+                return;
+            }
+
+            var serializedObj = new SerializedObject(tree);
+            serializedObj.Update();
+            var nodesProp = serializedObj.FindProperty("nodes");
+            for (var i = 0; i < nodesProp.arraySize; i++) {
+                var trackProp = nodesProp.GetArrayElementAtIndex(i);
+                if (trackProp.objectReferenceValue == null) {
+                    nodesProp.DeleteArrayElementAtIndex(i);
+                    i--;
+                    continue;
+                }
+
+                var nodeProp = new SerializedObject(trackProp.objectReferenceValue);
+                nodeProp.Update();
+                var childrenProp = nodeProp.FindProperty("children");
+                if (childrenProp != null) {
+                    for (var j = 0; j < childrenProp.arraySize; j++) {
+                        var prop = childrenProp.GetArrayElementAtIndex(j);
+                        if (prop.objectReferenceValue == null) {
+                            childrenProp.DeleteArrayElementAtIndex(j);
+                            j--;
+                        }
+                    }
+                }
+
+                var childProp = nodeProp.FindProperty("child");
+                if (childProp != null) {
+                    if (childProp.objectReferenceValue == null) {
+                        childProp.objectReferenceValue = null;
+                    }
+                }
+
+                nodeProp.ApplyModifiedPropertiesWithoutUndo();
+            }
+
+            serializedObj.ApplyModifiedPropertiesWithoutUndo();
         }
     }
 }
