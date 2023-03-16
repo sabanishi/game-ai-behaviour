@@ -337,56 +337,32 @@ namespace GameAiBehaviour {
             AssetDatabase.CreateAsset(newInstance, newPath);
             AssetDatabase.ImportAsset(newPath);
 
-            // SubAssetsのHideFlagを無効にする
-            var subAssets = AssetDatabase.LoadAllAssetsAtPath(oldPath);
-            var hideFlagsList = new HideFlags[subAssets.Length];
-            for (var i = 0; i < subAssets.Length; i++) {
+            // SubAssetsをクローンした物の子に退避
+            var assets = AssetDatabase.LoadAllAssetsAtPath(oldPath);
+            for (var i = 0; i < assets.Length; i++) {
                 // 破損した物
-                if (subAssets[i] == null) {
+                if (assets[i] == null) {
                     continue;
                 }
 
-                // HideFlagをキャッシュし、表示状態にする
-                hideFlagsList[i] = subAssets[i].hideFlags;
-                subAssets[i].hideFlags = HideFlags.None;
-                EditorUtility.SetDirty(subAssets[i]);
-            }
-
-            EditorUtility.SetDirty(targetAsset);
-            AssetDatabase.SaveAssets();
-
-            // 可視化されているSubAssetsの親を移動させる
-            var validSubAssets = AssetDatabase.LoadAllAssetRepresentationsAtPath(oldPath);
-            for (var i = 0; i < validSubAssets.Length; i++) {
-                // 破損した物
-                if (validSubAssets[i] == null) {
+                // MainAsset
+                if (assets[i] == targetAsset) {
                     continue;
                 }
 
                 // サブアセットを移動させる
-                AssetDatabase.RemoveObjectFromAsset(validSubAssets[i]);
-                AssetDatabase.AddObjectToAsset(validSubAssets[i], newInstance);
+                AssetDatabase.RemoveObjectFromAsset(assets[i]);
+                AssetDatabase.AddObjectToAsset(assets[i], newInstance);
             }
 
-            AssetDatabase.ImportAsset(oldPath);
-            AssetDatabase.ImportAsset(newPath);
-
-            // HideFlagをリセットする
-            for (var i = 0; i < subAssets.Length; i++) {
-                // 破損した物
-                if (subAssets[i] == null) {
-                    continue;
-                }
-
-                subAssets[i].hideFlags = hideFlagsList[i];
-                EditorUtility.SetDirty(subAssets[i]);
-            }
-            
             // 名前を直す
             newInstance.name = targetName;
 
             EditorUtility.SetDirty(newInstance);
             AssetDatabase.SaveAssets();
+
+            AssetDatabase.ImportAsset(oldPath);
+            AssetDatabase.ImportAsset(newPath);
 
             // metaを残しつつ、新しいインスタンスに差し替える
             var directoryName = System.IO.Path.GetDirectoryName(Application.dataPath) ?? "";
