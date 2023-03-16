@@ -1,3 +1,5 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using GameAiBehaviour;
 using UnityEngine;
 
@@ -5,8 +7,8 @@ using UnityEngine;
 /// 一定距離移動するノード
 /// </summary>
 public class SampleMoveNode : HandleableActionNode {
-    [Tooltip("移動速度")]
-    public Vector3 velocity;
+    [Tooltip("相対移動量")]
+    public Vector3 offset;
     [Tooltip("移動時間")]
     public float duration;
 }
@@ -15,14 +17,15 @@ public class SampleMoveNode : HandleableActionNode {
 /// 一定距離移動するノード用ハンドラ
 /// </summary>
 public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
-    private Transform _owner;
-    private float _timer;
-    
+    private Agent _owner;
+    private CancellationTokenSource _cancellationTokenSource;
+    private bool _finished;
+
     /// <summary>
     /// 初期化処理
     /// </summary>
     /// <param name="owner">制御対象のTransform</param>
-    public void Setup(Transform owner) {
+    public void Setup(Agent owner) {
         _owner = owner;
     }
 
@@ -30,7 +33,10 @@ public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
     /// ノード開始時処理
     /// </summary>
     protected override bool OnEnterInternal(SampleMoveNode node) {
-        _timer = node.duration;
+        _cancellationTokenSource = new CancellationTokenSource();
+        _finished = false;
+        _owner.MoveAsync(node.offset, node.duration, _cancellationTokenSource.Token)
+            .ContinueWith(() => _finished = true);
         return true;
     }
 
@@ -38,18 +44,19 @@ public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
     /// ノード更新時処理
     /// </summary>
     protected override IActionNodeHandler.State OnUpdateInternal(SampleMoveNode node) {
-        var deltaTime = Time.deltaTime;
-        
-        // 秒数を減らす
-        _timer -= deltaTime;
-        
-        // 移動する
-        _owner.position += node.velocity * deltaTime;
-
-        if (_timer > 0) {
+        // 完了を待つ
+        if (!_finished) {
             return IActionNodeHandler.State.Running;
         }
 
         return IActionNodeHandler.State.Success;
+    }
+
+    /// <summary>
+    /// ノード終了時処理
+    /// </summary>
+    protected override void OnExitInternal(SampleMoveNode node) {
+        _cancellationTokenSource.Dispose();
+        _cancellationTokenSource = null;
     }
 }

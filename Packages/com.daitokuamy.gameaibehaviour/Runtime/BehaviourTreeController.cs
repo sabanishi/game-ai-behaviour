@@ -41,7 +41,7 @@ namespace GameAiBehaviour {
         // 思考頻度
         public float TickInterval { get; set; }
         // 実行履歴パス
-        public IReadOnlyList<BehaviourTreeRunner.Path> ExecutedPaths => _baseRunner.ExecutedPaths;
+        public IReadOnlyList<BehaviourTreeRunner.Path> ExecutedPaths => _baseRunner != null ? _baseRunner.ExecutedPaths : new List<BehaviourTreeRunner.Path>();
 
         /// <summary>
         /// コンストラクタ

@@ -32,7 +32,7 @@ MonoBehaviour:
   position: {x: 596, y: 76}
   title: 
   subRoutine: {fileID: 0}
-  velocity: {x: 0, y: 1, z: 0}
+  offset: {x: 0, y: 1, z: 0}
   duration: 1
 --- !u!114 &-2530226767552434641
 MonoBehaviour:
@@ -50,8 +50,8 @@ MonoBehaviour:
   position: {x: 775, y: 76}
   title: 
   subRoutine: {fileID: 0}
-  velocity: {x: 0, y: -1, z: -1}
-  duration: 5
+  offset: {x: 0, y: -1, z: -1}
+  duration: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -89,7 +89,7 @@ MonoBehaviour:
   position: {x: 410, y: 76}
   title: 
   subRoutine: {fileID: 0}
-  velocity: {x: 0, y: 0, z: 1}
+  offset: {x: 0, y: 0, z: 1}
   duration: 1
 --- !u!114 &8588395444656792971
 MonoBehaviour:

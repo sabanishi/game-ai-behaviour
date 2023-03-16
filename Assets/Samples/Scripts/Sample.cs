@@ -7,7 +7,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerOwner {
     [SerializeField, Tooltip("思考頻度")]
     private float _tickInterval;
     [SerializeField, Tooltip("移動制御ターゲット")]
-    private GameObject _moveTarget;
+    private Agent _moveTarget;
 
     private BehaviourTreeController _controller;
 
@@ -21,7 +21,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerOwner {
 
     private void Start() {
         _controller.BindActionNodeHandler<SampleMoveNode, SampleMoveNodeHandler>(handler => {
-            handler.Setup(_moveTarget.transform);
+            handler.Setup(_moveTarget);
         });
     }
 
