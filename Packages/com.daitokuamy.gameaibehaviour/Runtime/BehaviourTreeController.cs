@@ -97,6 +97,14 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// ActionNodeHandlerのBindを一括解除
+        /// </summary>
+        public void ResetActionNodeHandlers() {
+            _actionHandlerInfos.Clear();
+            _actionNodeHandlers.Clear();
+        }
+
+        /// <summary>
         /// 初期化処理
         /// </summary>
         public void Setup(BehaviourTree data) {

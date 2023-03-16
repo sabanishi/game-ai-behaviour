@@ -43,6 +43,7 @@
         /// <summary>
         /// 実行ノードの開始処理
         /// </summary>
+        /// <returns>開始に成功したか</returns>
         protected virtual bool OnEnterInternal(TNode node) {
             return true;
         }
@@ -50,6 +51,7 @@
         /// <summary>
         /// 実行ノードの更新処理
         /// </summary>
+        /// <returns>更新結果</returns>
         protected virtual IActionNodeHandler.State OnUpdateInternal(TNode node) {
             return IActionNodeHandler.State.Success;
         }

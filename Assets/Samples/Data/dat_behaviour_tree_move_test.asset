@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9096441730182936278
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f20ca020fcdcbff4cb6cf4a92eb703db, type: 3}
+  m_Name: RootNode
+  m_EditorClassIdentifier: 
+  guid: f014b8d988251da45be1a68507b4ea56
+  position: {x: 596, y: -141.68}
+  title: 
+  child: {fileID: 8588395444656792971}
+--- !u!114 &-6863292961588240826
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 1672eafb9dc254058aeba5e45b858f1b
+  position: {x: 596, y: 76}
+  title: 
+  subRoutine: {fileID: 0}
+  velocity: {x: 0, y: 1, z: 0}
+  duration: 1
+--- !u!114 &-2530226767552434641
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 306c8afc8ad874836b85a5c89948acc3
+  position: {x: 775, y: 76}
+  title: 
+  subRoutine: {fileID: 0}
+  velocity: {x: 0, y: -1, z: -1}
+  duration: 5
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14c4b5c83ab7686489f1b4fa4ca9532e, type: 3}
+  m_Name: dat_behaviour_tree_move_test
+  m_EditorClassIdentifier: 
+  memo: 
+  rootNode: {fileID: -9096441730182936278}
+  nodes:
+  - {fileID: -9096441730182936278}
+  - {fileID: 596210178676479787}
+  - {fileID: 8588395444656792971}
+  - {fileID: -6863292961588240826}
+  - {fileID: -2530226767552434641}
+  blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
+--- !u!114 &596210178676479787
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 9b977f5b2ad554cf6b3f35b07953a82c
+  position: {x: 410, y: 76}
+  title: 
+  subRoutine: {fileID: 0}
+  velocity: {x: 0, y: 0, z: 1}
+  duration: 1
+--- !u!114 &8588395444656792971
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe1dcdbfdacd874c896be43fbb7c097, type: 3}
+  m_Name: SequencerNode
+  m_EditorClassIdentifier: 
+  guid: ffdbbb6c5d4ab493dad71b5c59dfc12f
+  position: {x: 596, y: -39}
+  title: 
+  children:
+  - {fileID: 596210178676479787}
+  - {fileID: -6863292961588240826}
+  - {fileID: -2530226767552434641}
