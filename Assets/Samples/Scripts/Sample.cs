@@ -1,7 +1,7 @@
 using GameAiBehaviour;
 using UnityEngine;
 
-public class Sample : MonoBehaviour, IBehaviourTreeControllerOwner {
+public class Sample : MonoBehaviour, IBehaviourTreeControllerProvider {
     [SerializeField, Tooltip("実行対象のツリー")]
     private BehaviourTree _behaviourTree;
     [SerializeField, Tooltip("思考頻度")]
@@ -11,7 +11,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerOwner {
 
     private BehaviourTreeController _controller;
 
-    BehaviourTreeController IBehaviourTreeControllerOwner.BehaviourTreeController => _controller;
+    BehaviourTreeController IBehaviourTreeControllerProvider.BehaviourTreeController => _controller;
 
     private void Awake() {
         _controller = new BehaviourTreeController();

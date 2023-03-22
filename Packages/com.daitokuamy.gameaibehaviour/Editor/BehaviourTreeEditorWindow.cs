@@ -20,7 +20,7 @@ namespace GameAiBehaviour.Editor {
         private BlackboardView _blackboardView;
 
         // BehaviourTreeControllerのオーナー
-        private IBehaviourTreeControllerOwner _owner;
+        private IBehaviourTreeControllerProvider _provider;
         // Playingモードの初期化フラグ
         private bool _playingInitFlag;
 
@@ -126,8 +126,8 @@ namespace GameAiBehaviour.Editor {
             }
 
             // Controllerの設定
-            _blackboardView.SetController(_owner?.BehaviourTreeController);
-            _behaviourTreeView.SetController(_owner?.BehaviourTreeController);
+            _blackboardView.SetController(_provider?.BehaviourTreeController);
+            _behaviourTreeView.SetController(_provider?.BehaviourTreeController);
 
             // LogicStateの反映
             _behaviourTreeView.RefreshNodeLogicState();
@@ -152,10 +152,10 @@ namespace GameAiBehaviour.Editor {
             var activeGameObject = Selection.activeGameObject;
 
             if (activeGameObject != null && Application.isPlaying) {
-                _owner = activeGameObject.GetComponentInParent<IBehaviourTreeControllerOwner>();
+                _provider = activeGameObject.GetComponentInParent<IBehaviourTreeControllerProvider>();
             }
             else {
-                _owner = null;
+                _provider = null;
             }
         }
 
@@ -168,7 +168,7 @@ namespace GameAiBehaviour.Editor {
             }
 
             if (stateChange == PlayModeStateChange.ExitingPlayMode) {
-                _owner = null;
+                _provider = null;
                 _blackboardView.SetController(null);
                 _behaviourTreeView.SetController(null);
                 _playingInitFlag = false;
