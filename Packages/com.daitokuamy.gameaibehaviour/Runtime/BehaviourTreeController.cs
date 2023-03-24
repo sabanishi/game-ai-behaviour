@@ -6,7 +6,7 @@ namespace GameAiBehaviour {
     /// <summary>
     /// BehaviourTree制御クラス
     /// </summary>
-    public class BehaviourTreeController : IBehaviourTreeController {
+    public class BehaviourTreeController : IBehaviourTreeController, IDisposable {
         /// <summary>
         /// ActionHandler情報
         /// </summary>
@@ -15,6 +15,8 @@ namespace GameAiBehaviour {
             public Action<object> InitAction;
         }
 
+        // 廃棄済みフラグ
+        private bool _disposed;
         // 実行データ
         private BehaviourTree _data;
         // 思考リセットフラグ
@@ -50,12 +52,29 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// 廃棄処理
+        /// </summary>
+        public void Dispose() {
+            if (!_disposed) {
+                return;
+            }
+            
+            _disposed = true;
+            ResetActionNodeHandlers();
+            Cleanup();
+        }
+
+        /// <summary>
         /// ActionNodeHandlerのBind
         /// </summary>
         /// <param name="onInit">Handlerの初期化関数</param>
         public void BindActionNodeHandler<TNode, THandler>(Action<THandler> onInit)
             where TNode : HandleableActionNode
             where THandler : ActionNodeHandler<TNode>, new() {
+            if (_disposed) {
+                return;
+            }
+            
             ResetActionNodeHandler<TNode>();
 
             _actionHandlerInfos[typeof(TNode)] = new ActionHandlerInfo {
@@ -85,6 +104,10 @@ namespace GameAiBehaviour {
         /// </summary>
         public void ResetActionNodeHandler<TNode>()
             where TNode : HandleableActionNode {
+            if (_disposed) {
+                return;
+            }
+            
             _actionHandlerInfos.Remove(typeof(TNode));
 
             // 既に登録済のHandlerがあった場合は削除する
@@ -100,6 +123,10 @@ namespace GameAiBehaviour {
         /// ActionNodeHandlerのBindを一括解除
         /// </summary>
         public void ResetActionNodeHandlers() {
+            if (_disposed) {
+                return;
+            }
+            
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -108,6 +135,10 @@ namespace GameAiBehaviour {
         /// 初期化処理
         /// </summary>
         public void Setup(BehaviourTree data) {
+            if (_disposed) {
+                return;
+            }
+            
             Cleanup();
 
             _data = data;
@@ -143,6 +174,10 @@ namespace GameAiBehaviour {
         /// 思考リセット
         /// </summary>
         public void ResetThink() {
+            if (_disposed) {
+                return;
+            }
+            
             foreach (var runner in _subRoutineRunners.Values) {
                 runner?.ResetThink();
             }
@@ -155,6 +190,10 @@ namespace GameAiBehaviour {
         /// 終了処理
         /// </summary>
         public void Cleanup() {
+            if (_disposed) {
+                return;
+            }
+            
             ResetThink();
 
             Blackboard.Clear();
@@ -175,7 +214,7 @@ namespace GameAiBehaviour {
         /// Tree更新
         /// </summary>
         public void Update(float deltaTime) {
-            if (_data == null || _baseRunner == null) {
+            if (_disposed || _data == null || _baseRunner == null) {
                 return;
             }
 
