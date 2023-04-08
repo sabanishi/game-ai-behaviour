@@ -332,6 +332,19 @@ namespace GameAiBehaviour.Editor {
             }
 
             if (graphViewChange.edgesToCreate != null) {
+                graphViewChange.edgesToCreate.RemoveAll(edge => {
+                    // 既に接続中のNodeの場合は無視
+                    var inputNodeView = (NodeView)edge.input.node;
+                    var outputNodeView = (NodeView)edge.output.node;
+                    if (outputNodeView?.Node is CompositeNode compositeNode) {
+                        if (compositeNode.children.Contains(inputNodeView.Node)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                });
+                
                 graphViewChange.edgesToCreate.ForEach(edge => {
                     var parentView = edge.output.node as NodeView;
                     var childView = edge.input.node as NodeView;
