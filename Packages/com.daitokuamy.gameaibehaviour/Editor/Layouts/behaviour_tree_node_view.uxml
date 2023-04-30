@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/GameAiBehaviour/Editor/Resources/behaviour_tree_node_view.uss?fileID=7433441132597879392&amp;guid=f20c21fe3267b6e4dad23a3c34a3bf29&amp;type=3#behaviour_tree_node_view" />
+    <Style src="project://database/Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_node_view.uss?fileID=7433441132597879392&amp;guid=f20c21fe3267b6e4dad23a3c34a3bf29&amp;type=3#behaviour_tree_node_view" />
     <ui:VisualElement name="node-border">
         <ui:VisualElement name="contents">
             <ui:VisualElement name="top">
