@@ -170,6 +170,11 @@ namespace GameAiBehaviour.Editor {
                 port.portName = "";
                 port.style.flexDirection = FlexDirection.Column;
                 port.AddToClassList("node_port");
+                var label = port.Q<Label>();
+                if (label != null) {
+                    // Labelは使わないので非表示
+                    label.style.display = DisplayStyle.None;
+                }
                 inputContainer.Add(port);
             }
 
@@ -199,6 +204,11 @@ namespace GameAiBehaviour.Editor {
                 port.portName = "";
                 port.style.flexDirection = FlexDirection.ColumnReverse;
                 port.AddToClassList("node_port");
+                var label = port.Q<Label>();
+                if (label != null) {
+                    // Labelは使わないので非表示
+                    label.style.display = DisplayStyle.None;
+                }
                 outputContainer.Add(port);
             }
 
