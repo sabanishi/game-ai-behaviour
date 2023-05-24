@@ -27,6 +27,8 @@ namespace GameAiBehaviour {
         private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new();
         // アクションノードハンドラ
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new();
+        // リンクノードハンドラ
+        private readonly Dictionary<Type, ILinkNodeHandler> _linkNodeHandlers = new();
         // コンディションハンドラ
         private readonly Dictionary<Type, IConditionHandler> _conditionHandlers = new();
 
@@ -59,6 +61,7 @@ namespace GameAiBehaviour {
             }
             
             ResetActionNodeHandlers();
+            ResetLinkNodeHandlers();
             ResetConditionHandlers();
             Cleanup();
             
@@ -130,6 +133,58 @@ namespace GameAiBehaviour {
             
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
+        }
+
+        /// <summary>
+        /// LinkNodeHandlerのBind
+        /// </summary>
+        /// <param name="onInit">Handlerの初期化関数</param>
+        public void BindLinkNodeHandler<TLinkNode, THandler>(Action<THandler> onInit)
+            where TLinkNode : HandleableLinkNode
+            where THandler : LinkNodeHandler<TLinkNode>, new() {
+            if (_disposed) {
+                return;
+            }
+            
+            ResetLinkNodeHandler<TLinkNode>();
+
+            var handler = new THandler();
+            _linkNodeHandlers[typeof(TLinkNode)] = handler;
+            onInit?.Invoke(handler);
+        }
+
+        /// <summary>
+        /// LinkNodeHandlerのBind
+        /// </summary>
+        /// <param name="getConnectNodeFunc">接続先ノード取得関数</param>
+        public void BindLinkNodeHandler<TLinkNode>(Func<TLinkNode, Node> getConnectNodeFunc)
+            where TLinkNode : HandleableLinkNode {
+            BindLinkNodeHandler<TLinkNode, ObserveLinkNodeHandler<TLinkNode>>(handler => {
+                handler.SetGetConnectNodeFunc(getConnectNodeFunc);
+            });
+        }
+
+        /// <summary>
+        /// LinkNodeHandlerのBindを解除
+        /// </summary>
+        public void ResetLinkNodeHandler<TLinkNode>()
+            where TLinkNode : HandleableLinkNode {
+            if (_disposed) {
+                return;
+            }
+            
+            _linkNodeHandlers.Remove(typeof(TLinkNode));
+        }
+
+        /// <summary>
+        /// LinkNodeHandlerのBindを一括解除
+        /// </summary>
+        public void ResetLinkNodeHandlers() {
+            if (_disposed) {
+                return;
+            }
+            
+            _linkNodeHandlers.Clear();
         }
 
         /// <summary>
@@ -320,6 +375,21 @@ namespace GameAiBehaviour {
             }
 
             return handler;
+        }
+
+        /// <summary>
+        /// LinkNodeのハンドリング用インスタンスを取得
+        /// </summary>
+        ILinkNodeHandler IBehaviourTreeController.GetLinkNodeHandler(HandleableLinkNode node) {
+            if (node == null) {
+                return null;
+            }
+
+            if (_linkNodeHandlers.TryGetValue(node.GetType(), out var handler)) {
+                return handler;
+            }
+
+            return null;
         }
 
         /// <summary>

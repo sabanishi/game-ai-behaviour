@@ -19,6 +19,11 @@
         IActionNodeHandler GetActionNodeHandler(HandleableActionNode node);
 
         /// <summary>
+        /// ノードにBindされているLinkNodeHandlerの取得
+        /// </summary>
+        ILinkNodeHandler GetLinkNodeHandler(HandleableLinkNode node);
+
+        /// <summary>
         /// ノードにBindされているConditionHandlerの取得
         /// </summary>
         IConditionHandler GetConditionHandler(HandleableCondition condition);

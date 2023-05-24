@@ -207,6 +207,10 @@ MonoBehaviour:
   m_Name: SampleCondition
   m_EditorClassIdentifier: 
   test: 0
+  test2: 0
+  hoge:
+    foo: 0
+    fuga: 0
 --- !u!114 &-1704354767421863799
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -572,7 +576,7 @@ MonoBehaviour:
   guid: ae25a7a966136594c9d3b401baefe618
   position: {x: 790, y: 229}
   title: 
-  subRoutine: {fileID: 6684506668937368026}
+  subRoutine: {fileID: 0}
   duration: 3
   resetTickTimer: 1
 --- !u!114 &5383493273251367993

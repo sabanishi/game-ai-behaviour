@@ -401,7 +401,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _behaviourTree: {fileID: 11400000, guid: fbea43ca9313247c2a869f29ddefba68, type: 2}
-  _tickInterval: 0
+  _tickInterval: 0.5
   _moveTarget: {fileID: 1732595166}
 --- !u!1 &832575517
 GameObject:

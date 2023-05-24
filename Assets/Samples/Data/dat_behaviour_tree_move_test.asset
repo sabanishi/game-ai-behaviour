@@ -34,6 +34,24 @@ MonoBehaviour:
   subRoutine: {fileID: 0}
   offset: {x: 0, y: 1, z: 0}
   duration: 1
+--- !u!114 &-6461592142074301141
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d8109792f001f844db714e62ad5aa7ec, type: 3}
+  m_Name: SampleLinkNode
+  m_EditorClassIdentifier: 
+  guid: 61ace8ee98c9f4e4e885dd8643523567
+  position: {x: 967, y: 34}
+  title: 
+  trees:
+  - {fileID: 11400000, guid: eed60b6f907ea49a28796a6de3eca136, type: 2}
+  - {fileID: 11400000, guid: ce6744b6203f19c4e85d0ae1749df4bf, type: 2}
 --- !u!114 &-4738421218151290539
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -87,6 +105,7 @@ MonoBehaviour:
   - {fileID: 7918046232546823091}
   - {fileID: -3970728055153770963}
   - {fileID: 4336964911181117374}
+  - {fileID: -6461592142074301141}
 --- !u!114 &-2530226767552434641
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -126,6 +145,7 @@ MonoBehaviour:
   - {fileID: -3970728055153770963}
   - {fileID: 603175685962450420}
   - {fileID: 4336964911181117374}
+  - {fileID: -6461592142074301141}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &596210178676479787
 MonoBehaviour:
