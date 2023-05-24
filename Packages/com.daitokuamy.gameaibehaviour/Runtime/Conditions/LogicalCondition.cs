@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace GameAiBehaviour {
     /// <summary>
-    /// 文字列比較用条件
+    /// 論理比較用条件
     /// </summary>
     public abstract class LogicalCondition<T, TValueObject> : ValueCondition<T, TValueObject>
         where T : IComparable

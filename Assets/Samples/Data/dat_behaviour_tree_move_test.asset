@@ -86,7 +86,7 @@ MonoBehaviour:
   children:
   - {fileID: 7918046232546823091}
   - {fileID: -3970728055153770963}
-  - {fileID: 603175685962450420}
+  - {fileID: 4336964911181117374}
 --- !u!114 &-2530226767552434641
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -125,6 +125,7 @@ MonoBehaviour:
   - {fileID: 7918046232546823091}
   - {fileID: -3970728055153770963}
   - {fileID: 603175685962450420}
+  - {fileID: 4336964911181117374}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &596210178676479787
 MonoBehaviour:
@@ -162,6 +163,42 @@ MonoBehaviour:
   subRoutine: {fileID: 0}
   offset: {x: 0, y: -1, z: -1}
   duration: 1
+--- !u!114 &4336964911181117374
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8d18bf1db1334f2d8023426a7851c74, type: 3}
+  m_Name: IfNode
+  m_EditorClassIdentifier: 
+  guid: d716970dbe6a0d047a88dcaea771438a
+  position: {x: 761, y: 34}
+  title: 
+  child: {fileID: 603175685962450420}
+  conditions:
+    conditions:
+    - {fileID: 4904684898986658672}
+--- !u!114 &4904684898986658672
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94c56d0ed96c7fb4694455d7ccf13bc9, type: 3}
+  m_Name: SampleCondition
+  m_EditorClassIdentifier: 
+  test: 1
+  test2: 0
+  hoge:
+    foo: 0
+    fuga: 0
 --- !u!114 &7918046232546823091
 MonoBehaviour:
   m_ObjectHideFlags: 1

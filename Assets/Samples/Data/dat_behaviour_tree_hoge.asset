@@ -194,6 +194,19 @@ MonoBehaviour:
   subRoutine: {fileID: 0}
   logType: 3
   text: F
+--- !u!114 &-2763042764233742925
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94c56d0ed96c7fb4694455d7ccf13bc9, type: 3}
+  m_Name: SampleCondition
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!114 &-1704354767421863799
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -581,6 +594,7 @@ MonoBehaviour:
   conditions:
     conditions:
     - {fileID: -3740395930079640521}
+    - {fileID: -2763042764233742925}
 --- !u!114 &6227504010875714103
 MonoBehaviour:
   m_ObjectHideFlags: 1

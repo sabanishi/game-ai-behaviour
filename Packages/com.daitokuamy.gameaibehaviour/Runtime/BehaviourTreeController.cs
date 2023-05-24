@@ -24,17 +24,16 @@ namespace GameAiBehaviour {
         // 思考タイミング用タイマー
         private float _tickTimer;
         // アクションハンドラ情報
-        private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos =
-            new Dictionary<Type, ActionHandlerInfo>();
+        private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new();
         // アクションノードハンドラ
-        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers =
-            new Dictionary<Node, IActionNodeHandler>();
+        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new();
+        // コンディションハンドラ
+        private readonly Dictionary<Type, IConditionHandler> _conditionHandlers = new();
 
         // ベースとなるTreeのRunner
         private BehaviourTreeRunner _baseRunner;
         // サブルーチン用のRunner
-        private Dictionary<Node.ILogic, BehaviourTreeRunner> _subRoutineRunners =
-            new Dictionary<Node.ILogic, BehaviourTreeRunner>();
+        private Dictionary<Node.ILogic, BehaviourTreeRunner> _subRoutineRunners = new();
 
         // 思考開始からの経過時間
         public float ThinkTime { get; private set; }
@@ -59,9 +58,11 @@ namespace GameAiBehaviour {
                 return;
             }
             
-            _disposed = true;
             ResetActionNodeHandlers();
+            ResetConditionHandlers();
             Cleanup();
+            
+            _disposed = true;
         }
 
         /// <summary>
@@ -129,6 +130,58 @@ namespace GameAiBehaviour {
             
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
+        }
+
+        /// <summary>
+        /// ConditionHandlerのBind
+        /// </summary>
+        /// <param name="onInit">Handlerの初期化関数</param>
+        public void BindConditionHandler<TCondition, THandler>(Action<THandler> onInit)
+            where TCondition : HandleableCondition
+            where THandler : ConditionHandler<TCondition>, new() {
+            if (_disposed) {
+                return;
+            }
+            
+            ResetConditionHandler<TCondition>();
+
+            var handler = new THandler();
+            _conditionHandlers[typeof(TCondition)] = handler;
+            onInit?.Invoke(handler);
+        }
+
+        /// <summary>
+        /// ConditionHandlerのBind
+        /// </summary>
+        /// <param name="checkFunc">判定関数</param>
+        public void BindConditionHandler<TCondition>(Func<TCondition, Blackboard, bool> checkFunc)
+            where TCondition : HandleableCondition {
+            BindConditionHandler<TCondition, ObserveConditionHandler<TCondition>>(handler => {
+                handler.SetCheckFunc(checkFunc);
+            });
+        }
+
+        /// <summary>
+        /// ConditionHandlerのBindを解除
+        /// </summary>
+        public void ResetConditionHandler<TCondition>()
+            where TCondition : HandleableCondition {
+            if (_disposed) {
+                return;
+            }
+            
+            _conditionHandlers.Remove(typeof(TCondition));
+        }
+
+        /// <summary>
+        /// ConditionHandlerのBindを一括解除
+        /// </summary>
+        public void ResetConditionHandlers() {
+            if (_disposed) {
+                return;
+            }
+            
+            _conditionHandlers.Clear();
         }
 
         /// <summary>
@@ -247,7 +300,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ActionNodeのハンドリング用インスタンスを取得
         /// </summary>
-        IActionNodeHandler IBehaviourTreeController.GetActionHandler(HandleableActionNode node) {
+        IActionNodeHandler IBehaviourTreeController.GetActionNodeHandler(HandleableActionNode node) {
             if (node == null) {
                 return null;
             }
@@ -267,6 +320,21 @@ namespace GameAiBehaviour {
             }
 
             return handler;
+        }
+
+        /// <summary>
+        /// Conditionのハンドリング用インスタンスを取得
+        /// </summary>
+        IConditionHandler IBehaviourTreeController.GetConditionHandler(HandleableCondition condition) {
+            if (condition == null) {
+                return null;
+            }
+
+            if (_conditionHandlers.TryGetValue(condition.GetType(), out var handler)) {
+                return handler;
+            }
+
+            return null;
         }
 
         /// <summary>

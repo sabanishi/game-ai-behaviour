@@ -25,7 +25,7 @@ namespace GameAiBehaviour {
                 }
 
                 // 条件判定に失敗するまで繰り返す
-                while (Node.conditions.Check(Controller.Blackboard)) {
+                while (Node.conditions.Check(Controller)) {
                     // 接続先ノードの実行
                     yield return ExecuteNodeRoutine(Node.child, SetState);
 

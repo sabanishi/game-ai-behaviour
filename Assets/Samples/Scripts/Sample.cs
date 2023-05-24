@@ -23,6 +23,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerProvider {
         _controller.BindActionNodeHandler<SampleMoveNode, SampleMoveNodeHandler>(handler => {
             handler.Setup(_moveTarget);
         });
+        _controller.BindConditionHandler<SampleCondition>((condition, blackboard) => condition.test == 1);
     }
 
     private void Update() {

@@ -14,9 +14,14 @@
         Blackboard Blackboard { get; }
 
         /// <summary>
-        /// ノードにBindされているHandlerの取得
+        /// ノードにBindされているActionNodeHandlerの取得
         /// </summary>
-        IActionNodeHandler GetActionHandler(HandleableActionNode node);
+        IActionNodeHandler GetActionNodeHandler(HandleableActionNode node);
+
+        /// <summary>
+        /// ノードにBindされているConditionHandlerの取得
+        /// </summary>
+        IConditionHandler GetConditionHandler(HandleableCondition condition);
 
         /// <summary>
         /// 思考リセット

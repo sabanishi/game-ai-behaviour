@@ -12,14 +12,14 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 判定
         /// </summary>
-        public bool Check(Blackboard blackboard) {
+        public bool Check(IBehaviourTreeController controller) {
             // AND条件で判定を行う
             foreach (var condition in conditions) {
                 if (condition == null) {
                     continue;
                 }
 
-                if (!condition.Check(blackboard)) {
+                if (!condition.Check(controller)) {
                     return false;
                 }
             }

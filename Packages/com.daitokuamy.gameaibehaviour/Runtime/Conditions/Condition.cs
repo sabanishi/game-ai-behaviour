@@ -14,7 +14,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 判定
         /// </summary>
-        public abstract bool Check(Blackboard blackboard);
+        public abstract bool Check(IBehaviourTreeController controller);
 
 #if UNITY_EDITOR
         /// <summary>

@@ -25,7 +25,7 @@ namespace GameAiBehaviour {
                 }
 
                 // 条件判定に失敗したら失敗
-                if (!Node.conditions.Check(Controller.Blackboard)) {
+                if (!Node.conditions.Check(Controller)) {
                     SetState(State.Failure);
                     yield break;
                 }

@@ -89,8 +89,8 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 判定
         /// </summary>
-        public sealed override bool Check(Blackboard blackboard) {
-            return CheckInternal(GetLeftValue(blackboard), GetRightValue(blackboard));
+        public sealed override bool Check(IBehaviourTreeController controller) {
+            return CheckInternal(GetLeftValue(controller.Blackboard), GetRightValue(controller.Blackboard));
         }
 
         /// <summary>
