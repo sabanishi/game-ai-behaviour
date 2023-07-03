@@ -48,7 +48,7 @@ namespace GameAiBehaviour {
         public void ResetThink() {
             foreach (var logics in _logicPools.Values) {
                 foreach (var logic in logics) {
-                    logic.Reset();
+                    logic.Cancel();
                 }
             }
 

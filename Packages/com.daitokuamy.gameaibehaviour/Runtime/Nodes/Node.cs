@@ -46,7 +46,7 @@ namespace GameAiBehaviour {
             /// <summary>
             /// キャンセル処理
             /// </summary>
-            void Reset();
+            void Cancel();
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace GameAiBehaviour {
             /// 廃棄時処理
             /// </summary>
             public void Dispose() {
-                ((ILogic)this).Reset();
+                ((ILogic)this).Cancel();
                 DisposeInternal();
             }
 
@@ -106,11 +106,11 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// リセット処理
+            /// キャンセル処理
             /// </summary>
-            void ILogic.Reset() {
+            void ILogic.Cancel() {
                 if (State != State.Inactive) {
-                    ResetInternal();
+                    CancelInternal();
                     State = State.Inactive;
                     IsRunning = false;
                 }
@@ -137,9 +137,9 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
-            /// 思考リセット時の処理(Override用)
+            /// キャンセル時の処理(Override用)
             /// </summary>
-            protected virtual void ResetInternal() {
+            protected virtual void CancelInternal() {
             }
 
             /// <summary>
