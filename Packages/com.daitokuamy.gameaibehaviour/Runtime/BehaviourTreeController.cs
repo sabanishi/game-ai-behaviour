@@ -60,6 +60,7 @@ namespace GameAiBehaviour {
                 return;
             }
             
+            ResetThink();
             ResetActionNodeHandlers();
             ResetLinkNodeHandlers();
             ResetConditionHandlers();
