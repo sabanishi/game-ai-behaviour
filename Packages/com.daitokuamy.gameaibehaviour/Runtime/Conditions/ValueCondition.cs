@@ -126,7 +126,7 @@ namespace GameAiBehaviour {
         /// 値の取得
         /// </summary>
         private T GetValue(Blackboard blackboard, TValueObject valueObject) {
-            if (string.IsNullOrEmpty(valueObject.propertyName)) {
+            if (string.IsNullOrEmpty(valueObject.propertyName) || !valueObject.useProperty) {
                 return valueObject.constValue;
             }
 
