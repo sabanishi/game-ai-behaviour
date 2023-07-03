@@ -44,7 +44,8 @@ namespace GameAiBehaviour {
         // 思考頻度
         public float TickInterval { get; set; }
         // 実行履歴パス
-        public IReadOnlyList<BehaviourTreeRunner.Path> ExecutedPaths => _baseRunner != null ? _baseRunner.ExecutedPaths : new List<BehaviourTreeRunner.Path>();
+        public IReadOnlyList<BehaviourTreeRunner.Path> ExecutedPaths =>
+            _baseRunner != null ? _baseRunner.ExecutedPaths : new List<BehaviourTreeRunner.Path>();
 
         /// <summary>
         /// コンストラクタ
@@ -60,12 +61,8 @@ namespace GameAiBehaviour {
                 return;
             }
             
-            ResetThink();
-            ResetActionNodeHandlers();
-            ResetLinkNodeHandlers();
-            ResetConditionHandlers();
             Cleanup();
-            
+
             _disposed = true;
         }
 
@@ -79,7 +76,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             ResetActionNodeHandler<TNode>();
 
             _actionHandlerInfos[typeof(TNode)] = new ActionHandlerInfo {
@@ -112,7 +109,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             _actionHandlerInfos.Remove(typeof(TNode));
 
             // 既に登録済のHandlerがあった場合は削除する
@@ -131,7 +128,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
         }
@@ -146,7 +143,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             ResetLinkNodeHandler<TLinkNode>();
 
             var handler = new THandler();
@@ -173,7 +170,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             _linkNodeHandlers.Remove(typeof(TLinkNode));
         }
 
@@ -184,7 +181,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             _linkNodeHandlers.Clear();
         }
 
@@ -198,7 +195,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             ResetConditionHandler<TCondition>();
 
             var handler = new THandler();
@@ -225,7 +222,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             _conditionHandlers.Remove(typeof(TCondition));
         }
 
@@ -236,7 +233,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             _conditionHandlers.Clear();
         }
 
@@ -247,7 +244,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             Cleanup();
 
             _data = data;
@@ -286,10 +283,11 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             foreach (var runner in _subRoutineRunners.Values) {
                 runner?.ResetThink();
             }
+
             _baseRunner?.ResetThink();
 
             _tickTimer = 0.0f;
@@ -302,7 +300,7 @@ namespace GameAiBehaviour {
             if (_disposed) {
                 return;
             }
-            
+
             ResetThink();
 
             Blackboard.Clear();
@@ -310,6 +308,7 @@ namespace GameAiBehaviour {
             foreach (var runner in _subRoutineRunners.Values) {
                 runner?.Cleanup();
             }
+
             _subRoutineRunners.Clear();
             _baseRunner?.Cleanup();
             _baseRunner = null;
@@ -317,6 +316,8 @@ namespace GameAiBehaviour {
             _data = null;
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
+            _linkNodeHandlers.Clear();
+            _conditionHandlers.Clear();
         }
 
         /// <summary>
