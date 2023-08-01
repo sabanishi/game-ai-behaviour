@@ -57,6 +57,23 @@ namespace GameAiBehaviour {
                 // 終了処理実行
                 handler.OnExit(Node);
             }
+
+            /// <summary>
+            /// キャンセル処理
+            /// </summary>
+            protected override void CancelInternal() {
+                base.CancelInternal();
+                
+                var handler = Controller.GetActionNodeHandler(Node);
+
+                // サブルーチン停止
+                if (Node.subRoutine != null) {
+                    Controller.ResetSubRoutine(this);
+                }
+                
+                // キャンセル処理通知
+                handler.OnCancel(Node);
+            }
         }
 
         /// <summary>

@@ -15,6 +15,7 @@
         bool OnEnter(HandleableActionNode node);
         State OnUpdate(HandleableActionNode node);
         void OnExit(HandleableActionNode node);
+        void OnCancel(HandleableActionNode node);
     }
 
     /// <summary>
@@ -40,6 +41,10 @@
             OnExitInternal((TNode)node);
         }
 
+        void IActionNodeHandler.OnCancel(HandleableActionNode node) {
+            OnCancelInternal((TNode)node);
+        }
+
         /// <summary>
         /// 実行ノードの開始処理
         /// </summary>
@@ -60,6 +65,12 @@
         /// 実行ノードの終了処理
         /// </summary>
         protected virtual void OnExitInternal(TNode node) {
+        }
+
+        /// <summary>
+        /// 実行ノードのキャンセル処理
+        /// </summary>
+        protected virtual void OnCancelInternal(TNode node) {
         }
     }
 }
