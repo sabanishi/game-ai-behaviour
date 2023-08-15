@@ -10,6 +10,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerProvider {
     private Agent _moveTarget;
 
     private BehaviourTreeController _controller;
+    private Node.State _prevResultState = Node.State.Inactive;
 
     BehaviourTreeController IBehaviourTreeControllerProvider.BehaviourTreeController => _controller;
 
@@ -28,7 +29,11 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerProvider {
     }
 
     private void Update() {
-        _controller.Update(Time.deltaTime);
+        var result = _controller.Update(Time.deltaTime);
+        if (result != _prevResultState) {
+            Debug.Log($"ResultState:{result}");
+            _prevResultState = result;
+        }
     }
 
     private void OnDestroy() {

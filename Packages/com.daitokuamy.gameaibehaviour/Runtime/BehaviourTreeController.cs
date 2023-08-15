@@ -323,9 +323,9 @@ namespace GameAiBehaviour {
         /// <summary>
         /// Tree更新
         /// </summary>
-        public void Update(float deltaTime) {
+        public Node.State Update(float deltaTime) {
             if (_disposed || _data == null || _baseRunner == null) {
-                return;
+                return Node.State.Failure;
             }
 
             // 思考時間更新
@@ -334,13 +334,13 @@ namespace GameAiBehaviour {
             // Tickタイマー更新
             if (_tickTimer > 0.0f) {
                 _tickTimer -= deltaTime;
-                return;
+                return _baseRunner.CurrentState;
             }
 
             _tickTimer = TickInterval;
 
             // 基本思考の実行
-            _baseRunner.Tick(() => ThinkTime = 0.0f);
+            var result = _baseRunner.Tick(() => ThinkTime = 0.0f);
 
             // サブルーチンの実行
             foreach (var runner in _subRoutineRunners.Values) {
@@ -352,6 +352,8 @@ namespace GameAiBehaviour {
                 ResetThink();
                 _thinkResetFlag = false;
             }
+
+            return result;
         }
 
         /// <summary>

@@ -10,6 +10,7 @@ namespace GameAiBehaviour {
         // 状態
         public enum State {
             Inactive,
+            Running,
             Failure,
             Success,
         }
@@ -27,11 +28,6 @@ namespace GameAiBehaviour {
             /// 現在の状態
             /// </summary>
             State State { get; }
-
-            /// <summary>
-            /// 実行中
-            /// </summary>
-            bool IsRunning { get; }
 
             /// <summary>
             /// 初期化処理
@@ -56,8 +52,6 @@ namespace GameAiBehaviour {
             where TNode : Node {
             // 現在の状態
             public State State { get; private set; }
-            // 実行中か
-            public bool IsRunning { get; private set; }
             // 制御対象のNode
             Node ILogic.TargetNode => Node;
             // 実行用のランナー
@@ -96,13 +90,10 @@ namespace GameAiBehaviour {
             /// </summary>
             IEnumerator ILogic.ExecuteRoutine() {
                 // 実行開始
-                IsRunning = true;
+                State = State.Running;
 
                 // Override用コード実行
                 yield return ExecuteRoutineInternal();
-
-                // 実行完了
-                IsRunning = false;
             }
 
             /// <summary>
@@ -111,8 +102,6 @@ namespace GameAiBehaviour {
             void ILogic.Cancel() {
                 if (State != State.Inactive) {
                     CancelInternal();
-                    State = State.Inactive;
-                    IsRunning = false;
                 }
             }
 

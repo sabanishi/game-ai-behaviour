@@ -20,13 +20,15 @@ namespace GameAiBehaviour {
         private readonly Dictionary<Node, List<Node.ILogic>> _logicPools = new Dictionary<Node, List<Node.ILogic>>();
         // 実行用ルーチン
         private NodeLogicRoutine _nodeLogicRoutine;
+        // 実行中StartNodeLogic
+        private Node.ILogic _startNodeLogic;
         // 実行履歴パス
         private readonly List<Path> _executedPaths = new List<Path>();
         // 思考時間
         private float _thinkTime;
-
+        
         // 現在の実行状態
-        public Node.State CurrentState => _nodeLogicRoutine?.Current?.State ?? Node.State.Inactive;
+        public Node.State CurrentState => _startNodeLogic?.State ?? Node.State.Inactive;
         // 実行中か
         public bool IsRunning => _nodeLogicRoutine != null;
         // 実行履歴のパス
@@ -53,6 +55,7 @@ namespace GameAiBehaviour {
             }
 
             _nodeLogicRoutine = null;
+            _startNodeLogic = null;
             _executedPaths.Clear();
         }
 
@@ -75,9 +78,9 @@ namespace GameAiBehaviour {
         /// <summary>
         /// Tick
         /// </summary>
-        public void Tick(Action onReset = null) {
+        public Node.State Tick(Action onReset = null) {
             if (_startNode == null) {
-                return;
+                return Node.State.Failure;
             }
 
             void UpdateRoutine() {
@@ -98,12 +101,15 @@ namespace GameAiBehaviour {
                 onReset?.Invoke();
 
                 // 起点NodeのRoutineを生成
-                var startLogic = ((IBehaviourTreeRunner)this).FindLogic(_startNode);
-                _nodeLogicRoutine = new NodeLogicRoutine(startLogic.ExecuteRoutine());
+                var startNodeLogic = ((IBehaviourTreeRunner)this).FindLogic(_startNode);
+                _nodeLogicRoutine = new NodeLogicRoutine(startNodeLogic.ExecuteRoutine());
+                _startNodeLogic = startNodeLogic;
 
                 // ルーチン実行
                 UpdateRoutine();
             }
+
+            return CurrentState;
         }
 
         /// <summary>

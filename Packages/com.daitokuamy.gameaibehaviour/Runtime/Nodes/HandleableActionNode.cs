@@ -72,7 +72,7 @@ namespace GameAiBehaviour {
                 }
                 
                 // キャンセル処理通知
-                handler.OnCancel(Node);
+                handler?.OnCancel(Node);
             }
         }
 

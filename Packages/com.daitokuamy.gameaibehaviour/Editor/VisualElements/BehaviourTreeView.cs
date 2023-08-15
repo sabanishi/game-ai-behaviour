@@ -180,21 +180,19 @@ namespace GameAiBehaviour.Editor {
 
             // ノードの状態を設定
             void SetNodeState(NodeView view, Node.ILogic nodeLogic) {
-                if (nodeLogic.IsRunning) {
-                    view.SetNodeState(NodeView.State.Running);
-                }
-                else {
-                    switch (nodeLogic.State) {
-                        case Node.State.Success:
-                            view.SetNodeState(NodeView.State.Success);
-                            break;
-                        case Node.State.Failure:
-                            view.SetNodeState(NodeView.State.Failure);
-                            break;
-                        default:
-                            view.SetNodeState(NodeView.State.Default);
-                            break;
-                    }
+                switch (nodeLogic.State) {
+                    case Node.State.Success:
+                        view.SetNodeState(NodeView.State.Success);
+                        break;
+                    case Node.State.Failure:
+                        view.SetNodeState(NodeView.State.Failure);
+                        break;
+                    case Node.State.Running:
+                        view.SetNodeState(NodeView.State.Running);
+                        break;
+                    default:
+                        view.SetNodeState(NodeView.State.Default);
+                        break;
                 }
             }
 
@@ -344,7 +342,7 @@ namespace GameAiBehaviour.Editor {
 
                     return false;
                 });
-                
+
                 graphViewChange.edgesToCreate.ForEach(edge => {
                     var parentView = edge.output.node as NodeView;
                     var childView = edge.input.node as NodeView;
