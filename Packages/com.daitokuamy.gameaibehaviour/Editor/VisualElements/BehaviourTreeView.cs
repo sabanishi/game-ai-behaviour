@@ -42,7 +42,9 @@ namespace GameAiBehaviour.Editor {
             gridBackground.AddToClassList("grid-background");
 
             // 基本設定
-            this.AddManipulator(new ContentZoomer());
+            var zoomer = new ContentZoomer();
+            zoomer.maxScale = 3.0f;
+            this.AddManipulator(zoomer);
             this.AddManipulator(new ContentDragger());
             this.AddManipulator(new SelectionDragger());
             this.AddManipulator(new RectangleSelector());
