@@ -1,3 +1,4 @@
+using System.IO;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using GameAiBehaviour;
@@ -6,6 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 一定距離移動するノード
 /// </summary>
+[BehaviourTreeNode("Test/SampleMoveNode")]
 public class SampleMoveNode : HandleableActionNode {
     [Tooltip("相対移動量")]
     public Vector3 offset;

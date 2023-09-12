@@ -20,7 +20,19 @@ namespace GameAiBehaviour {
             }
 
             if (string.IsNullOrEmpty(node.title)) {
-                return ObjectNames.NicifyVariableName(node.GetType().Name);
+                var type = node.GetType();
+                var attr =
+                    type.GetCustomAttributes(typeof(BehaviourTreeNodeAttribute), false).FirstOrDefault() as
+                        BehaviourTreeNodeAttribute;
+                var name = ObjectNames.NicifyVariableName(type.Name);
+                if (attr != null) {
+                    var displayName = attr.DisplayName;
+                    if (!string.IsNullOrEmpty(displayName)) {
+                        name = displayName;
+                    }
+                }
+
+                return name;
             }
 
             return node.title;
