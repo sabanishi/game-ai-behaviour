@@ -351,6 +351,7 @@ MonoBehaviour:
   - {fileID: -909098928808776949}
   - {fileID: 3621230470430876040}
   - {fileID: -3033307032264944086}
+  - {fileID: 5274948584396916034}
   blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &299288502928017254
 MonoBehaviour:
@@ -579,6 +580,24 @@ MonoBehaviour:
   subRoutine: {fileID: 0}
   duration: 3
   resetTickTimer: 1
+--- !u!114 &5274948584396916034
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42257c489381744d99b2b09b1788af32, type: 3}
+  m_Name: SampleMoveNode
+  m_EditorClassIdentifier: 
+  guid: 9b91f52e9d7813845b7535045cac4560
+  position: {x: 929, y: -202}
+  title: aaa
+  subRoutine: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  duration: 0
 --- !u!114 &5383493273251367993
 MonoBehaviour:
   m_ObjectHideFlags: 1

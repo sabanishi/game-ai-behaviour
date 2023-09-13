@@ -17,8 +17,6 @@ namespace GameAiBehaviour {
 
         // 廃棄済みフラグ
         private bool _disposed;
-        // 実行データ
-        private BehaviourTree _data;
         // 思考リセットフラグ
         private bool _thinkResetFlag;
         // 思考タイミング用タイマー
@@ -37,13 +35,15 @@ namespace GameAiBehaviour {
         // サブルーチン用のRunner
         private Dictionary<Node.ILogic, BehaviourTreeRunner> _subRoutineRunners = new();
 
-        // 思考開始からの経過時間
+        /// <summary>思考開始からの経過時間</summary>
         public float ThinkTime { get; private set; }
-        // プロパティ管理用Blackboard
+        /// <summary>プロパティ管理用Blackboard</summary>
         public Blackboard Blackboard { get; private set; } = new Blackboard();
-        // 思考頻度
+        /// <summary>実行中ツリー</summary>
+        public BehaviourTree Tree { get; private set; }
+        /// <summary>思考頻度</summary>
         public float TickInterval { get; set; }
-        // 実行履歴パス
+        /// <summary>実行履歴パス</summary>
         public IReadOnlyList<BehaviourTreeRunner.Path> ExecutedPaths =>
             _baseRunner != null ? _baseRunner.ExecutedPaths : new List<BehaviourTreeRunner.Path>();
 
@@ -240,24 +240,24 @@ namespace GameAiBehaviour {
         /// <summary>
         /// 初期化処理
         /// </summary>
-        public void Setup(BehaviourTree data) {
+        public void Setup(BehaviourTree tree) {
             if (_disposed) {
                 return;
             }
 
             Cleanup();
 
-            _data = data;
+            Tree = tree;
 
-            if (_data == null) {
+            if (Tree == null) {
                 return;
             }
 
-            _baseRunner = new BehaviourTreeRunner(this, _data.rootNode);
+            _baseRunner = new BehaviourTreeRunner(this, Tree.rootNode);
 
             // Blackboard初期化
-            if (data.blackboardAsset != null) {
-                foreach (var property in data.blackboardAsset.properties) {
+            if (tree.blackboardAsset != null) {
+                foreach (var property in tree.blackboardAsset.properties) {
                     switch (property.propertyType) {
                         case Property.Type.Integer:
                             Blackboard.SetInteger(property.propertyName, property.integerValue);
@@ -313,7 +313,7 @@ namespace GameAiBehaviour {
             _baseRunner?.Cleanup();
             _baseRunner = null;
 
-            _data = null;
+            Tree = null;
             _actionHandlerInfos.Clear();
             _actionNodeHandlers.Clear();
             _linkNodeHandlers.Clear();
@@ -324,7 +324,7 @@ namespace GameAiBehaviour {
         /// Tree更新
         /// </summary>
         public Node.State Update(float deltaTime) {
-            if (_disposed || _data == null || _baseRunner == null) {
+            if (_disposed || Tree == null || _baseRunner == null) {
                 return Node.State.Failure;
             }
 

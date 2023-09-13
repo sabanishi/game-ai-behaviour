@@ -7,7 +7,7 @@ using UnityEngine;
 /// <summary>
 /// 一定距離移動するノード
 /// </summary>
-[BehaviourTreeNode("Test/SampleMoveNode")]
+[BehaviourTreeNode("Test/サンプル移動")]
 public class SampleMoveNode : HandleableActionNode {
     [Tooltip("相対移動量")]
     public Vector3 offset;
