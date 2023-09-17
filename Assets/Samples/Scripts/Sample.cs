@@ -24,6 +24,7 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerProvider {
         _controller.BindActionNodeHandler<SampleMoveNode, SampleMoveNodeHandler>(handler => {
             handler.Setup(_moveTarget);
         });
+        _controller.BindActionNodeHandler<SampleLogNode, SampleLogNodeHandler>(null);
         _controller.BindConditionHandler<SampleCondition>((condition, blackboard) => condition.test == 1);
         _controller.BindLinkNodeHandler<SampleLinkNode, SampleLinkNodeHandler>(_ => {});
     }

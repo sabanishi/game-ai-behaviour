@@ -11,6 +11,17 @@ namespace GameAiBehaviour.Editor {
     /// Node生成用のSearchWindowProvider
     /// </summary>
     public class CreateNodeSearchWindowProvider : ScriptableObject, ISearchWindowProvider {
+        private class TreeNode {
+            public string name;
+            public object userData;
+            public List<TreeNode> children = new();
+
+            public TreeNode(string name, object userData = null) {
+                this.name = name;
+                this.userData = userData;
+            }
+        }
+        
         private BehaviourTreeView _graphView;
         private EditorWindow _editorWindow;
 
@@ -28,61 +39,21 @@ namespace GameAiBehaviour.Editor {
         public List<SearchTreeEntry> CreateSearchTree(SearchWindowContext context) {
             var entries = new List<SearchTreeEntry>();
 
-            void AddTreeGroupEntry(string entryName, int level = 0) {
-                entries.Add(new SearchTreeGroupEntry(new GUIContent(entryName)) { level = level });
-            }
-
-            void AddTreeEntry(Type type, int level) {
-                var attr = type.GetCustomAttributes(typeof(BehaviourTreeNodeAttribute), false).FirstOrDefault() as BehaviourTreeNodeAttribute;
-                var path = ObjectNames.NicifyVariableName(type.Name);
-                if (attr != null) {
-                    if (!string.IsNullOrEmpty(attr.Path)) {
-                        path = attr.Path;
+            // Entryの追加
+            void AddEntry(TreeNode node, int level = 0) {
+                var group = node.children.Count > 0;
+                if (group) {
+                    entries.Add(new SearchTreeGroupEntry(new GUIContent(node.name)) { level = level, userData = node.userData});
+                    foreach (var child in node.children) {
+                        AddEntry(child, level + 1);
                     }
                 }
-
-                var splitPaths = path.Split("/");
-                for (var i = 0; i < splitPaths.Length; i++) {
-                    var splitPath = splitPaths[i];
-                    var group = i < splitPaths.Length - 1;
-                    var entry = default(SearchTreeEntry);
-                    if (group) {
-                        entry = new SearchTreeGroupEntry(new GUIContent(splitPath)) { level = level + i };
-                    }
-                    else {
-                        entry = new SearchTreeEntry(new GUIContent(splitPath)) { level = level + i, userData = type };
-                    }
-
-                    entries.Add(entry);
+                else {
+                    entries.Add(new SearchTreeEntry(new GUIContent(node.name)) { level = level, userData = node.userData});
                 }
             }
-
-            AddTreeGroupEntry("Create Node");
-
-            var groupTypes = new List<Type> {
-                typeof(CompositeNode),
-                typeof(DecoratorNode),
-                typeof(ActionNode),
-                typeof(LinkNode),
-            };
-
-            foreach (var groupType in groupTypes) {
-                var types = TypeCache.GetTypesDerivedFrom(groupType)
-                    .Where(x => !x.IsAbstract && !x.IsGenericType)
-                    .ToArray();
-                if (types.Length <= 0) {
-                    continue;
-                }
-
-                AddTreeGroupEntry(groupType.Name.Replace("Node", ""), 1);
-                foreach (var type in types) {
-                    AddTreeEntry(type, 2);
-                }
-            }
-
-            AddTreeGroupEntry("Etc", 1);
-            AddTreeEntry(typeof(FunctionRootNode), 2);
-
+            
+            AddEntry(CreateNodeTree());
             return entries;
         }
 
@@ -102,6 +73,76 @@ namespace GameAiBehaviour.Editor {
 
             AssetDatabase.SaveAssets();
             return true;
+        }
+
+        /// <summary>
+        /// ノードツリーの作成
+        /// </summary>
+        private TreeNode CreateNodeTree() {
+            // パスを解析した状態でのノード追加
+            void AddNode(TreeNode parentNode, Type type) {
+                var attr = type.GetCustomAttributes(typeof(BehaviourTreeNodeAttribute), false).FirstOrDefault() as BehaviourTreeNodeAttribute;
+                var path = ObjectNames.NicifyVariableName(type.Name);
+                if (attr != null) {
+                    if (!string.IsNullOrEmpty(attr.Path)) {
+                        path = attr.Path;
+                    }
+                }
+
+                var splitPaths = path.Split("/");
+                var currentNode = parentNode;
+                for (var i = 0; i < splitPaths.Length; i++) {
+                    var splitPath = splitPaths[i];
+                    var group = i < splitPaths.Length - 1;
+                    if (group) {
+                        var foundNode = currentNode.children.Find(x => x.name == splitPath);
+                        // 既に存在しているなら流用
+                        if (foundNode != null) {
+                            currentNode = foundNode;
+                        }
+                        // 無ければ生成して追加
+                        else {
+                            var nextNode = new TreeNode(splitPath);
+                            currentNode.children.Add(nextNode);
+                            currentNode = nextNode;
+                        }
+                    }
+                    else {
+                        var node = new TreeNode(splitPath, type);
+                        currentNode.children.Add(node);
+                    }
+                }
+            }
+            
+            var rootNode = new TreeNode("Create Node");
+            var groupTypes = new List<Type> {
+                typeof(CompositeNode),
+                typeof(DecoratorNode),
+                typeof(ActionNode),
+                typeof(LinkNode),
+            };
+
+            foreach (var groupType in groupTypes) {
+                var types = TypeCache.GetTypesDerivedFrom(groupType)
+                    .Where(x => !x.IsAbstract && !x.IsGenericType)
+                    .ToArray();
+                if (types.Length <= 0) {
+                    continue;
+                }
+
+                var groupNode = new TreeNode(groupType.Name.Replace("Node", ""));
+                rootNode.children.Add(groupNode);
+                
+                foreach (var type in types) {
+                    AddNode(groupNode, type);
+                }
+            }
+
+            var etcNode = new TreeNode("Etc");
+            rootNode.children.Add(etcNode);
+            AddNode(etcNode, typeof(FunctionNode));
+
+            return rootNode;
         }
     }
 }
