@@ -19,7 +19,7 @@ namespace GameAiBehaviour {
             /// </summary>
             protected override IEnumerator ExecuteRoutineInternal() {
                 if (Node.children.Length <= 0) {
-                    SetState(State.Failure);
+                    SetState(Node.FailureState);
                     yield break;
                 }
 
@@ -48,6 +48,7 @@ namespace GameAiBehaviour {
                     }
                     // 失敗していた場合、そのまま失敗として終了
                     else if (State == State.Failure) {
+                        SetState(Node.FailureState);
                         yield break;
                     }
                 }

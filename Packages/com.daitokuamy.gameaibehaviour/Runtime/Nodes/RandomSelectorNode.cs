@@ -39,7 +39,7 @@ namespace GameAiBehaviour {
                 }
 
                 // 誰も実行できなかった場合、失敗とする
-                SetState(State.Failure);
+                SetState(Node.FailureState);
             }
         }
 

@@ -4,7 +4,7 @@ namespace GameAiBehaviour {
     /// <summary>
     /// 選択用ノード
     /// </summary>
-    public sealed class SelectorNode : CompositeNode {
+    public sealed class SelectorNode : CompositeNode {        
         private class Logic : Logic<SelectorNode> {
             /// <summary>
             /// コンストラクタ
@@ -28,7 +28,7 @@ namespace GameAiBehaviour {
                 }
 
                 // 誰も実行できなかった場合、失敗とする
-                SetState(State.Failure);
+                SetState(Node.FailureState);
             }
         }
 
