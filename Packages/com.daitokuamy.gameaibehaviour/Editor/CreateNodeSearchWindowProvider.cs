@@ -140,6 +140,7 @@ namespace GameAiBehaviour.Editor {
 
             var etcNode = new TreeNode("Etc");
             rootNode.children.Add(etcNode);
+            AddNode(etcNode, typeof(FunctionRootNode));
             AddNode(etcNode, typeof(FunctionNode));
 
             return rootNode;
