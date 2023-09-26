@@ -7,8 +7,6 @@ namespace GameAiBehaviour {
     /// </summary>
     public sealed class RepeatNode : DecoratorNode {
         private class Logic : Logic<RepeatNode> {
-            private int _index;
-
             /// <summary>
             /// コンストラクタ
             /// </summary>
