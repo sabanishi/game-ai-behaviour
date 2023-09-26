@@ -168,10 +168,12 @@ namespace GameAiBehaviour {
         [Tooltip("タイトル")]
         public string title;
 
-        // サブタイトル
+        /// <summary>サブタイトル</summary>
         public virtual string SubTitle => "";
-        // 説明文
+        /// <summary>説明文</summary>
         public virtual string Description => "";
+        /// <summary>ノード幅</summary>
+        public virtual float NodeWidth => 100.0f;
 
         /// <summary>
         /// ロジックの生成

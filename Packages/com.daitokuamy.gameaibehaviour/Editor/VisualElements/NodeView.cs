@@ -73,6 +73,10 @@ namespace GameAiBehaviour.Editor {
                 }
             }
         }
+        public float NodeWidth {
+            get => style.width.value.value;
+            set => style.width = value;
+        }
         public Node Node { get; private set; }
         public Port Input { get; private set; }
         public Port Output { get; private set; }
@@ -91,6 +95,7 @@ namespace GameAiBehaviour.Editor {
             title = node.title;
             SubTitle = node.SubTitle;
             Description = node.Description;
+            NodeWidth = node.NodeWidth;
 
             // 座標設定
             style.left = Node.position.x;
