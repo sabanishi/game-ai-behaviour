@@ -141,6 +141,24 @@ namespace GameAiBehaviour.Editor {
             var etcNode = new TreeNode("Etc");
             rootNode.children.Add(etcNode);
             AddNode(etcNode, typeof(FunctionRootNode));
+            
+            // ノードの並び変え
+            void SortNode(TreeNode baseNode) {
+                if (baseNode.children.Count <= 0) {
+                    return;
+                }
+                
+                baseNode.children.Sort((a, b) => String.Compare(a.name, b.name, StringComparison.Ordinal));
+
+                foreach (var child in baseNode.children) {
+                    SortNode(child);
+                }
+            }
+
+            // Root直下はソートしない
+            foreach (var node in rootNode.children) {
+                SortNode(node);
+            }
 
             return rootNode;
         }
