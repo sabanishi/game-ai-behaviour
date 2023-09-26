@@ -173,7 +173,7 @@ namespace GameAiBehaviour {
         /// <summary>説明文</summary>
         public virtual string Description => "";
         /// <summary>ノード幅</summary>
-        public virtual float NodeWidth => 100.0f;
+        public virtual float NodeWidth => 150.0f;
 
         /// <summary>
         /// ロジックの生成
