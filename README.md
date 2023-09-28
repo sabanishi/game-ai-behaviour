@@ -166,7 +166,7 @@ _controller.BindActionNodeHandler<FooNode, FooNodeHandler>(onInit: handler => {
   * Force SuccessをONにした場合は、失敗した時も自身が成功となる
 
 * Random Sequencer Node  
-![random_selector](https://github.com/DaitokuAmy/game-ai-behaviour/assets/6957962/0e777139-7407-4612-a8b3-a05616115796)
+![random_sequencer](https://github.com/DaitokuAmy/game-ai-behaviour/assets/6957962/0de40cd8-7218-499b-95d5-b9e30e4a4ca9)
   * 割り当てられたWeightに合わせて確率で子ノードを実行するノード
   * 抽選された子ノードが失敗した場合、自身も失敗となる
   * 子ノードが成功した場合、次の子ノードを抽選し続ける
