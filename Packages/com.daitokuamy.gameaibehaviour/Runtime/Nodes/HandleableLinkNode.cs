@@ -4,7 +4,7 @@ namespace GameAiBehaviour {
     /// <summary>
     /// ランタイムハンドリング可能なLinkNode
     /// </summary>
-    public class HandleableLinkNode : LinkNode {
+    public abstract class HandleableLinkNode : LinkNode {
         private class Logic : Logic<HandleableLinkNode> {
             /// <summary>
             /// コンストラクタ

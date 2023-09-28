@@ -326,6 +326,8 @@ namespace GameAiBehaviour.Editor {
                         var parentView = edge.output.node as NodeView;
                         var childView = edge.input.node as NodeView;
                         BehaviourTreeEditorUtility.DisconnectNode(parentView?.Node, childView?.Node);
+                        parentView?.Refresh();
+                        childView?.Refresh();
                     }
                 });
                 AssetDatabase.SaveAssets();
@@ -350,6 +352,8 @@ namespace GameAiBehaviour.Editor {
                     var childView = edge.input.node as NodeView;
                     BehaviourTreeEditorUtility.ConnectNode(parentView?.Node, childView?.Node);
                     BehaviourTreeEditorUtility.SortChildren(parentView?.Node);
+                    parentView?.Refresh();
+                    childView?.Refresh();
                 });
                 AssetDatabase.SaveAssets();
             }

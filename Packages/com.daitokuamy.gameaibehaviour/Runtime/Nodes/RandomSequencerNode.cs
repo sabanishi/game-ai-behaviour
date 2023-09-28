@@ -31,7 +31,7 @@ namespace GameAiBehaviour {
                         return Random.Range(0, weight);
                     })
                     .ToArray();
-                
+
                 for (var i = 0; i < orderedIndices.Length; i++) {
                     var index = orderedIndices[i];
                     var node = Node.children[index];
@@ -57,6 +57,37 @@ namespace GameAiBehaviour {
 
         [Tooltip("実行順番抽選の重み")]
         public FloatChildNodeValueGroup weights;
+
+        public override float NodeWidth => 185.0f;
+
+#if UNITY_EDITOR
+        public override string Description {
+            get {
+                if (children.Length != weights.Count) {
+                    var weightCount = weights.Count;
+                    
+                    // 子の要素数にWeightの要素数を合わせる
+                    for (var i = weightCount; i < children.Length; i++) {
+                        weights.Set(i, 1.0f);
+                    }
+
+                    if (weightCount > children.Length) {
+                        weights.SetCount(children.Length);
+                    }
+                }
+                
+                if (!weights.Any()) {
+                    return "Empty Children";
+                }
+                
+                var lines = weights.Select((x, i) => {
+                    var nodeName = BehaviourTreeEditorUtility.GetNodeDisplayTitle(children[i]);
+                    return $"[{x}]{nodeName}";
+                });
+                return string.Join('\n', lines);
+            }
+        }
+#endif
 
         /// <summary>
         /// ロジックの生成
