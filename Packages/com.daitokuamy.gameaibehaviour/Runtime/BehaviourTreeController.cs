@@ -89,13 +89,15 @@ namespace GameAiBehaviour {
         /// <param name="updateFunc">更新関数</param>
         /// <param name="enterAction">開始関数</param>
         /// <param name="exitAction">終了関数</param>
+        /// <param name="cancelAction">キャンセル関数</param>
         public void BindActionNodeHandler<TNode>(Func<TNode, IActionNodeHandler.State> updateFunc,
-            Func<TNode, bool> enterAction = null, Action<TNode> exitAction = null)
+            Func<TNode, bool> enterAction = null, Action<TNode> exitAction = null, Action<TNode> cancelAction = null)
             where TNode : HandleableActionNode {
             BindActionNodeHandler<TNode, ObserveActionNodeHandler<TNode>>(handler => {
                 handler.SetEnterAction(enterAction);
                 handler.SetUpdateFunc(updateFunc);
                 handler.SetExitAction(exitAction);
+                handler.SetCancelAction(cancelAction);
             });
         }
 
