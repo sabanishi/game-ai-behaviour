@@ -28,4 +28,8 @@ public class SampleLogNodeHandler : ActionNodeHandler<SampleLogNode> {
     protected override IActionNodeHandler.State OnUpdateInternal(SampleLogNode node) {
         return IActionNodeHandler.State.Success;
     }
+
+    protected override void OnCancelInternal(SampleLogNode node) {
+        Debug.Log("Canceled action node handler");
+    }
 }

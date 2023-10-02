@@ -58,4 +58,8 @@ public class SampleMoveNodeHandler : ActionNodeHandler<SampleMoveNode> {
         _cancellationTokenSource.Dispose();
         _cancellationTokenSource = null;
     }
+
+    protected override void OnCancelInternal(SampleMoveNode node) {
+        Debug.Log("Canceled action node handler");
+    }
 }

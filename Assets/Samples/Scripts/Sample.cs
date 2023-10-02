@@ -35,6 +35,10 @@ public class Sample : MonoBehaviour, IBehaviourTreeControllerProvider {
             Debug.Log($"ResultState:{result}");
             _prevResultState = result;
         }
+
+        if (Input.GetKeyDown(KeyCode.D)) {
+            _controller.Dispose();
+        }
     }
 
     private void OnDestroy() {

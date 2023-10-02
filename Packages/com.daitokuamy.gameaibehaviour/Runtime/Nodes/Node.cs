@@ -100,9 +100,12 @@ namespace GameAiBehaviour {
             /// キャンセル処理
             /// </summary>
             void ILogic.Cancel() {
-                if (State != State.Inactive) {
+                if (State == State.Running) {
                     CancelInternal();
                 }
+                
+                // ステートをInactiveにする
+                State = State.Inactive;
             }
 
             /// <summary>

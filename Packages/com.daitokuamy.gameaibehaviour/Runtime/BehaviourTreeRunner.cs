@@ -198,7 +198,7 @@ namespace GameAiBehaviour {
                 if (removeKey is HandleableActionNode actionNode) {
                     var logic = runner.GetLogic(actionNode);
                     if (logic != null) {
-                        if (logic.State != Node.State.Inactive) {
+                        if (logic.State == Node.State.Running) {
                             _actionNodeHandlers[removeKey].OnCancel(actionNode);
                         }
                     }
@@ -218,7 +218,7 @@ namespace GameAiBehaviour {
                 if (pair.Key is HandleableActionNode actionNode) {
                     var logic = runner.GetLogic(actionNode);
                     if (logic != null) {
-                        if (logic.State != Node.State.Inactive) {
+                        if (logic.State == Node.State.Running) {
                             _actionNodeHandlers[pair.Key].OnCancel(actionNode);
                         }
                     }

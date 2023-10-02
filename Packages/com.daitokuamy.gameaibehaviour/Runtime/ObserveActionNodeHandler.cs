@@ -9,6 +9,7 @@ namespace GameAiBehaviour {
         private Func<TNode, bool> _enterFunc;
         private Func<TNode, IActionNodeHandler.State> _updateFunc;
         private Action<TNode> _exitAction;
+        private Action<TNode> _cancelAction;
 
         /// <summary>
         /// コンストラクタ
@@ -38,6 +39,13 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// キャンセル時処理登録
+        /// </summary>
+        public void SetCancelAction(Action<TNode> cancelAction) {
+            _cancelAction = cancelAction;
+        }
+
+        /// <summary>
         /// 実行ノードの開始処理
         /// </summary>
         protected override bool OnEnterInternal(TNode node) {
@@ -56,6 +64,13 @@ namespace GameAiBehaviour {
         /// </summary>
         protected override void OnExitInternal(TNode node) {
             _exitAction?.Invoke(node);
+        }
+
+        /// <summary>
+        /// 実行ノードのキャンセル処理
+        /// </summary>
+        protected override void OnCancelInternal(TNode node) {
+            _cancelAction?.Invoke(node);
         }
     }
 }

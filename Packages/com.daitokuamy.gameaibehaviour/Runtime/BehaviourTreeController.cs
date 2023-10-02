@@ -55,7 +55,7 @@ namespace GameAiBehaviour {
         /// 廃棄処理
         /// </summary>
         public void Dispose() {
-            if (!_disposed) {
+            if (_disposed) {
                 return;
             }
 
