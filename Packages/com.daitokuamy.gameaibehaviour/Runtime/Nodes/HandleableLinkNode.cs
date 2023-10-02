@@ -16,7 +16,7 @@ namespace GameAiBehaviour {
             /// 実行ルーチン
             /// </summary>
             protected override IEnumerator ExecuteRoutineInternal() {
-                var handler = Controller.GetLinkNodeHandler(Node);
+                var handler = Runner.GetLinkNodeHandler(Node);
 
                 // 何もなければ成功して終わる
                 if (handler == null) {

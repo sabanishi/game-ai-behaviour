@@ -14,9 +14,9 @@
         Blackboard Blackboard { get; }
 
         /// <summary>
-        /// ノードにBindされているActionNodeHandlerの取得
+        /// ActionNodeHandlerの生成
         /// </summary>
-        IActionNodeHandler GetActionNodeHandler(HandleableActionNode node);
+        IActionNodeHandler CreateActionNodeHandler(HandleableActionNode node);
 
         /// <summary>
         /// ノードにBindされているLinkNodeHandlerの取得

@@ -10,7 +10,7 @@ namespace GameAiBehaviour {
         /// <summary>
         /// ActionHandler情報
         /// </summary>
-        private class ActionHandlerInfo {
+        internal class ActionHandlerInfo {
             public Type Type;
             public Action<object> InitAction;
         }
@@ -23,8 +23,6 @@ namespace GameAiBehaviour {
         private float _tickTimer;
         // アクションハンドラ情報
         private readonly Dictionary<Type, ActionHandlerInfo> _actionHandlerInfos = new();
-        // アクションノードハンドラ
-        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new();
         // リンクノードハンドラ
         private readonly Dictionary<Type, ILinkNodeHandler> _linkNodeHandlers = new();
         // コンディションハンドラ
@@ -60,7 +58,7 @@ namespace GameAiBehaviour {
             if (!_disposed) {
                 return;
             }
-            
+
             Cleanup();
 
             _disposed = true;
@@ -110,15 +108,14 @@ namespace GameAiBehaviour {
                 return;
             }
 
-            _actionHandlerInfos.Remove(typeof(TNode));
-
             // 既に登録済のHandlerがあった場合は削除する
-            var removeKeys = _actionNodeHandlers.Keys
-                .Where(x => x.GetType() == typeof(TNode))
-                .ToArray();
-            foreach (var removeKey in removeKeys) {
-                _actionNodeHandlers.Remove(removeKey);
+            _baseRunner?.RemoveActionNodeHandlers(typeof(TNode));
+            foreach (var pair in _subRoutineRunners) {
+                pair.Value.RemoveActionNodeHandlers(typeof(TNode));
             }
+
+            // Handler情報を削除
+            _actionHandlerInfos.Remove(typeof(TNode));
         }
 
         /// <summary>
@@ -129,8 +126,14 @@ namespace GameAiBehaviour {
                 return;
             }
 
+            // 既に登録済のHandlerがあった場合は削除する
+            _baseRunner?.RemoveActionNodeHandlers();
+            foreach (var pair in _subRoutineRunners) {
+                pair.Value.RemoveActionNodeHandlers();
+            }
+
+            // Handler情報を削除
             _actionHandlerInfos.Clear();
-            _actionNodeHandlers.Clear();
         }
 
         /// <summary>
@@ -315,7 +318,6 @@ namespace GameAiBehaviour {
 
             Tree = null;
             _actionHandlerInfos.Clear();
-            _actionNodeHandlers.Clear();
             _linkNodeHandlers.Clear();
             _conditionHandlers.Clear();
         }
@@ -357,27 +359,18 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
-        /// ActionNodeのハンドリング用インスタンスを取得
+        /// ActionNodeHandlerの生成
         /// </summary>
-        IActionNodeHandler IBehaviourTreeController.GetActionNodeHandler(HandleableActionNode node) {
-            if (node == null) {
-                return null;
-            }
-
-            if (_actionNodeHandlers.TryGetValue(node, out var handler)) {
-                return handler;
-            }
-
-            // 無ければ生成
+        IActionNodeHandler IBehaviourTreeController.CreateActionNodeHandler(HandleableActionNode node) {
+            var handler = default(IActionNodeHandler);
             if (_actionHandlerInfos.TryGetValue(node.GetType(), out var handlerInfo)) {
                 var constructorInfo = handlerInfo.Type.GetConstructor(Type.EmptyTypes);
                 if (constructorInfo != null) {
                     handler = (IActionNodeHandler)constructorInfo.Invoke(Array.Empty<object>());
-                    _actionNodeHandlers[node] = handler;
                     handlerInfo.InitAction?.Invoke(handler);
                 }
             }
-
+            
             return handler;
         }
 

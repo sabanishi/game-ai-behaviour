@@ -11,7 +11,17 @@
         /// <summary>
         /// ノード用ロジックを検索
         /// </summary>
-        Node.ILogic FindLogic(Node node);
+        Node.ILogic GetLogic(Node node);
+
+        /// <summary>
+        /// ノードにBindされているActionNodeHandlerの取得
+        /// </summary>
+        IActionNodeHandler GetActionNodeHandler(HandleableActionNode node);
+
+        /// <summary>
+        /// ノードにBindされているLinkNodeHandlerの取得
+        /// </summary>
+        ILinkNodeHandler GetLinkNodeHandler(HandleableLinkNode node);
 
         /// <summary>
         /// 実行パスの追加

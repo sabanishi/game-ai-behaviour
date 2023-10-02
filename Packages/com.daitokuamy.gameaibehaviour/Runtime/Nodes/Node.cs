@@ -142,7 +142,7 @@ namespace GameAiBehaviour {
             /// ノードの実行
             /// </summary>
             protected IEnumerator ExecuteNodeRoutine(Node node, Action<State> onResult) {
-                var logic = Runner.FindLogic(node);
+                var logic = Runner.GetLogic(node);
 
                 // Logicが存在しない場合、完了扱い
                 if (logic == null) {

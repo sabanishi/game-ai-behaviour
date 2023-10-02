@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -26,7 +27,9 @@ namespace GameAiBehaviour {
         private readonly List<Path> _executedPaths = new List<Path>();
         // 思考時間
         private float _thinkTime;
-        
+        // アクションノードハンドラ
+        private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new();
+
         // 現在の実行状態
         public Node.State CurrentState => _startNodeLogic?.State ?? Node.State.Inactive;
         // 実行中か
@@ -65,6 +68,9 @@ namespace GameAiBehaviour {
         public void Cleanup() {
             ResetThink();
 
+            // Handlerを解放
+            RemoveActionNodeHandlers();
+
             _startNode = null;
             foreach (var logics in _logicPools.Values) {
                 foreach (var logic in logics) {
@@ -101,7 +107,7 @@ namespace GameAiBehaviour {
                 onReset?.Invoke();
 
                 // 起点NodeのRoutineを生成
-                var startNodeLogic = ((IBehaviourTreeRunner)this).FindLogic(_startNode);
+                var startNodeLogic = ((IBehaviourTreeRunner)this).GetLogic(_startNode);
                 _nodeLogicRoutine = new NodeLogicRoutine(startNodeLogic.ExecuteRoutine());
                 _startNodeLogic = startNodeLogic;
 
@@ -113,9 +119,9 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
-        /// ノード用ロジックを検索
+        /// ノード用ロジックを取得(無ければ生成)
         /// </summary>
-        Node.ILogic IBehaviourTreeRunner.FindLogic(Node node) {
+        Node.ILogic IBehaviourTreeRunner.GetLogic(Node node) {
             if (node == null) {
                 return null;
             }
@@ -144,10 +150,82 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// ActionNodeHandlerの取得
+        /// </summary>
+        IActionNodeHandler IBehaviourTreeRunner.GetActionNodeHandler(HandleableActionNode node) {
+            if (node == null) {
+                return null;
+            }
+
+            if (_actionNodeHandlers.TryGetValue(node, out var handler)) {
+                return handler;
+            }
+
+            // 無ければ生成
+            handler = Controller.CreateActionNodeHandler(node);
+            if (handler != null) {
+                _actionNodeHandlers[node] = handler;
+            }
+
+            return handler;
+        }
+
+        /// <summary>
+        /// LinkNodeHandlerの取得
+        /// </summary>
+        ILinkNodeHandler IBehaviourTreeRunner.GetLinkNodeHandler(HandleableLinkNode node) {
+            return Controller.GetLinkNodeHandler(node);
+        }
+
+        /// <summary>
         /// 実行パスの追加
         /// </summary>
         void IBehaviourTreeRunner.AddExecutedPath(Node.ILogic prev, Node.ILogic next) {
             _executedPaths.Add(new Path { PrevNodeLogic = prev, NextNodeLogic = next });
+        }
+
+        /// <summary>
+        /// ActionNodeHandlerを削除する
+        /// </summary>
+        internal void RemoveActionNodeHandlers(Type nodeType) {
+            var removeKeys = _actionNodeHandlers.Keys
+                .Where(x => x.GetType() == nodeType)
+                .ToArray();
+            var runner = (IBehaviourTreeRunner)this;
+
+            foreach (var removeKey in removeKeys) {
+                // 登録解除時に事前にキャンセルを呼び出し
+                if (removeKey is HandleableActionNode actionNode) {
+                    var logic = runner.GetLogic(actionNode);
+                    if (logic != null) {
+                        if (logic.State != Node.State.Inactive) {
+                            _actionNodeHandlers[removeKey].OnCancel(actionNode);
+                        }
+                    }
+                }
+
+                _actionNodeHandlers.Remove(removeKey);
+            }
+        }
+
+        /// <summary>
+        /// ActionNodeHandlerを削除する
+        /// </summary>
+        internal void RemoveActionNodeHandlers() {
+            var runner = (IBehaviourTreeRunner)this;
+            foreach (var pair in _actionNodeHandlers) {
+                // 登録解除時に事前にキャンセルを呼び出し
+                if (pair.Key is HandleableActionNode actionNode) {
+                    var logic = runner.GetLogic(actionNode);
+                    if (logic != null) {
+                        if (logic.State != Node.State.Inactive) {
+                            _actionNodeHandlers[pair.Key].OnCancel(actionNode);
+                        }
+                    }
+                }
+            }
+
+            _actionNodeHandlers.Clear();
         }
     }
 }

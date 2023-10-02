@@ -17,7 +17,7 @@ namespace GameAiBehaviour {
             /// 実行ルーチン
             /// </summary>
             protected sealed override IEnumerator ExecuteActionRoutineInternal() {
-                var handler = Controller.GetActionNodeHandler(Node);
+                var handler = Runner.GetActionNodeHandler(Node);
 
                 // Handlerが無ければ、ログを出して終了
                 if (handler == null) {
@@ -64,7 +64,7 @@ namespace GameAiBehaviour {
             protected override void CancelInternal() {
                 base.CancelInternal();
                 
-                var handler = Controller.GetActionNodeHandler(Node);
+                var handler = Runner.GetActionNodeHandler(Node);
 
                 // サブルーチン停止
                 if (Node.subRoutine != null) {
