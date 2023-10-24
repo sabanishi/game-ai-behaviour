@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.Callbacks;
+using UnityEditor.UIElements;
 
 namespace GameAiBehaviour.Editor {
     /// <summary>
@@ -15,6 +16,7 @@ namespace GameAiBehaviour.Editor {
         private BehaviourTree _target;
 
         // UIElement
+        private ObjectField _objectField;
         private BehaviourTreeView _behaviourTreeView;
         private InspectorView _inspectorView;
         private BlackboardView _blackboardView;
@@ -32,8 +34,7 @@ namespace GameAiBehaviour.Editor {
                 return;
             }
 
-            var window =
-                GetWindow<BehaviourTreeEditorWindow>(
+            var window = GetWindow<BehaviourTreeEditorWindow>(
                     ObjectNames.NicifyVariableName(nameof(BehaviourTreeEditorWindow)));
             window.Setup(data);
         }
@@ -63,10 +64,18 @@ namespace GameAiBehaviour.Editor {
             var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uss");
             root.styleSheets.Add(styleSheet);
 
+            _objectField = root.Q<ObjectField>();
             _behaviourTreeView = root.Q<BehaviourTreeView>();
             _inspectorView = root.Q<InspectorView>();
             _blackboardView = root.Q<BlackboardView>();
 
+            _objectField.value = _target;
+            _objectField.RegisterValueChangedCallback(evt => {
+                // 開いているTreeの変更
+                if (_target != evt.newValue) {
+                    Setup(evt.newValue as BehaviourTree);
+                }
+            });
             _behaviourTreeView.OnChangedSelectionNodeViews = nodeViews => {
                 // 選択対象の更新
                 _inspectorView.UpdateSelection(nodeViews.Select(x => (Object)x.Node).ToArray());
@@ -140,6 +149,7 @@ namespace GameAiBehaviour.Editor {
             var serializedObj = data != null ? new SerializedObject(data) : null;
             CleanBehaviourTree(data);
             _target = data;
+            _objectField.value = _target;
             _behaviourTreeView.Load(_target);
             _blackboardView.SetBehaviourTreeObject(serializedObj);
             _inspectorView.SetBehaviourTree(_target);

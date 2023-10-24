@@ -1,8 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="True">
-    <Style src="project://database/Assets/GameAiBehaviour/Editor/Resources/behaviour_tree_editor_window.uss?fileID=7433441132597879392&amp;guid=4b821d14c037ef641afcaf1aead615ab&amp;type=3#behaviour_tree_editor_window" />
-    <uie:Toolbar style="display: none;">
-        <uie:ToolbarMenu display-tooltip-when-elided="true" text="Assets" />
-    </uie:Toolbar>
+    <Style src="project://database/Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uss?fileID=7433441132597879392&amp;guid=4b821d14c037ef641afcaf1aead615ab&amp;type=3#behaviour_tree_editor_window" />
+    <uie:ObjectField allow-scene-objects="false" type="GameAiBehaviour.BehaviourTree, GameAiBehaviour" />
     <GameAiBehaviour.Editor.SplitView fixed-pane-initial-dimension="250" fixed-pane-index="1">
         <ui:VisualElement name="left-panel">
             <ui:Label text="Tree View" display-tooltip-when-elided="true" style="background-color: rgb(25, 25, 25); padding-left: 2px; padding-right: 2px; padding-top: 2px; padding-bottom: 2px;" />
