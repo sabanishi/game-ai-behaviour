@@ -89,6 +89,44 @@ namespace GameAiBehaviour.Editor {
                     }
                 }
             };
+            _behaviourTreeView.OnAlignmentSelectionNodes = (nodeViews, alignmentType) => {
+                // 整列
+                if (nodeViews.Length <= 0) {
+                    return;
+                }
+
+                // 全体を取り込んだサイズの取得
+                var mergedRect = nodeViews[0].GetPosition();
+                for (var i = 1; i < nodeViews.Length; i++) {
+                    var rect = nodeViews[i].GetPosition();
+                    mergedRect.min = Vector2.Min(mergedRect.min, rect.min);
+                    mergedRect.max = Vector2.Max(mergedRect.max, rect.max);
+                }
+                
+                // 位置を補正
+                for (var i = 0; i < nodeViews.Length; i++) {
+                    var nodeView = nodeViews[i];
+                    var rect = nodeView.GetPosition();
+                    var offset = Vector2.zero;
+                    switch (alignmentType) {
+                        case BehaviourTreeView.AlignmentType.Top:
+                            offset.y = mergedRect.yMin - rect.yMin;
+                            break;
+                        case BehaviourTreeView.AlignmentType.Bottom:
+                            offset.y = mergedRect.yMax - rect.yMax;
+                            break;
+                        case BehaviourTreeView.AlignmentType.Left:
+                            offset.x = mergedRect.xMin - rect.xMin;
+                            break;
+                        case BehaviourTreeView.AlignmentType.Right:
+                            offset.x = mergedRect.xMax - rect.xMax;
+                            break;
+                    }
+
+                    rect.position += offset;
+                    nodeView.SetPosition(rect);
+                }
+            };
 
             // ノード生成処理
             var provider = CreateInstance<CreateNodeSearchWindowProvider>();

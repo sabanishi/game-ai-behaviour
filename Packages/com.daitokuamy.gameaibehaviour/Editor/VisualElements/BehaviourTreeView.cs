@@ -13,6 +13,16 @@ namespace GameAiBehaviour.Editor {
     /// BehaviourTree表示用のGraphView
     /// </summary>
     public class BehaviourTreeView : GraphView {
+        /// <summary>
+        /// 整列用のタイプ
+        /// </summary>
+        public enum AlignmentType {
+            Top,
+            Bottom,
+            Left,
+            Right,
+        }
+        
         public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> {
         }
 
@@ -29,6 +39,7 @@ namespace GameAiBehaviour.Editor {
         private List<NodeEdge> _tempNodeEdges = new List<NodeEdge>();
 
         public Action<NodeView[]> OnChangedSelectionNodeViews;
+        public Action<NodeView[], AlignmentType> OnAlignmentSelectionNodes;
         public BehaviourTree Data { get; private set; }
 
         /// <summary>
@@ -84,6 +95,21 @@ namespace GameAiBehaviour.Editor {
             }));
 
             return compatiblePorts;
+        }
+
+        /// <summary>
+        /// コンテキストメニューのビルド
+        /// </summary>
+        /// <param name="evt"></param>
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt) {
+            base.BuildContextualMenu(evt);
+
+            foreach (AlignmentType alignmentType in Enum.GetValues(typeof(AlignmentType))) {
+                var type = alignmentType;
+                evt.menu.AppendAction($"Alignment/{alignmentType}", action => {
+                    OnAlignmentSelectionNodes?.Invoke(selection.OfType<NodeView>().ToArray(), type);
+                });
+            }
         }
 
         /// <summary>
