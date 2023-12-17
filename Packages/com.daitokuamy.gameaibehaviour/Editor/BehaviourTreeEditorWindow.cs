@@ -35,7 +35,7 @@ namespace GameAiBehaviour.Editor {
             }
 
             var window = GetWindow<BehaviourTreeEditorWindow>(
-                    ObjectNames.NicifyVariableName(nameof(BehaviourTreeEditorWindow)));
+                ObjectNames.NicifyVariableName(nameof(BehaviourTreeEditorWindow)));
             window.Setup(data);
         }
 
@@ -59,9 +59,11 @@ namespace GameAiBehaviour.Editor {
         private void CreateGUI() {
             // Xml, Style読み込み
             var root = rootVisualElement;
-            var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uxml");
+            var uxml = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
+                "Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uxml");
             uxml.CloneTree(root);
-            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>("Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uss");
+            var styleSheet = AssetDatabase.LoadAssetAtPath<StyleSheet>(
+                "Packages/com.daitokuamy.gameaibehaviour/Editor/Layouts/behaviour_tree_editor_window.uss");
             root.styleSheets.Add(styleSheet);
 
             _objectField = root.Q<ObjectField>();
@@ -89,7 +91,7 @@ namespace GameAiBehaviour.Editor {
                     }
                 }
             };
-            _behaviourTreeView.OnAlignmentSelectionNodes = (nodeViews, alignmentType) => {
+            _behaviourTreeView.OnAlignmentSelectionNodeViews = (nodeViews, alignmentType) => {
                 // 整列
                 if (nodeViews.Length <= 0) {
                     return;
@@ -102,7 +104,7 @@ namespace GameAiBehaviour.Editor {
                     mergedRect.min = Vector2.Min(mergedRect.min, rect.min);
                     mergedRect.max = Vector2.Max(mergedRect.max, rect.max);
                 }
-                
+
                 // 位置を補正
                 for (var i = 0; i < nodeViews.Length; i++) {
                     var nodeView = nodeViews[i];
@@ -115,6 +117,12 @@ namespace GameAiBehaviour.Editor {
                         case BehaviourTreeView.AlignmentType.Bottom:
                             offset.y = mergedRect.yMax - rect.yMax;
                             break;
+                        case BehaviourTreeView.AlignmentType.CenterH:
+                            offset.y = mergedRect.center.y - rect.center.y;
+                            break;
+                        case BehaviourTreeView.AlignmentType.CenterV:
+                            offset.x = mergedRect.center.x - rect.center.x;
+                            break;
                         case BehaviourTreeView.AlignmentType.Left:
                             offset.x = mergedRect.xMin - rect.xMin;
                             break;
@@ -125,6 +133,12 @@ namespace GameAiBehaviour.Editor {
 
                     rect.position += offset;
                     nodeView.SetPosition(rect);
+                }
+            };
+            _behaviourTreeView.OnConnectAllSelectionNodeViews = (connectNodeView, connectedNodeViews) => {
+                // 一括接続
+                foreach (var toNodeView in connectedNodeViews) {
+                    _behaviourTreeView.ConnectNodeView(connectNodeView, toNodeView);
                 }
             };
 
@@ -276,7 +290,7 @@ namespace GameAiBehaviour.Editor {
             }
 
             serializedObj.ApplyModifiedPropertiesWithoutUndo();
-            
+
             // アセットに不備があった場合、SubAssetsをクリーンアップする
             if (cleanAsset) {
                 BehaviourTreeEditorUtility.RemoveMissingSubAssets(tree);

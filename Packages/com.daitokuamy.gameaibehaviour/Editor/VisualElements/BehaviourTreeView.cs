@@ -19,10 +19,12 @@ namespace GameAiBehaviour.Editor {
         public enum AlignmentType {
             Top,
             Bottom,
+            CenterH,
+            CenterV,
             Left,
             Right,
         }
-        
+
         public new class UxmlFactory : UxmlFactory<BehaviourTreeView, UxmlTraits> {
         }
 
@@ -39,7 +41,8 @@ namespace GameAiBehaviour.Editor {
         private List<NodeEdge> _tempNodeEdges = new List<NodeEdge>();
 
         public Action<NodeView[]> OnChangedSelectionNodeViews;
-        public Action<NodeView[], AlignmentType> OnAlignmentSelectionNodes;
+        public Action<NodeView, NodeView[]> OnConnectAllSelectionNodeViews;
+        public Action<NodeView[], AlignmentType> OnAlignmentSelectionNodeViews;
         public BehaviourTree Data { get; private set; }
 
         /// <summary>
@@ -106,10 +109,43 @@ namespace GameAiBehaviour.Editor {
 
             foreach (AlignmentType alignmentType in Enum.GetValues(typeof(AlignmentType))) {
                 var type = alignmentType;
-                evt.menu.AppendAction($"Alignment/{alignmentType}", action => {
-                    OnAlignmentSelectionNodes?.Invoke(selection.OfType<NodeView>().ToArray(), type);
-                });
+                evt.menu.AppendAction($"Alignment/{alignmentType}",
+                    action => { OnAlignmentSelectionNodeViews?.Invoke(selection.OfType<NodeView>().ToArray(), type); });
+                if (evt.target is NodeView nodeView) {
+                    if (CheckConnectableNode(nodeView.Node)) {
+                        evt.menu.InsertAction(0, "Connect all",
+                            action => {
+                                OnConnectAllSelectionNodeViews?.Invoke(nodeView,
+                                    selection.OfType<NodeView>().Where(x => x != nodeView && !CheckRootNode(x.Node))
+                                        .ToArray());
+                            });
+                    }
+                }
             }
+        }
+
+        /// <summary>
+        /// 選択状態の追加
+        /// </summary>
+        public override void AddToSelection(ISelectable selectable) {
+            base.AddToSelection(selectable);
+            OnChangedSelectionNodeViews?.Invoke(selection.OfType<NodeView>().ToArray());
+        }
+
+        /// <summary>
+        /// 選択状態の削除
+        /// </summary>
+        public override void RemoveFromSelection(ISelectable selectable) {
+            base.RemoveFromSelection(selectable);
+            OnChangedSelectionNodeViews?.Invoke(selection.OfType<NodeView>().ToArray());
+        }
+
+        /// <summary>
+        /// 選択状態のクリア
+        /// </summary>
+        public override void ClearSelection() {
+            base.ClearSelection();
+            OnChangedSelectionNodeViews?.Invoke(Array.Empty<NodeView>());
         }
 
         /// <summary>
@@ -163,6 +199,32 @@ namespace GameAiBehaviour.Editor {
 
             var nodeView = new NodeView(node);
             AddElement(nodeView);
+        }
+
+        /// <summary>
+        /// NodeViewの接続
+        /// </summary>
+        public void ConnectNodeView(NodeView from, NodeView to) {
+            if (from == null || to == null) {
+                return;
+            }
+
+            if (!CheckConnectableNode(from.Node)) {
+                return;
+            }
+
+            if (CheckRootNode(to.Node)) {
+                return;
+            }
+
+            // エッジを接続して通知
+            var edge = CreateEdge(from.Node, to.Node);
+            if (edge != null) {
+                var change = new GraphViewChange();
+                change.edgesToCreate = new();
+                change.edgesToCreate.Add(edge);
+                graphViewChanged?.Invoke(change);
+            }
         }
 
         /// <summary>
@@ -247,43 +309,29 @@ namespace GameAiBehaviour.Editor {
         }
 
         /// <summary>
-        /// 選択状態の追加
-        /// </summary>
-        public override void AddToSelection(ISelectable selectable) {
-            base.AddToSelection(selectable);
-            OnChangedSelectionNodeViews?.Invoke(selection.OfType<NodeView>().ToArray());
-        }
-
-        /// <summary>
-        /// 選択状態の削除
-        /// </summary>
-        public override void RemoveFromSelection(ISelectable selectable) {
-            base.RemoveFromSelection(selectable);
-            OnChangedSelectionNodeViews?.Invoke(selection.OfType<NodeView>().ToArray());
-        }
-
-        /// <summary>
-        /// 選択状態のクリア
-        /// </summary>
-        public override void ClearSelection() {
-            base.ClearSelection();
-            OnChangedSelectionNodeViews?.Invoke(Array.Empty<NodeView>());
-        }
-
-        /// <summary>
         /// Edgeの生成
         /// </summary>
-        private void CreateEdge(Node parentNode, Node child) {
+        private NodeEdge CreateEdge(Node parentNode, Node child) {
             if (parentNode == null || child == null) {
-                return;
+                return null;
             }
 
             var parentElement = GetElementByGuid(parentNode.guid) as NodeView;
             var childElement = GetElementByGuid(child.guid) as NodeView;
-            if (parentElement != null && childElement != null) {
-                var edge = parentElement.Output.ConnectTo<NodeEdge>(childElement.Input);
-                AddElement(edge);
+            if (parentElement == null || childElement == null) {
+                return null;
             }
+
+            foreach (var connection in parentElement.Output.connections) {
+                if (connection.input.node == childElement) {
+                    // 既に接続済み
+                    return null;
+                }
+            }
+
+            var edge = parentElement.Output.ConnectTo<NodeEdge>(childElement.Input);
+            AddElement(edge);
+            return edge;
         }
 
         /// <summary>
@@ -324,6 +372,36 @@ namespace GameAiBehaviour.Editor {
             serializedObj.Update();
             rootNodeProp.objectReferenceValue = rootNode;
             serializedObj.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// 子要素を接続可能なノードかチェック
+        /// </summary>
+        private bool CheckConnectableNode(Node node) {
+            if (node is ActionNode) {
+                return false;
+            }
+
+            if (node is LinkNode) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// ルートノード(接続不可能)かチェック
+        /// </summary>
+        private bool CheckRootNode(Node node) {
+            if (node is RootNode) {
+                return true;
+            }
+
+            if (node is FunctionRootNode) {
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
