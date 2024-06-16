@@ -192,6 +192,9 @@ namespace GameAiBehaviour.Editor {
 
             // LogicStateの反映
             _behaviourTreeView.RefreshNodeLogicState();
+            
+            // 描画の反映
+            Repaint();
         }
 
         /// <summary>
