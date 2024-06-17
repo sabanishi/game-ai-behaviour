@@ -11,10 +11,19 @@ namespace GameAiBehaviour {
         private readonly Dictionary<string, string> _stringProperties = new Dictionary<string, string>();
         private readonly Dictionary<string, bool> _booleanProperties = new Dictionary<string, bool>();
 
+        private readonly Dictionary<string, int> _constIntegerProperties = new Dictionary<string, int>();
+        private readonly Dictionary<string, float> _constFloatProperties = new Dictionary<string, float>();
+        private readonly Dictionary<string, string> _constStringProperties = new Dictionary<string, string>();
+        private readonly Dictionary<string, bool> _constBooleanProperties = new Dictionary<string, bool>();
+
         public string[] IntegerPropertyNames => _integerProperties.Keys.ToArray();
         public string[] FloatPropertyNames => _floatProperties.Keys.ToArray();
         public string[] StringPropertyNames => _stringProperties.Keys.ToArray();
         public string[] BooleanPropertyNames => _booleanProperties.Keys.ToArray();
+        public string[] ConstIntegerPropertyNames => _constIntegerProperties.Keys.ToArray();
+        public string[] ConstFloatPropertyNames => _constFloatProperties.Keys.ToArray();
+        public string[] ConstStringPropertyNames => _constStringProperties.Keys.ToArray();
+        public string[] ConstBooleanPropertyNames => _constBooleanProperties.Keys.ToArray();
 
         /// <summary>
         /// プロパティのクリア
@@ -22,8 +31,12 @@ namespace GameAiBehaviour {
         public void Clear() {
             _integerProperties.Clear();
             _floatProperties.Clear();
-            _booleanProperties.Clear();
             _stringProperties.Clear();
+            _booleanProperties.Clear();
+            _constIntegerProperties.Clear();
+            _constFloatProperties.Clear();
+            _constStringProperties.Clear();
+            _constBooleanProperties.Clear();
         }
 
         /// <summary>
@@ -34,6 +47,10 @@ namespace GameAiBehaviour {
                 return val;
             }
 
+            if (_constIntegerProperties.TryGetValue(propertyName, out val)) {
+                return val;
+            }
+
             return defaultValue;
         }
 
@@ -41,6 +58,10 @@ namespace GameAiBehaviour {
         /// Integer型プロパティ野設定
         /// </summary>
         public void SetInteger(string propertyName, int val) {
+            if (!_integerProperties.ContainsKey(propertyName)) {
+                return;
+            }
+            
             _integerProperties[propertyName] = val;
         }
 
@@ -52,6 +73,10 @@ namespace GameAiBehaviour {
                 return val;
             }
 
+            if (_constFloatProperties.TryGetValue(propertyName, out val)) {
+                return val;
+            }
+
             return defaultValue;
         }
 
@@ -59,6 +84,10 @@ namespace GameAiBehaviour {
         /// Float型プロパティ野設定
         /// </summary>
         public void SetFloat(string propertyName, float val) {
+            if (!_floatProperties.ContainsKey(propertyName)) {
+                return;
+            }
+            
             _floatProperties[propertyName] = val;
         }
 
@@ -70,6 +99,10 @@ namespace GameAiBehaviour {
                 return val;
             }
 
+            if (_constStringProperties.TryGetValue(propertyName, out val)) {
+                return val;
+            }
+
             return defaultValue;
         }
 
@@ -77,6 +110,10 @@ namespace GameAiBehaviour {
         /// String型プロパティ野設定
         /// </summary>
         public void SetString(string propertyName, string val) {
+            if (!_stringProperties.ContainsKey(propertyName)) {
+                return;
+            }
+            
             _stringProperties[propertyName] = val;
         }
 
@@ -88,6 +125,10 @@ namespace GameAiBehaviour {
                 return val;
             }
 
+            if (_constBooleanProperties.TryGetValue(propertyName, out val)) {
+                return val;
+            }
+
             return defaultValue;
         }
 
@@ -95,6 +136,10 @@ namespace GameAiBehaviour {
         /// Boolean型プロパティ野設定
         /// </summary>
         public void SetBoolean(string propertyName, bool val) {
+            if (!_booleanProperties.ContainsKey(propertyName)) {
+                return;
+            }
+
             _booleanProperties[propertyName] = val;
         }
     }

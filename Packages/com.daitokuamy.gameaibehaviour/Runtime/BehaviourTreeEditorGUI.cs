@@ -54,6 +54,7 @@ namespace GameAiBehaviour {
             var propertyNames = Array.Empty<string>();
             if (CurrentTree.blackboardAsset != null) {
                 propertyNames = CurrentTree.blackboardAsset.properties
+                    .Concat(CurrentTree.blackboardAsset.constProperties)
                     .Where(x => typeFilters?.Contains(x.propertyType) ?? true)
                     .Select(x => x.propertyName)
                     .ToArray();

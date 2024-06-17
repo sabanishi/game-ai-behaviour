@@ -88,7 +88,7 @@ namespace GameAiBehaviour.Editor {
                         using (var scope = new EditorGUI.ChangeCheckScope()) {
                             var result = onGui.Invoke(key);
                             if (scope.changed) {
-                                onSet.Invoke(key, result);
+                                onSet?.Invoke(key, result);
                             }
                         }
                     }
@@ -107,6 +107,19 @@ namespace GameAiBehaviour.Editor {
                 DrawProperty(blackboard.BooleanPropertyNames,
                     key => EditorGUILayout.Toggle(key, blackboard.GetBoolean(key)),
                     (key, result) => blackboard.SetBoolean(key, result));
+
+                DrawProperty(blackboard.ConstIntegerPropertyNames,
+                    key => EditorGUILayout.IntField(key, blackboard.GetInteger(key)),
+                    null);
+                DrawProperty(blackboard.ConstFloatPropertyNames,
+                    key => EditorGUILayout.FloatField(key, blackboard.GetFloat(key)),
+                    null);
+                DrawProperty(blackboard.ConstStringPropertyNames,
+                    key => EditorGUILayout.TextField(key, blackboard.GetString(key)),
+                    null);
+                DrawProperty(blackboard.ConstBooleanPropertyNames,
+                    key => EditorGUILayout.Toggle(key, blackboard.GetBoolean(key)),
+                    null);
             }
             else {
                 if (_blackboardAsset != null) {

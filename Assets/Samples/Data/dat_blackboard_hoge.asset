@@ -37,3 +37,22 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     booleanValue: 0
+  constProperties:
+  - propertyName: Test
+    propertyType: 0
+    integerValue: 3
+    floatValue: 0
+    stringValue: 
+    booleanValue: 0
+  - propertyName: Foo
+    propertyType: 2
+    integerValue: 0
+    floatValue: 0
+    stringValue: AAA
+    booleanValue: 0
+  - propertyName: Hoge
+    propertyType: 1
+    integerValue: 0
+    floatValue: 1.5
+    stringValue: 
+    booleanValue: 0

@@ -9,5 +9,7 @@ namespace GameAiBehaviour {
     public class BlackboardAsset : ScriptableObject {
         [Tooltip("Blackboardに列挙するプロパティ")]
         public Property[] properties = Array.Empty<Property>();
+        [Tooltip("Blackboardに列挙する定数プロパティ")]
+        public Property[] constProperties = Array.Empty<Property>();
     }
 }

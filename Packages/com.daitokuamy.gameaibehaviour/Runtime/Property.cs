@@ -18,7 +18,7 @@ namespace GameAiBehaviour {
         public string propertyName = "Property Name";
         // プロパティタイプ
         public Type propertyType = Type.Integer;
-
+        
         // 整数型の値
         public int integerValue;
         // 小数型の値
