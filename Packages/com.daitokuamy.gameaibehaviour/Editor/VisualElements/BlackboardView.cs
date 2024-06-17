@@ -107,7 +107,10 @@ namespace GameAiBehaviour.Editor {
                 DrawProperty(blackboard.BooleanPropertyNames,
                     key => EditorGUILayout.Toggle(key, blackboard.GetBoolean(key)),
                     (key, result) => blackboard.SetBoolean(key, result));
-
+                
+                EditorGUILayout.Space();
+                EditorGUILayout.LabelField("[ConstProperties]", EditorStyles.miniBoldLabel);
+                
                 DrawProperty(blackboard.ConstIntegerPropertyNames,
                     key => EditorGUILayout.IntField(key, blackboard.GetInteger(key)),
                     null);
