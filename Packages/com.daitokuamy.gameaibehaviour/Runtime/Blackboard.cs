@@ -58,7 +58,7 @@ namespace GameAiBehaviour {
         /// Integer型プロパティ野設定
         /// </summary>
         public void SetInteger(string propertyName, int val) {
-            if (!_constIntegerProperties.ContainsKey(propertyName)) {
+            if (_constIntegerProperties.ContainsKey(propertyName)) {
                 return;
             }
             
