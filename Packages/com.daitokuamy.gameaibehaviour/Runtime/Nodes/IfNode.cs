@@ -39,6 +39,7 @@ namespace GameAiBehaviour {
         public ConditionGroup conditions = new ConditionGroup();
 
         public override string Description => string.Join("\n", conditions.conditions.Select(x => x.ConditionTitle));
+        public override float NodeWidth => 200.0f;
 
         /// <summary>
         /// ロジックの生成
