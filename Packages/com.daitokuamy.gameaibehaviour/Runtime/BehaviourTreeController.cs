@@ -278,6 +278,23 @@ namespace GameAiBehaviour {
                             break;
                     }
                 }
+                
+                foreach (var property in tree.blackboardAsset.constProperties) {
+                    switch (property.propertyType) {
+                        case Property.Type.Integer:
+                            Blackboard.SetConstInteger(property.propertyName, property.integerValue);
+                            break;
+                        case Property.Type.Float:
+                            Blackboard.SetConstFloat(property.propertyName, property.floatValue);
+                            break;
+                        case Property.Type.String:
+                            Blackboard.SetConstString(property.propertyName, property.stringValue);
+                            break;
+                        case Property.Type.Boolean:
+                            Blackboard.SetConstBoolean(property.propertyName, property.booleanValue);
+                            break;
+                    }
+                }
             }
         }
 

@@ -58,7 +58,7 @@ namespace GameAiBehaviour {
         /// Integer型プロパティ野設定
         /// </summary>
         public void SetInteger(string propertyName, int val) {
-            if (!_integerProperties.ContainsKey(propertyName)) {
+            if (!_constIntegerProperties.ContainsKey(propertyName)) {
                 return;
             }
             
@@ -84,7 +84,7 @@ namespace GameAiBehaviour {
         /// Float型プロパティ野設定
         /// </summary>
         public void SetFloat(string propertyName, float val) {
-            if (!_floatProperties.ContainsKey(propertyName)) {
+            if (_constFloatProperties.ContainsKey(propertyName)) {
                 return;
             }
             
@@ -110,7 +110,7 @@ namespace GameAiBehaviour {
         /// String型プロパティ野設定
         /// </summary>
         public void SetString(string propertyName, string val) {
-            if (!_stringProperties.ContainsKey(propertyName)) {
+            if (_constStringProperties.ContainsKey(propertyName)) {
                 return;
             }
             
@@ -136,11 +136,39 @@ namespace GameAiBehaviour {
         /// Boolean型プロパティ野設定
         /// </summary>
         public void SetBoolean(string propertyName, bool val) {
-            if (!_booleanProperties.ContainsKey(propertyName)) {
+            if (_constBooleanProperties.ContainsKey(propertyName)) {
                 return;
             }
 
             _booleanProperties[propertyName] = val;
+        }
+
+        /// <summary>
+        /// ConstInteger型プロパティ野設定
+        /// </summary>
+        internal void SetConstInteger(string propertyName, int val) {
+            _constIntegerProperties[propertyName] = val;
+        }
+
+        /// <summary>
+        /// ConstFloat型プロパティ野設定
+        /// </summary>
+        internal void SetConstFloat(string propertyName, float val) {
+            _constFloatProperties[propertyName] = val;
+        }
+
+        /// <summary>
+        /// ConstString型プロパティ野設定
+        /// </summary>
+        internal void SetConstString(string propertyName, string val) {
+            _constStringProperties[propertyName] = val;
+        }
+
+        /// <summary>
+        /// ConstBoolean型プロパティ野設定
+        /// </summary>
+        internal void SetConstBoolean(string propertyName, bool val) {
+            _constBooleanProperties[propertyName] = val;
         }
     }
 }
