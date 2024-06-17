@@ -299,6 +299,13 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// 思考タイミングの遅延を設定
+        /// </summary>
+        public void SetTickDelay(float time) {
+            _tickTimer = time;
+        }
+
+        /// <summary>
         /// 終了処理
         /// </summary>
         public void Cleanup() {
