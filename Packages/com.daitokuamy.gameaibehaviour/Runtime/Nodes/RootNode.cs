@@ -21,6 +21,9 @@ namespace GameAiBehaviour {
                 if (child != null) {
                     yield return ExecuteNodeRoutine(child, SetState);
                 }
+                else {
+                    SetState(State.Success);
+                }
             }
         }
 
