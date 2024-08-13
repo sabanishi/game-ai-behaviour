@@ -17,14 +17,7 @@ namespace GameAiBehaviour {
         /// 値の判定
         /// </summary>
         protected sealed override bool CheckInternal(T left, T right) {
-            switch (operatorType) {
-                case OperatorType.Equal:
-                    return left.Equals(right);
-                case OperatorType.NotEqual:
-                    return !left.Equals(right);
-            }
-
-            return false;
+            return operatorType.Check(left, right);
         }
 
         /// <summary>

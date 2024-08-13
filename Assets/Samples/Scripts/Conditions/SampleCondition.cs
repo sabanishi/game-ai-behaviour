@@ -4,6 +4,7 @@ using GameAiBehaviour;
 /// <summary>
 /// サンプル用の条件
 /// </summary>
+[BehaviourTreeCondition("サンプル/サンプル用条件")]
 public class SampleCondition : HandleableCondition {
     [Serializable]
     public struct Hoge {

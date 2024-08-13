@@ -128,7 +128,9 @@ namespace GameAiBehaviour.Editor {
                     .ToArray();
                 foreach (var type in conditionTypes) {
                     var t = type;
-                    menu.AddItem(new GUIContent(type.Name), false, () => {
+                    var attr = type.GetCustomAttributes(typeof(BehaviourTreeConditionAttribute), false).FirstOrDefault() as BehaviourTreeConditionAttribute;
+                    var path = attr != null ? attr.Path : type.Name;
+                    menu.AddItem(new GUIContent(path), false, () => {
                         // 条件の生成
                         BehaviourTreeEditorUtility.CreateCondition(_propertyInfo.ListProperty, t);
                         list.index = list.count - 1;

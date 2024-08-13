@@ -105,6 +105,7 @@ MonoBehaviour:
   conditions:
     conditions:
     - {fileID: -624816096900473424}
+    - {fileID: 8633490757648744762}
 --- !u!114 &-6035141168896095301
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -672,3 +673,20 @@ MonoBehaviour:
   position: {x: 938, y: -25}
   title: Test1
   child: {fileID: 3621230470430876040}
+--- !u!114 &8633490757648744762
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94c56d0ed96c7fb4694455d7ccf13bc9, type: 3}
+  m_Name: SampleCondition
+  m_EditorClassIdentifier: 
+  test: 0
+  test2: 0
+  hoge:
+    foo: 0
+    fuga: 0

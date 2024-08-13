@@ -1,4 +1,6 @@
-﻿namespace GameAiBehaviour {
+﻿using System;
+
+namespace GameAiBehaviour {
     /// <summary>
     /// 単純比較用オペレータ
     /// </summary>
@@ -57,6 +59,44 @@
             }
 
             return source.ToString();
+        }
+
+        /// <summary>
+        /// 比較処理
+        /// </summary>
+        public static bool Check<T>(this OperatorType source, T left, T right) {
+            switch (source) {
+                case OperatorType.Equal:
+                    return left.Equals(right);
+                case OperatorType.NotEqual:
+                    return !left.Equals(right);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// 比較処理
+        /// </summary>
+        public static bool Check<T>(this NumericOperatorType source, T left, T right)
+            where T : IComparable {
+            var result = left.CompareTo(right);
+            switch (source) {
+                case NumericOperatorType.Equal:
+                    return result == 0;
+                case NumericOperatorType.NotEqual:
+                    return result != 0;
+                case NumericOperatorType.Less:
+                    return result < 0;
+                case NumericOperatorType.LessEqual:
+                    return result <= 0;
+                case NumericOperatorType.Greater:
+                    return result > 0;
+                case NumericOperatorType.GreaterEqual:
+                    return result >= 0;
+            }
+
+            return false;
         }
     }
 }
