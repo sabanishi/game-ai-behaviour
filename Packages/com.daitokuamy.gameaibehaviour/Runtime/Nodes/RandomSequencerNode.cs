@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -8,6 +9,9 @@ namespace GameAiBehaviour {
     /// </summary>
     public sealed class RandomSequencerNode : CompositeNode {
         private class Logic : Logic<RandomSequencerNode> {
+            private readonly List<int> _sourceIndices = new();
+            private readonly List<int> _destIndices = new();
+            
             /// <summary>
             /// コンストラクタ
             /// </summary>
@@ -24,16 +28,34 @@ namespace GameAiBehaviour {
                 }
 
                 // ランダムに実行
-                var orderedIndices = Enumerable.Range(0, Node.children.Length)
-                    .Where(i => Node.weights[i] > float.Epsilon)
-                    .OrderByDescending(i => {
-                        var weight = Node.weights[i];
-                        return Random.Range(0, weight);
-                    })
-                    .ToArray();
+                _sourceIndices.Clear();
+                _destIndices.Clear();
+                _sourceIndices.AddRange(Enumerable.Range(0, Node.children.Length));
 
-                for (var i = 0; i < orderedIndices.Length; i++) {
-                    var index = orderedIndices[i];
+                while (_sourceIndices.Count > 0) {
+                    var totalWeight = _sourceIndices.Sum(x => Node.weights[x]);
+                    if (totalWeight <= 0.0f) {
+                        break;
+                    }
+                    
+                    var randomValue = RandomRange(0.0f, totalWeight);
+                    for (var i = 0; i < _sourceIndices.Count; i++) {
+                        var index = _sourceIndices[i];
+                        var weight = Node.weights[index];
+                        if (weight <= 0.0f) {
+                            continue;
+                        }
+                    
+                        randomValue -= weight;
+                        if (randomValue <= 0.0f) {
+                            _sourceIndices.RemoveAt(i--);
+                            _destIndices.Add(index);
+                        }
+                    }
+                }
+
+                for (var i = 0; i < _destIndices.Count; i++) {
+                    var index = _destIndices[i];
                     var node = Node.children[index];
                     yield return ExecuteNodeRoutine(node, SetState);
 

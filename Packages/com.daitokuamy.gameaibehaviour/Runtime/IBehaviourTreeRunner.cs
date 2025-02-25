@@ -7,6 +7,11 @@
         /// Runnerを制御するためのコントローラ
         /// </summary>
         IBehaviourTreeController Controller { get; }
+        
+        /// <summary>
+        /// 乱数生成用のインスタンス
+        /// </summary>
+        IRandom Random { get; }
 
         /// <summary>
         /// ノード用ロジックを検索

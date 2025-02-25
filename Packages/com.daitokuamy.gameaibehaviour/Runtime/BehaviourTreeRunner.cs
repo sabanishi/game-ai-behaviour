@@ -30,20 +30,23 @@ namespace GameAiBehaviour {
         // アクションノードハンドラ
         private readonly Dictionary<Node, IActionNodeHandler> _actionNodeHandlers = new();
 
-        // 現在の実行状態
+        /// <summary>現在の実行状態</summary>
         public Node.State CurrentState => _startNodeLogic?.State ?? Node.State.Inactive;
-        // 実行中か
+        /// <summary>実行中か</summary>
         public bool IsRunning => _nodeLogicRoutine != null;
-        // 実行履歴のパス
+        /// <summary>実行履歴のパス</summary>
         public IReadOnlyList<Path> ExecutedPaths => _executedPaths;
-        // 制御用コントローラ
+        /// <summary>乱数生成用</summary>
+        public IRandom Random { get; set; }
+        /// <summary>制御用コントローラ</summary>
         public IBehaviourTreeController Controller { get; private set; }
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public BehaviourTreeRunner(IBehaviourTreeController controller, Node startNode) {
+        public BehaviourTreeRunner(IBehaviourTreeController controller, Node startNode, IRandom random = null) {
             Controller = controller;
+            Random = random ?? new UnityRandom();
             _startNode = startNode;
         }
 

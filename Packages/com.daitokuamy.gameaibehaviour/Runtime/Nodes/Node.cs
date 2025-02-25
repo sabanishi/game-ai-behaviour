@@ -109,6 +109,13 @@ namespace GameAiBehaviour {
             }
 
             /// <summary>
+            /// 乱数の抽選
+            /// </summary>
+            protected float RandomRange(float min, float max) {
+                return Runner.Random.Range(min, max);
+            }
+
+            /// <summary>
             /// 初期化処理(Override用)
             /// </summary>
             protected virtual void InitializeInternal() {

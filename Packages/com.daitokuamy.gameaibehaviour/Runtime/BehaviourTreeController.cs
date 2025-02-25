@@ -349,6 +349,20 @@ namespace GameAiBehaviour {
         }
 
         /// <summary>
+        /// 乱数生成用のロジックを設定
+        /// </summary>
+        public void SetRandom(IRandom random) {
+            if (random == null) {
+                random = new UnityRandom();
+            }
+            
+            _baseRunner.Random = random;
+            foreach (var pair in _subRoutineRunners) {
+                pair.Value.Random = random;
+            }
+        }
+
+        /// <summary>
         /// Tree更新
         /// </summary>
         public Node.State Update(float deltaTime) {
@@ -454,7 +468,7 @@ namespace GameAiBehaviour {
                 return;
             }
 
-            var runner = new BehaviourTreeRunner(this, startNode);
+            var runner = new BehaviourTreeRunner(this, startNode, _baseRunner.Random);
             _subRoutineRunners[parent] = runner;
         }
 
