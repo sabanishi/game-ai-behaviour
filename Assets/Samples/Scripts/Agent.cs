@@ -3,6 +3,9 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class Agent : MonoBehaviour {
+    [SerializeField] private GameObject target;
+    public GameObject Target => target;
+    
     /// <summary>
     /// 相対移動
     /// </summary>

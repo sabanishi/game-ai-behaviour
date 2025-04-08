@@ -276,6 +276,9 @@ namespace GameAiBehaviour {
                         case Property.Type.Boolean:
                             Blackboard.SetBoolean(property.propertyName, property.booleanValue);
                             break;
+                        case Property.Type.GameObject:
+                            Blackboard.SetGameObject(property.propertyName, property.gameObjectValue);
+                            break;
                     }
                 }
                 
@@ -292,6 +295,9 @@ namespace GameAiBehaviour {
                             break;
                         case Property.Type.Boolean:
                             Blackboard.SetConstBoolean(property.propertyName, property.booleanValue);
+                            break;
+                        case Property.Type.GameObject:
+                            Blackboard.SetConstGameObject(property.propertyName, property.gameObjectValue);
                             break;
                     }
                 }

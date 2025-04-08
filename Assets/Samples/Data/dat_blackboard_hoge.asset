@@ -19,24 +19,35 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     booleanValue: 0
+    gameObjectValue: {fileID: 0}
   - propertyName: TargetDistance
     propertyType: 1
     integerValue: 0
     floatValue: 0
     stringValue: 
     booleanValue: 0
+    gameObjectValue: {fileID: 0}
   - propertyName: Reset
     propertyType: 3
     integerValue: 0
     floatValue: 0
     stringValue: 
     booleanValue: 0
+    gameObjectValue: {fileID: 0}
   - propertyName: Check
     propertyType: 3
     integerValue: 0
     floatValue: 0
     stringValue: 
     booleanValue: 0
+    gameObjectValue: {fileID: 0}
+  - propertyName: SampleGameObject
+    propertyType: 4
+    integerValue: 0
+    floatValue: 0
+    stringValue: 
+    booleanValue: 0
+    gameObjectValue: {fileID: 0}
   constProperties:
   - propertyName: Test
     propertyType: 0
@@ -44,15 +55,18 @@ MonoBehaviour:
     floatValue: 0
     stringValue: 
     booleanValue: 0
+    gameObjectValue: {fileID: 0}
   - propertyName: Foo
     propertyType: 2
     integerValue: 0
     floatValue: 0
     stringValue: AAA
     booleanValue: 0
+    gameObjectValue: {fileID: 0}
   - propertyName: Hoge
     propertyType: 1
     integerValue: 0
     floatValue: 1.5
     stringValue: 
     booleanValue: 0
+    gameObjectValue: {fileID: 0}

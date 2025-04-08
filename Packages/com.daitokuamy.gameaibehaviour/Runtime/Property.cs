@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -12,6 +13,7 @@ namespace GameAiBehaviour {
             Float,
             String,
             Boolean,
+            GameObject,
         }
 
         // プロパティ名
@@ -27,5 +29,7 @@ namespace GameAiBehaviour {
         public string stringValue;
         // 論理型の値
         public bool booleanValue;
+        // ゲームオブジェクト型の値
+        public GameObject gameObjectValue;
     }
 }

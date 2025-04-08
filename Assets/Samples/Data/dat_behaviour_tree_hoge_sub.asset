@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5308557616972825614
+--- !u!114 &-1053394512233846782
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9,14 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02751b745a0a64ae8a46d045246f2b11, type: 3}
-  m_Name: LogNode
+  m_Script: {fileID: 11500000, guid: 4873e09f79474ab9975e16bcbf45cd3a, type: 3}
+  m_Name: SampleSenderNode
   m_EditorClassIdentifier: 
-  guid: d9600b0eaae56554d87ec1fcb9565b17
-  position: {x: 96, y: 113}
+  guid: a75401db79c7445538640c7e9d2ec2a4
+  position: {x: 11.5, y: 215}
   title: 
-  logType: 3
-  text: AAA
+  subRoutine: {fileID: 0}
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33,8 +32,10 @@ MonoBehaviour:
   rootNode: {fileID: 3590568569584449244}
   nodes:
   - {fileID: 3590568569584449244}
-  - {fileID: -5308557616972825614}
-  blackboardAsset: {fileID: 0}
+  - {fileID: 7693385059458220705}
+  - {fileID: -1053394512233846782}
+  - {fileID: 8547939691635444385}
+  blackboardAsset: {fileID: 11400000, guid: fdcd5b0c167dc44b987f597c5c0a14b0, type: 2}
 --- !u!114 &3590568569584449244
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -48,6 +49,41 @@ MonoBehaviour:
   m_Name: RootNode
   m_EditorClassIdentifier: 
   guid: 875e75ade3a09fa4084891a880a5a23e
-  position: {x: 109, y: -32.080017}
+  position: {x: 109, y: -42.499992}
   title: 
-  child: {fileID: -5308557616972825614}
+  child: {fileID: 7693385059458220705}
+--- !u!114 &7693385059458220705
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbe1dcdbfdacd874c896be43fbb7c097, type: 3}
+  m_Name: SequencerNode
+  m_EditorClassIdentifier: 
+  guid: 288cd1906a5ef41fab93d57e5620843a
+  position: {x: 109, y: 63.000015}
+  title: 
+  children:
+  - {fileID: -1053394512233846782}
+  - {fileID: 8547939691635444385}
+  forceSuccess: 0
+--- !u!114 &8547939691635444385
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e74b1ccba5f04cb6ae41e2a44e0b5c5b, type: 3}
+  m_Name: SampleReceiverNode
+  m_EditorClassIdentifier: 
+  guid: 12cb6070126f44689ac252e92a53164a
+  position: {x: 205.50002, y: 215}
+  title: 
+  subRoutine: {fileID: 0}

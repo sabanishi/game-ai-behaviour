@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace GameAiBehaviour {
     /// <summary>
@@ -10,20 +11,24 @@ namespace GameAiBehaviour {
         private readonly Dictionary<string, float> _floatProperties = new Dictionary<string, float>();
         private readonly Dictionary<string, string> _stringProperties = new Dictionary<string, string>();
         private readonly Dictionary<string, bool> _booleanProperties = new Dictionary<string, bool>();
+        private readonly Dictionary<string,GameObject> _gameObjectProperties = new Dictionary<string, GameObject>();
 
         private readonly Dictionary<string, int> _constIntegerProperties = new Dictionary<string, int>();
         private readonly Dictionary<string, float> _constFloatProperties = new Dictionary<string, float>();
         private readonly Dictionary<string, string> _constStringProperties = new Dictionary<string, string>();
         private readonly Dictionary<string, bool> _constBooleanProperties = new Dictionary<string, bool>();
+        private readonly Dictionary<string, GameObject> _constGameObjectProperties = new Dictionary<string, GameObject>();
 
         public string[] IntegerPropertyNames => _integerProperties.Keys.ToArray();
         public string[] FloatPropertyNames => _floatProperties.Keys.ToArray();
         public string[] StringPropertyNames => _stringProperties.Keys.ToArray();
         public string[] BooleanPropertyNames => _booleanProperties.Keys.ToArray();
+        public string[] GameObjectPropertyNames => _gameObjectProperties.Keys.ToArray();
         public string[] ConstIntegerPropertyNames => _constIntegerProperties.Keys.ToArray();
         public string[] ConstFloatPropertyNames => _constFloatProperties.Keys.ToArray();
         public string[] ConstStringPropertyNames => _constStringProperties.Keys.ToArray();
         public string[] ConstBooleanPropertyNames => _constBooleanProperties.Keys.ToArray();
+        public string[] ConstGameObjectPropertyNames => _constGameObjectProperties.Keys.ToArray();
 
         /// <summary>
         /// プロパティのクリア
@@ -33,10 +38,12 @@ namespace GameAiBehaviour {
             _floatProperties.Clear();
             _stringProperties.Clear();
             _booleanProperties.Clear();
+            _gameObjectProperties.Clear();
             _constIntegerProperties.Clear();
             _constFloatProperties.Clear();
             _constStringProperties.Clear();
             _constBooleanProperties.Clear();
+            _constGameObjectProperties.Clear();
         }
 
         /// <summary>
@@ -142,6 +149,32 @@ namespace GameAiBehaviour {
 
             _booleanProperties[propertyName] = val;
         }
+        
+        /// <summary>
+        /// GameObject型プロパティの取得
+        /// </summary>
+        public GameObject GetGameObject(string propertyName, GameObject defaultValue = null) {
+            if (_gameObjectProperties.TryGetValue(propertyName, out var val)) {
+                return val;
+            }
+
+            if (_constGameObjectProperties.TryGetValue(propertyName, out val)) {
+                return val;
+            }
+
+            return defaultValue;
+        }
+        
+        /// <summary>
+        /// GameObject型プロパティ野設定
+        /// </summary>
+        public void SetGameObject(string propertyName, GameObject val) {
+            if (_constGameObjectProperties.ContainsKey(propertyName)) {
+                return;
+            }
+
+            _gameObjectProperties[propertyName] = val;
+        }
 
         /// <summary>
         /// ConstInteger型プロパティ野設定
@@ -169,6 +202,13 @@ namespace GameAiBehaviour {
         /// </summary>
         internal void SetConstBoolean(string propertyName, bool val) {
             _constBooleanProperties[propertyName] = val;
+        }
+        
+        /// <summary>
+        /// ConstGameObject型プロパティ野設定
+        /// </summary>
+        internal void SetConstGameObject(string propertyName, GameObject val) {
+            _constGameObjectProperties[propertyName] = val;
         }
     }
 }
